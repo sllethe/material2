@@ -139,6 +139,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.defineRestrictionsAndStick();
     }
 
+    onTouchMove(): void {
+        this.defineRestrictions();
+        this.sticker();
+    }
+
     onResize(): void {
         this.defineRestrictionsAndStick();
 
@@ -265,6 +270,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         }else if ( this.isStuck === false &&
             currentPosition > this._containerStart && currentPosition < this._scrollFinish) {
             this.stickElement();
+            console.log('stick');
         }
     }
 
