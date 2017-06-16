@@ -48,6 +48,8 @@ import {MdExpansionModule} from './expansion/index';
 import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
+import {CdkStickyHeaderModule} from './sticky-header/index';
+
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -86,7 +88,9 @@ const MATERIAL_MODULES = [
   A11yModule,
   PlatformModule,
   MdCommonModule,
-  ObserveContentModule
+  ObserveContentModule,
+  CdkDataTableModule,
+  CdkStickyHeaderModule,
 ];
 
 /** @deprecated */
