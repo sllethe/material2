@@ -96,6 +96,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             this.stickyParent = this.element.parentElement;
         }
 
+        // // define parent scrollable container as parent element
+        // this.stickyParent = this.elem.parentNode;
+        //
+        // // make sure this.stickyParent is the element with 'sticky-parent' tag
+        // while (!this.stickyParent.classList.contains('sticky-parent')) {
+        //     this.stickyParent = this.elem.parentNode;
+        // }
+
         this.originalCss = {
             zIndex: this.getCssValue(this.element, 'zIndex'),
             position: this.getCssValue(this.element, 'position'),
