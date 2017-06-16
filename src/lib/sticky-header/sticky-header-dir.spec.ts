@@ -33,7 +33,8 @@ describe('my test for sticky-header', () => {
         testComponent = fixture.debugElement.componentInstance;
         stickyElement = fixture.debugElement.query(By.directive(StickyHeaderDirective));
         stickyParentElement = fixture.debugElement.query(By.directive(StickyParentDirective));
-        stickyHeaderDir = stickyElement.injector.get<StickyHeaderDirective>(StickyHeaderDirective);
+        stickyHeaderDir = fixture.debugElement.query(
+            By.directive(StickyHeaderDirective)).injector.get<StickyHeaderDirective>(StickyHeaderDirective);
     });
 
     fit('true is true', () => expect(true).toBe(true));
@@ -45,10 +46,17 @@ describe('my test for sticky-header', () => {
 
     fit('make sure the cdkSticky element has the right cdkStickyViewport parent element afterViewInit',
         async(() => {
-            fixture.detectChanges();
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
             console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
             console.log('stickyElement.nativeElement.stickyParent is: ' + stickyElement.nativeElement.stickyParent);
             expect(stickyElement.nativeElement.stickyParent.classList.contains('sticky-parent')).toBe(true);
+        });
+            // stickyHeaderDir.ngAfterViewInit();
+            // tick();
+            // console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
+            // console.log('stickyElement.nativeElement.stickyParent is: ' + stickyElement.nativeElement.stickyParent);
+            // expect(stickyElement.nativeElement.stickyParent.classList.contains('sticky-parent')).toBe(true);
         }));
 });
 
