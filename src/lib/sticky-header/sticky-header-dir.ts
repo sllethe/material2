@@ -10,7 +10,8 @@ import {
     ElementRef,
     Injectable,
     Renderer2,
-    ViewContainerRef,} from '@angular/core';
+    ViewContainerRef, Optional,
+} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
@@ -44,6 +45,10 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy(): void {
         this.pelem.classList.remove('sticky-parent');
     }
+
+    getElementRef(): ElementRef {
+        return this.element;
+    }
 }
 
 
@@ -57,6 +62,9 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @Input('sticky-zIndex') zIndex: number = 10;
+    @Input('parent') parentFlag: boolean = true;
+    @Input('parentRegion') parentRegion: any;
+    @Input('scrollableRegion') scrollableRegion: any;
 
     private activated = new EventEmitter();
     private deactivated = new EventEmitter();
@@ -100,10 +108,15 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     // sticky element's width
     private width: string = 'auto';
 
-    constructor(private element: ElementRef, public findScroll: Scrollable) {
+    constructor(private element: ElementRef,
+                public findScroll: Scrollable,
+                @Optional() public parentReg: StickyParentDirective) {
         this.elem = element.nativeElement;
         this.upperScrollableContainer = findScroll.getElementRef().nativeElement;
-
+        if(parentReg != null) {
+            this.parentRegion = parentReg.getElementRef().nativeElement;
+        }
+        this.scrollableRegion = findScroll.getElementRef().nativeElement;
     }
 
     ngOnInit(): void {
@@ -112,13 +125,21 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit(): void {
 
-        // define parent scrollable container as parent element
-        this.stickyParent = this.elem.parentNode;
+        //console.log('parentNode from StickyParentDirective: ' + this.parentRegion);
 
-        // make sure this.stickyParent is the element with 'sticky-parent' tag
-        while (!this.stickyParent.classList.contains('sticky-parent')) {
+        if(this.parentRegion != null) {
+            this.stickyParent = this.parentRegion;
+        }else {
             this.stickyParent = this.elem.parentNode;
         }
+
+        // // define parent scrollable container as parent element
+        // this.stickyParent = this.elem.parentNode;
+        //
+        // // make sure this.stickyParent is the element with 'sticky-parent' tag
+        // while (!this.stickyParent.classList.contains('sticky-parent')) {
+        //     this.stickyParent = this.elem.parentNode;
+        // }
 
         this.originalCss = {
             zIndex: this.getCssValue(this.elem, 'zIndex'),
