@@ -75,25 +75,25 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     private stickStartClass: string = 'sticky';
     private stickEndClass: string = 'sticky-end';
-    private isStuck: boolean = false;
+    public isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
-    private elem: any;
+    public elem: any;
 
     // the uppercontainer element with the 'md-sticky-viewport' tag
-    stickyParent: any;
+    public stickyParent: any;
 
     // the upper scrollable container
-    private upperScrollableContainer: any;
+    public upperScrollableContainer: any;
 
     // the original css of the sticky element, used to reset the sticky element when it is being unstick
-    private originalCss: any;
+    public originalCss: any;
 
     // the height of 'stickyParent'
     private containerHeight: number;
 
     // the height of 'elem'
-    private elemHeight: number;
+    public elemHeight: number;
 
     private containerStart: number;
     private scrollFinish: number;

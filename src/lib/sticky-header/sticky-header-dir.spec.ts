@@ -33,37 +33,129 @@ describe('my test for sticky-header', () => {
         testComponent = fixture.debugElement.componentInstance;
         stickyElement = fixture.debugElement.query(By.directive(StickyHeaderDirective));
         stickyParentElement = fixture.debugElement.query(By.directive(StickyParentDirective));
-        stickyHeaderDir = fixture.debugElement.query(
-            By.directive(StickyHeaderDirective)).injector.get<StickyHeaderDirective>(StickyHeaderDirective);
+        stickyHeaderDir = stickyElement.injector.get<StickyHeaderDirective>(StickyHeaderDirective);
+        //stickyHeaderDir = fixture.debugElement.query(By.directive(StickyHeaderDirective)).componentInstance;
     });
 
-    fit('true is true', () => expect(true).toBe(true));
+    // fit('true is true', () => expect(true).toBe(true));
 
     fit('md-sticky-viewport element should have sticky-parent class in its classList', () => {
         fixture.detectChanges();
         expect(stickyParentElement.nativeElement.classList.contains('sticky-parent')).toBe(true);
     });
 
-    fit('make sure the cdkSticky element has the right cdkStickyViewport parent element afterViewInit',
-        async(() => {
-        fixture.detectChanges();
-        fixture.whenStable().then(() => {
+    fit('make sure has the sticky-parent element afterViewInit()',
+        fakeAsync(() => {
+            fixture.detectChanges();
+            stickyHeaderDir.ngAfterViewInit();
+            tick(0);
+            fixture.detectChanges();
             console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
-            console.log('stickyElement.nativeElement.stickyParent is: ' + stickyElement.nativeElement.stickyParent);
-            expect(stickyElement.nativeElement.stickyParent.classList.contains('sticky-parent')).toBe(true);
-        });
-            // stickyHeaderDir.ngAfterViewInit();
-            // tick();
-            // console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
-            // console.log('stickyElement.nativeElement.stickyParent is: ' + stickyElement.nativeElement.stickyParent);
-            // expect(stickyElement.nativeElement.stickyParent.classList.contains('sticky-parent')).toBe(true);
+            console.log('stickyElement.nativeElement.stickyParent is: ' + stickyHeaderDir.stickyParent);
+            expect(stickyHeaderDir.stickyParent.classList.contains('sticky-parent')).toBe(true);
         }));
+
+
+    fit('make sure defineRestrictions() is called when the element is scrolled',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onScroll();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.elemHeight).not.toEqual(null);
+        }));
+
+    fit('make sure defineRestrictions() is called when the element is onTouchmove on mobile screen',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onTouchMove();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.elemHeight).not.toEqual(null);
+        }));
+
+    fit('make sure defineRestrictions() is called when the element is resized',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onResize();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.elemHeight).not.toEqual(null);
+        }));
+
+    fit('make sure sticked successfully after being sticked',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onScroll();
+            stickyHeaderDir.stickElement();
+
+            tick(0);
+            fixture.detectChanges();
+            let exp: any = stickyHeaderDir.upperScrollableContainer.offsetTop + 'px';
+            expect(stickyHeaderDir.elem.style.top).toEqual(exp);
+        }));
+
+    fit('make sure stickElement() successfully change isStuck flag to be TRUE',
+        fakeAsync(() => {
+            fixture.detectChanges();
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onScroll();
+            stickyHeaderDir.stickElement();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.isStuck).toBe(true);
+        }));
+
+    fit('make sure unstickedElement successfully works',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onScroll();
+            stickyHeaderDir.stickElement();
+            stickyHeaderDir.unstickElement();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.elem.style.bottom).toEqual('0px');
+        }));
+
+    fit('make sure unstickElement() successfully change isStuck flag to be FALSE',
+        fakeAsync(() => {
+            fixture.detectChanges();
+            stickyHeaderDir.ngAfterViewInit();
+            stickyHeaderDir.onScroll();
+            stickyHeaderDir.stickElement();
+            stickyHeaderDir.unstickElement();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.isStuck).toBe(false);
+        }));
+
+    fit('make sure resetElement successfully works',
+        fakeAsync(() => {
+            stickyHeaderDir.ngAfterViewInit();
+            let exp = stickyHeaderDir.originalCss.width;
+            stickyHeaderDir.onScroll();
+            stickyHeaderDir.stickElement();
+            stickyHeaderDir.unstickElement();
+            stickyHeaderDir.resetElement();
+
+            tick(0);
+            fixture.detectChanges();
+            expect(stickyHeaderDir.elem.style.width).toEqual(exp);
+        }));
+
+
 });
 
 @Component({
     selector: 'app',
     template: `
-    <div  cdk-scrollable style="text-align: center;
+    <div cdk-scrollable style="text-align: center;
         -webkit-appearance: none;
         -moz-appearance: none;
         height: 300px;
