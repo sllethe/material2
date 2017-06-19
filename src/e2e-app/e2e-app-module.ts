@@ -25,7 +25,7 @@ import {
   OverlayContainer, FullscreenOverlayContainer, MdGridListModule, MdProgressBarModule,
   MdProgressSpinnerModule, MdTabsModule, MdRadioModule, MdSlideToggleModule, MdMenuModule,
   MdListModule, MdInputModule, MdIconModule, MdDialogModule, MdCheckboxModule, MdButtonModule,
-  MdStickyHeaderModule, ScrollDispatchModule,
+  MdStickyHeaderModule
 } from '@angular/material';
 import {ExampleModule} from '@angular/material-examples';
 
@@ -45,9 +45,7 @@ import {ExampleModule} from '@angular/material-examples';
     MdProgressBarModule,
     MdProgressSpinnerModule,
     MdTabsModule,
-    MdStickyHeaderModule,
-    ScrollDispatchModule,
-
+    MdStickyHeaderModule
   ]
 })
 export class E2eMaterialModule {}
@@ -81,7 +79,7 @@ export class E2eMaterialModule {}
     TestDialog,
     TestDialogFullScreen,
     BlockScrollStrategyE2E,
-    StickyHeaderE2E,
+    StickyHeaderE2E
   ],
   bootstrap: [E2EApp],
   providers: [
