@@ -20,7 +20,7 @@ import {Subject} from 'rxjs/Subject';
 
 
 @Directive({
-    selector: '[md-sticky-viewport], [cdkStickyViewport]',
+    selector: '[md-sticky-viewport], [cdkStickyViewport], [cdkStickyRegion]',
 })
 
 
@@ -54,7 +54,7 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 
 
 @Directive({
-    selector: '[md-sticky], [cdkSticky]',
+    selector: '[md-sticky], [cdkSticky], [cdkStickyHeader]',
 })
 
 
