@@ -60,7 +60,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     public element: HTMLElement;
 
     // the uppercontainer element with the 'md-sticky-viewport' tag
-    public stickyParent: HTMLElement;
+    public stickyParent: HTMLElement | null;
 
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
@@ -75,9 +75,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     private _scrollFinish: number;
 
     private _scrollingWidth: number;
-
-    // sticky element's width
-    private _width: string = 'auto';
 
     constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
@@ -118,10 +115,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
         this.attach();
 
-        if (this._width == 'auto') {
-            this._width = this.originalCss.width;
-        }
-
         this.defineRestrictionsAndStick();
     }
 
@@ -146,12 +139,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     onTouchMove(): void {
         this.defineRestrictionsAndStick();
     }
-
-    onTouchMove(): void {
-        this.defineRestrictions();
-        this.sticker();
-    }
-
     onResize(): void {
         this.defineRestrictionsAndStick();
 
@@ -171,6 +158,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * when to start, when to finish)
      */
     defineRestrictions(): void {
+      if(this.stickyParent == null) {
+        return;
+      }
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         let elemHeight: number = this.element.offsetHeight;
         let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
@@ -247,6 +237,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * the former one.
      */
     unstuckElement(): void {
+      if(this.stickyParent == null) {
+        return;
+      }
         this.isStuck = false;
 
         this.element.classList.add(STICK_END_CLASS);

@@ -18,6 +18,7 @@ import {FullscreenE2E} from '../fullscreen/fullscreen-e2e';
 import {InputE2E} from '../input/input-e2e';
 import {SidenavE2E} from '../sidenav/sidenav-e2e';
 import {BlockScrollStrategyE2E} from '../block-scroll-strategy/block-scroll-strategy-e2e';
+import {StickyHeaderE2E} from '../sticky-header/sticky-header-e2e';
 
 export const E2E_APP_ROUTES: Routes = [
   {path: '', component: Home},
@@ -37,5 +38,6 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'sidenav', component: SidenavE2E},
   {path: 'slide-toggle', component: SlideToggleE2E},
   {path: 'tabs', component: BasicTabs},
+  {path: 'sticky-header', component: StickyHeaderE2E},
   {path: 'card-fancy', component: CardFancyExample},
 ];

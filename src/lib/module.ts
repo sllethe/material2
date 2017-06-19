@@ -49,6 +49,10 @@ import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
 import {CdkStickyHeaderModule} from './sticky-header/index';
+import {CdkDataTableModule} from './core/data-table/index';
+import {MdExpansionModule} from './expansion/index';
+import {ScrollDispatchModule} from './core/overlay/scroll/index';
+
 
 
 const MATERIAL_MODULES = [
