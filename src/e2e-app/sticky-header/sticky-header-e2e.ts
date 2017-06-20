@@ -1,4 +1,9 @@
-import {Component} from '@angular/core';
+
+import {Component, ElementRef, Output, EventEmitter, Optional} from '@angular/core';
+import {ScrollDispatchModule, Scrollable, MdStickyHeaderModule, StickyParentDirective, StickyHeaderDirective} from '@angular/material';
+
+import {Component, ElementRef, Output, EventEmitter, Optional} from '@angular/core';
+import {ScrollDispatchModule, Scrollable, MdStickyHeaderModule, StickyParentDirective, StickyHeaderDirective} from '@angular/material';
 
 import {Component, ElementRef, Output, EventEmitter, Optional} from '@angular/core';
 import {ScrollDispatchModule, Scrollable, MdStickyHeaderModule, StickyParentDirective, StickyHeaderDirective} from '@angular/material';
