@@ -1,4 +1,9 @@
-<div cdk-scrollable id="theScrollableContainer" style="text-align: center;
+
+<button id="click-to-scroll" (click)="testScroll()">Test Scroll</button>
+
+<button id="click-to-touch" (click)="testTouchmove()">Test Scroll</button>
+
+<div cdk-scrollable id="scrollable-container" style="text-align: center;
         -webkit-appearance: none;
         -moz-appearance: none;
         height: 300px;
@@ -9,8 +14,8 @@
     <p>test test test</p>
     <p>test test test</p>
     <p>test test test</p>
-    <div cdkStickyRegion id="withTheStickyRegion">
-        <div cdkStickyHeader id="withTheStickyRegionHeader" style="background: whitesmoke; padding: 5px;">
+    <div cdkStickyRegion id="sticky-region">
+        <div cdkStickyHeader id="sticky-header" style="background: whitesmoke; padding: 5px;">
             <h2>Heading 1</h2>
         </div>
         <p>test test test</p>
