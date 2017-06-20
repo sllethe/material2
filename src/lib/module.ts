@@ -47,6 +47,7 @@ import {MdDatepickerModule} from './datepicker/index';
 import {CdkStickyHeaderModule} from './sticky-header/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
+import {ScrollDispatchModule} from './core/overlay/scroll/index';
 
 
 
