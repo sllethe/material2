@@ -39,6 +39,7 @@ import {MdDatepickerModule} from './datepicker/index';
 import {MdStickyHeaderModule} from './sticky-header/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
+import {ScrollDispatchModule} from './core/overlay/scroll/index';
 
 
 const MATERIAL_MODULES = [
@@ -78,6 +79,7 @@ const MATERIAL_MODULES = [
   ObserveContentModule,
   MdStickyHeaderModule,
   CdkDataTableModule,
+  ScrollDispatchModule
 ];
 
 /** @deprecated */
