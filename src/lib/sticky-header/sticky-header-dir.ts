@@ -25,26 +25,9 @@ import {Subject} from 'rxjs/Subject';
 
 
 @Injectable()
-export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
+export class StickyParentDirective {
 
-    // The parent element, which with the 'md-sticky-viewport' tag
-    private pelem: any;
-
-    constructor(private element: ElementRef) {
-        this.pelem = element.nativeElement;
-    }
-
-    ngOnInit(): void {
-        this.pelem.classList.add('sticky-parent');
-    }
-
-    ngAfterViewInit(): void {
-
-    }
-
-    ngOnDestroy(): void {
-        this.pelem.classList.remove('sticky-parent');
-    }
+    constructor(private element: ElementRef) { }
 
     getElementRef(): ElementRef {
         return this.element;
@@ -59,7 +42,7 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 
 
 @Injectable()
-export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
+export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
     @Input('sticky-zIndex') zIndex: number = 10;
     @Input('parent') parentFlag: boolean = true;
@@ -88,6 +71,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     // the original css of the sticky element, used to reset the sticky element when it is being unstick
     public originalCss: any;
+    public stickyCss: any;
 
     // the height of 'stickyParent'
     private containerHeight: number;
@@ -98,8 +82,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     private containerStart: number;
     private scrollFinish: number;
 
-    private scrollingWidth: any;
-    private scrollingRight: any;
+    private _scrollingWidth: any;
 
     // the padding of 'elem'
     private elementPadding: any;
@@ -133,14 +116,6 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
             this.stickyParent = this.elem.parentNode;
         }
 
-        // // define parent scrollable container as parent element
-        // this.stickyParent = this.elem.parentNode;
-        //
-        // // make sure this.stickyParent is the element with 'sticky-parent' tag
-        // while (!this.stickyParent.classList.contains('sticky-parent')) {
-        //     this.stickyParent = this.elem.parentNode;
-        // }
-
         this.originalCss = {
             zIndex: this.getCssValue(this.elem, 'zIndex'),
             position: this.getCssValue(this.elem, 'position'),
@@ -151,7 +126,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
             width: this.getCssValue(this.elem, 'width'),
         };
 
-        this.scrollingWidth = this.upperScrollableContainer.scrollWidth;
+        this._scrollingWidth = this.upperScrollableContainer.scrollWidth;
 
         this.attach();
 
@@ -210,7 +185,6 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     // define the restrictions of the sticky header(including stickyWidth, when to start, when to finish)
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
-        //this.elemHeight = this.getCssNumber(this.elem, 'height');
         this.elemHeight = this.elem.offsetHeight;
         this.containerHeight = this.getCssNumber(this.stickyParent, 'height');
         // this.containerStart = containerTop['top'];
@@ -220,7 +194,7 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elementPadding = this.getCssValue(this.elem, 'padding');
 
         this.paddingNumber = Number(this.elementPadding.slice(0,-2));
-        this.scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
+        this._scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
 
         this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
     }
@@ -258,29 +232,19 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         **/
         this.elem.style.transform = 'translate3d(0,0,0)';
 
-        this.elem.style.zIndex = this.zIndex;
-        this.elem.style.position = 'fixed';
-        // this.elem.style.top = this.upperScrollableContainer.offsetTop + 'px';
-        this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
-
-        this.scrollingRight = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.offsetWidth;
-        // let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect()['right'];
+        // this._scrollingRight = this.upperScrollableContainer.offsetLeft +
+        //     this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
-        this.elem.style.right = stuckRight + 'px';
-
-        this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
-        this.elem.style.bottom = 'auto';
-        this.elem.style.width = this.scrollingWidth + 'px';
-
-        // Set style for sticky element again for Mobile Views.
-        this.elem.style.setProperty('zIndex', this.zIndex);
-        this.elem.style.setProperty('position', 'fixed');
-        this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
-        this.elem.style.setProperty('right', stuckRight + 'px');
-        this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this.scrollingWidth + 'px');
-
-        this.activated.next(this.elem);
+        this.stickyCss = {
+            zIndex: this.zIndex,
+            position: 'fixed',
+            top: this.upperScrollableContainer.offsetTop + 'px',
+            right: stuckRight + 'px',
+            left: this.upperScrollableContainer.offsetLeft + 'px',
+            bottom: 'auto',
+            width: this._scrollingWidth + 'px',
+        };
+        Object.assign(this.elem.style, this.stickyCss);
     }
 
     // unstuck element
@@ -296,17 +260,10 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elem.style.left = 'auto';
         this.elem.style.bottom = 0;
         this.elem.style.width = this.width;
-
-        this.deactivated.next(this.elem);
     }
 
 
     sticker(): void {
-        // detecting when a container's height changes
-        let currentContainerHeight: number = this.getCssNumber(this.stickyParent, 'height');
-        if (currentContainerHeight !== this.containerHeight) {
-            this.defineRestrictions();
-        }
 
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
