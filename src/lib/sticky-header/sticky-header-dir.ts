@@ -70,6 +70,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * when it is being unstuck
      */
     public originalCss: any;
+    public stickyCss: any;
 
     private _containerStart: number;
     private _scrollFinish: number;
@@ -97,14 +98,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         }else {
             this.stickyParent = this.element.parentElement;
         }
-
-        // // define parent scrollable container as parent element
-        // this.stickyParent = this.elem.parentNode;
-        //
-        // // make sure this.stickyParent is the element with 'sticky-parent' tag
-        // while (!this.stickyParent.classList.contains('sticky-parent')) {
-        //     this.stickyParent = this.elem.parentNode;
-        // }
 
         this.originalCss = {
             zIndex: this.getCssValue(this.element, 'zIndex'),
