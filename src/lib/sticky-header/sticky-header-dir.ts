@@ -31,7 +31,6 @@ export class StickyParentDirective {
     selector: '[cdkStickyHeader]',
 })
 
-@Injectable()
 export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
     /**Set the sticky-header's z-index as 10 in default. Make it as an input
