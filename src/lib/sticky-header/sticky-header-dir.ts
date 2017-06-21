@@ -68,6 +68,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      * when it is being unstuck
      */
     public originalCss: any;
+    public stickyCss: any;
 
     // the height of 'stickyParent'
     private containerHeight: number;
@@ -78,8 +79,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
     private _containerStart: number;
     private _scrollFinish: number;
 
-    private scrollingWidth: number;
-    private scrollingRight: number;
+    private _scrollingWidth: number;
+    private _scrollingRight: number;
 
     // the padding of 'elem'
     private elementPadding: any;
@@ -117,7 +118,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             width: this.getCssValue(this.elem, 'width'),
         };
 
-        this.scrollingWidth = this.upperScrollableContainer.scrollWidth;
+        this._scrollingWidth = this.upperScrollableContainer.scrollWidth;
 
         this.attach();
 
@@ -189,7 +190,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elementPadding = this.getCssValue(this.elem, 'padding');
 
         this.paddingNumber = Number(this.elementPadding.slice(0, -2));
-        this.scrollingWidth = this.upperScrollableContainer.clientWidth -
+        this._scrollingWidth = this.upperScrollableContainer.clientWidth -
             this.paddingNumber - this.paddingNumber;
 
         this._scrollFinish = this._containerStart + (this.containerHeight - this.elemHeight);
@@ -232,18 +233,19 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
          **/
         this.elem.style.transform = 'translate3d(0,0,0)';
 
-        this.elem.style.zIndex = this.zIndex;
-        this.elem.style.position = 'fixed';
-        this.elem.style.top = this.getCssNumber(this.upperScrollableContainer, 'top') + 'px';
-
-        this.scrollingRight = this.upperScrollableContainer.offsetLeft +
-            this.upperScrollableContainer.offsetWidth;
+        // this._scrollingRight = this.upperScrollableContainer.offsetLeft +
+        //     this.upperScrollableContainer.offsetWidth;
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
-        this.elem.style.right = stuckRight + 'px';
-
-        this.elem.style.left = this.upperScrollableContainer.offsetLeft + 'px';
-        this.elem.style.bottom = 'auto';
-        this.elem.style.width = this.scrollingWidth + 'px';
+        this.stickyCss = {
+            zIndex: this.zIndex,
+            position: 'fixed',
+            top: this.upperScrollableContainer.offsetTop + 'px',
+            right: stuckRight + 'px',
+            left: this.upperScrollableContainer.offsetLeft + 'px',
+            bottom: 'auto',
+            width: this._scrollingWidth + 'px',
+        };
+        Object.assign(this.elem.style, this.stickyCss);
 
         // Set style for sticky element again for Mobile Views.
         this.elem.style.setProperty('zIndex', this.zIndex);
@@ -251,9 +253,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
         this.elem.style.setProperty('right', stuckRight + 'px');
         this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this.scrollingWidth + 'px');
+        this.elem.style.setProperty('width', this._scrollingWidth + 'px');
 
-        this._activated.next(this.elem);
+        //this._activated.next(this.elem);
     }
 
     /**
@@ -272,7 +274,7 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
         this.elem.style.bottom = 0;
         this.elem.style.width = this.width;
 
-        this._deactivated.next(this.elem);
+        //this._deactivated.next(this.elem);
     }
 
 
