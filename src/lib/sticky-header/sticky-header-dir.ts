@@ -70,7 +70,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * when it is being unstuck
      */
     public originalCss: any;
-    public stickyCss: any;
 
     private _containerStart: number;
     private _scrollFinish: number;
