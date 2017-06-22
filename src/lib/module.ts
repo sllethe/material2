@@ -45,10 +45,10 @@ import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
 import {MdExpansionModule} from './expansion/index';
+import {CdkStickyHeaderModule} from './sticky-header/index';
 import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
-import {MdStickyHeaderModule} from './sticky-header/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -89,7 +89,7 @@ const MATERIAL_MODULES = [
   MdCommonModule,
   ObserveContentModule,
   CdkDataTableModule,
-  MdStickyHeaderModule,
+  CdkStickyHeaderModule,
 ];
 
 /** @deprecated */
