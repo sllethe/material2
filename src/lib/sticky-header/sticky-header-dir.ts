@@ -77,9 +77,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     private _scrollingWidth: number;
 
-    // sticky element's width
-    private _width: string = 'auto';
-
     constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: CdkStickyRegion) {
@@ -111,10 +108,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
         this.attach();
 
-        if (this._width == 'auto') {
-            this._width = this.originalCss.width;
-        }
-
         this.defineRestrictionsAndStick();
     }
 
@@ -139,12 +132,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     onTouchMove(): void {
         this.defineRestrictionsAndStick();
     }
-
-    onTouchMove(): void {
-        this.defineRestrictions();
-        this.sticker();
-    }
-
     onResize(): void {
         this.defineRestrictionsAndStick();
 

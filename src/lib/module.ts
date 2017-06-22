@@ -44,10 +44,10 @@ import {PlatformModule} from './core/platform/index';
 import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
-import {MdStickyHeaderModule} from './sticky-header/index';
+import {CdkStickyHeaderModule} from './sticky-header/index';
 import {CdkDataTableModule} from './core/data-table/index';
 import {MdExpansionModule} from './expansion/index';
-import {CdkStickyHeaderModule} from './sticky-header/index';
+
 
 
 const MATERIAL_MODULES = [
