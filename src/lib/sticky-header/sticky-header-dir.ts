@@ -8,6 +8,7 @@
 import {Component, Directive, Input, Output,
     OnDestroy, AfterViewInit, ElementRef, Injectable, Optional} from '@angular/core';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
+import {extendObject} from '../core/util/object-extend';
 
 
 /**
@@ -171,7 +172,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      */
     resetElement(): void {
         this.element.classList.remove(STICK_START_CLASS);
-        Object.assign(this.element.style, this.originalCss);
+        extendObject(this.element.style, this.originalCss);
     }
 
     /**
@@ -202,7 +203,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
          * So the 'position: fixed' does not work on iPhone and iPad. To make it work,
          * 'translate3d(0,0,0)' needs to be used to force Safari re-rendering the sticky element.
          **/
-        this.element.style.transform = 'translate3d(0,0,0)';
+        this.element.style.transform = 'translate3d(0px,0px,0px)';
 
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
@@ -215,7 +216,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             bottom: 'auto',
             width: this._scrollingWidth + 'px',
         };
-        Object.assign(this.element.style, stickyCss);
+        //Object.assign(this.element.style, stickyCss);
+        extendObject(this.element.style, stickyCss);
     }
 
     /**
@@ -239,7 +241,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             bottom: '0',
             width: this.originalCss.width,
         };
-        Object.assign(this.element.style, unstuckCss);
+        extendObject(this.element.style, unstuckCss);
+        //Object.assign(this.element.style, unstuckCss);
     }
 
 
