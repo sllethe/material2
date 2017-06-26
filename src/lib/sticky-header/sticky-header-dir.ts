@@ -19,11 +19,7 @@ import {Subject} from 'rxjs/Subject';
     selector: '[cdkStickyRegion]',
 })
 export class StickyParentDirective {
-    constructor(private element: ElementRef) { }
-
-    getElementRef(): ElementRef {
-        return this.element;
-    }
+  constructor(public readonly _elementRef: ElementRef) { }
 }
 
 
@@ -91,19 +87,16 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
 
     constructor(private element: ElementRef,
                 public scrollable: Scrollable,
-                @Optional() public parentReg: StickyParentDirective) {
+                @Optional() public _parentReg: StickyParentDirective) {
         this.elem = element.nativeElement;
         this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
         this.scrollableRegion = scrollable.getElementRef().nativeElement;
-        if ( parentReg != null) {
-            this.cdkStickyParentRegion = parentReg.getElementRef().nativeElement;
-        }
     }
 
     ngAfterViewInit(): void {
 
-        if ( this.cdkStickyParentRegion != null) {
-            this.stickyParent = this.cdkStickyParentRegion;
+        if ( this._parentReg != null) {
+            this.stickyParent = this._parentReg._elementRef.nativeElement;
         }else {
             this.stickyParent = this.elem.parentNode;
         }
