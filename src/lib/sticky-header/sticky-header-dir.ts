@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import {ScrollDispatcher} from '../core/overlay/scroll/scroll-dispatcher';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {Subject} from 'rxjs/Subject';
+import {extendObject} from '../core/util/object-extend';
 
 
 @Directive({
@@ -194,7 +195,9 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
      */
     resetElement(): void {
         this.elem.classList.remove(this.STICK_START_CLASS);
-        Object.assign(this.elem.style, this.originalCss);
+        //Object.assign(this.elem.style, this.originalCss);
+        extendObject(this.elem.style, this.originalCss);
+
     }
 
     /**
@@ -238,15 +241,16 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             bottom: 'auto',
             width: this._scrollingWidth + 'px',
         };
-        Object.assign(this.elem.style, this.stickyCss);
+        //Object.assign(this.elem.style, this.stickyCss);
+        extendObject(this.elem.style, this.stickyCss);
 
-        // Set style for sticky element again for Mobile Views.
-        this.elem.style.setProperty('zIndex', this.zIndex);
-        this.elem.style.setProperty('position', 'fixed');
-        this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
-        this.elem.style.setProperty('right', stuckRight + 'px');
-        this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
-        this.elem.style.setProperty('width', this._scrollingWidth + 'px');
+        // // Set style for sticky element again for Mobile Views.
+        // this.elem.style.setProperty('zIndex', this.zIndex);
+        // this.elem.style.setProperty('position', 'fixed');
+        // this.elem.style.setProperty('top', this.upperScrollableContainer.offsetTop + 'px');
+        // this.elem.style.setProperty('right', stuckRight + 'px');
+        // this.elem.style.setProperty('left', this.upperScrollableContainer.offsetLeft + 'px');
+        // this.elem.style.setProperty('width', this._scrollingWidth + 'px');
 
         //this._activated.next(this.elem);
     }
