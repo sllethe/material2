@@ -101,6 +101,48 @@
         </button>
       </md-list-item>
     </md-nav-list>
+
+
+    <md-nav-list dense>
+      <md-list-item *ngFor="let link of links">
+        <a md-line href="http://www.google.com">{{ link.name }}</a>
+        <button md-icon-button (click)="infoClicked=!infoClicked">
+          <md-icon class="material-icons">info</md-icon>
+        </button>
+        <button md-icon-button (click)="infoClicked=!infoClicked">
+          <md-icon class="material-icons">info</md-icon>
+        </button>
+        <md-checkbox [aria-label]="ingredient"> </md-checkbox>
+      </md-list-item>
+    </md-nav-list>
+
+    <mat-selection-list dense>
+      <md-list-item *ngFor="let link of links">
+        <a md-line href="http://www.google.com">{{ link.name }}</a>
+        <button md-icon-button (click)="infoClicked=!infoClicked">
+          <md-icon class="material-icons">info</md-icon>
+        </button>
+      </md-list-item>
+    </mat-selection-list>
+
+    <md-selection-list dense>
+      <md-list-item *ngFor="let link of links">
+        <a md-line href="http://www.google.com">{{ link.name }}</a>
+        <button md-icon-button (click)="infoClicked=!infoClicked">
+          <md-icon class="material-icons">info</md-icon>
+        </button>
+      </md-list-item>
+    </md-selection-list>
+
+
+    <md-nav-list>
+      <md-list-item *ngFor="let link of links">
+        <a md-line href="http://www.google.com">{{ link.name }}</a>
+        <button md-icon-button (click)="infoClicked=!infoClicked">
+          <md-icon>info</md-icon>
+        </button>
+      </md-list-item>
+    </md-nav-list>
   </div>
 
   <div>
