@@ -97,15 +97,19 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             this.stickyParent = this.element.parentElement;
         }
 
-        this.originalCss = {
-            zIndex: this.getCssValue(this.element, 'zIndex'),
-            position: this.getCssValue(this.element, 'position'),
-            top: this.getCssValue(this.element, 'top'),
-            right: this.getCssValue(this.element, 'right'),
-            left: this.getCssValue(this.element, 'left'),
-            bottom: this.getCssValue(this.element, 'bottom'),
-            width: this.getCssValue(this.element, 'width'),
-        };
+        // this.originalCss = {
+        //     zIndex: this.getCssValue(this.element, 'zIndex'),
+        //     position: this.getCssValue(this.element, 'position'),
+        //     top: this.getCssValue(this.element, 'top'),
+        //     right: this.getCssValue(this.element, 'right'),
+        //     left: this.getCssValue(this.element, 'left'),
+        //     bottom: this.getCssValue(this.element, 'bottom'),
+        //     width: this.getCssValue(this.element, 'width'),
+        // };
+      this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
+        this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
+        this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
+        this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
 
         this.attach();
 
@@ -207,17 +211,21 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
         let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
 
-        let stickyCss:any = {
-            zIndex: this.zIndex,
-            position: 'fixed',
-            top: this.upperScrollableContainer.offsetTop + 'px',
-            right: stuckRight + 'px',
-            left: this.upperScrollableContainer.offsetLeft + 'px',
-            bottom: 'auto',
-            width: this._scrollingWidth + 'px',
-        };
+        // let stickyCss:any = {
+        //     zIndex: this.zIndex,
+        //     position: 'fixed',
+        //     top: this.upperScrollableContainer.offsetTop + 'px',
+        //     right: stuckRight + 'px',
+        //     left: this.upperScrollableContainer.offsetLeft + 'px',
+        //     bottom: 'auto',
+        //     width: this._scrollingWidth + 'px',
+        // };
+        let stickyCss2:any = this.generateCssStyle(this.zIndex, 'fixed',
+          this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
+          this.upperScrollableContainer.offsetLeft + 'px', 'auto',
+          this._scrollingWidth + 'px');
         //Object.assign(this.element.style, stickyCss);
-        extendObject(this.element.style, stickyCss);
+        extendObject(this.element.style, stickyCss2);
     }
 
     /**
@@ -233,15 +241,17 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
         this.element.classList.add(STICK_END_CLASS);
         this.stickyParent.style.position = 'relative';
-        let unstuckCss: any = {
-            position: 'absolute',
-            top: 'auto',
-            right: '0',
-            left: 'auto',
-            bottom: '0',
-            width: this.originalCss.width,
-        };
-        extendObject(this.element.style, unstuckCss);
+        // let unstuckCss: any = {
+        //     position: 'absolute',
+        //     top: 'auto',
+        //     right: '0',
+        //     left: 'auto',
+        //     bottom: '0',
+        //     width: this.originalCss.width,
+        // };
+        let unstuckCss2: any = this.generateCssStyle(this.originalCss.zIndex,
+          'absolute', 'auto', '0', 'auto', '0', this.originalCss.width);
+        extendObject(this.element.style, unstuckCss2);
         //Object.assign(this.element.style, unstuckCss);
     }
 
@@ -269,6 +279,20 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.defineRestrictions();
         this.sticker();
     }
+
+  generateCssStyle(zIndex:any, position:any, top:any, right:any,
+                   left:any, bottom:any, width:any): any {
+    let curCSS = {
+      zIndex: zIndex,
+      position: position,
+      top: top,
+      right: right,
+      left: left,
+      bottom: bottom,
+      width: width,
+    };
+    return curCSS;
+  }
 
 
     private getCssValue(element: any, property: string): any {
