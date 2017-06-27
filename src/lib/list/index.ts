@@ -18,6 +18,7 @@ import {
   MdNavListCssMatStyler,
   MdDividerCssMatStyler,
   MdListSubheaderCssMatStyler,
+  MdSelectionListCssMatStyler,
 } from './list';
 
 
@@ -35,6 +36,7 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdSelectionListCssMatStyler,
   ],
   declarations: [
     MdList,
@@ -46,6 +48,7 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdSelectionListCssMatStyler,
   ],
 })
 export class MdListModule {}

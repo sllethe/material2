@@ -7,7 +7,7 @@
  */
 
 import {
-  AfterContentInit,
+  AfterContentInit, AfterViewInit,
   Component,
   ContentChild,
   ContentChildren,
@@ -43,7 +43,7 @@ export class MdListDivider {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
+  selector: 'md-list, mat-list, md-nav-list, mat-nav-list, md-selection-list, mat-selection-list, md-action-list, mat-action-list',
   host: {'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
@@ -72,6 +72,14 @@ export class MdListCssMatStyler {}
   host: {'class': 'mat-nav-list'}
 })
 export class MdNavListCssMatStyler {}
+
+/////////////////////////////////////////////////////////////
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+  host: {'class': 'mat-selection-list'}
+})
+export class MdSelectionListCssMatStyler {}
+///////////////////////////////////////////////////////////////
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -130,6 +138,7 @@ export class MdListSubheaderCssMatStyler {}
 export class MdListItem extends _MdListItemMixinBase implements AfterContentInit, CanDisableRipple {
   private _lineSetter: MdLineSetter;
   private _isNavList: boolean = false;
+  private _isSelectionList: boolean = false;
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
@@ -148,7 +157,15 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
               @Optional() navList: MdNavListCssMatStyler) {
     super();
     this._isNavList = !!navList;
+    this._isSelectionList = !!selectionList;
   }
+
+  // ngAfterViewInit() {
+  //   if(this._isSelectionList == true) {
+  //     this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
+  //       '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
+  //   }
+  // }
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
@@ -156,7 +173,12 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && this._isNavList && !this._list.disableRipple;
+    return !this.disableRipple && (this._isNavList || this._isSelectionList)
+      && !this._list.disableRipple;
+  }
+
+  isAddCheckbox() {
+    return this._isSelectionList;
   }
 
   _handleFocus() {
@@ -172,3 +194,4 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
     return this._element.nativeElement;
   }
 }
+
