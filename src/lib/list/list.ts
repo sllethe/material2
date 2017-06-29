@@ -13,7 +13,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
-  Input,
+  Input, OnInit,
   Optional,
   QueryList,
   Renderer2,
@@ -179,10 +179,12 @@ export class MdListItem implements AfterContentInit {
     this._isSelectionList = !!selectionList;
   }
 
-  // ngAfterViewInit() {
+  // ngOnInit() {
   //   if(this._isSelectionList == true) {
-  //     this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
-  //       '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
+  //     console.log('need to be appended : ' + this._element.nativeElement.firstChild);
+  //     this._element.nativeElement.firstChild.insertAdjacentHTML('beforeEnd', '<md-checkbox class="mat-selection-list-checkbox" [aria-label]="ingredient"> </md-checkbox>');
+  //     // this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
+  //     //   '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
   //   }
   // }
 
@@ -214,4 +216,8 @@ export class MdListItem implements AfterContentInit {
   }
 }
 
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+})
+export class MdSelectionListCheckboxer {
 
