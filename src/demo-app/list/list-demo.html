@@ -116,32 +116,31 @@
       </md-list-item>
     </md-nav-list>
 
-    <mat-selection-list dense>
-      <md-list-item *ngFor="let link of links">
-        <a md-line href="http://www.google.com">{{ link.name }}</a>
-        <button md-icon-button (click)="infoClicked=!infoClicked">
-          <md-icon class="material-icons">info</md-icon>
-        </button>
+    <mat-selection-list dense id="selection-list-1">
+      <md-list-item>
+        <a md-line href="http://www.google.com">test 1</a>
+        <md-checkbox id="real-checkb" [aria-label]="ingredient"> </md-checkbox>
+      </md-list-item>
+      <md-list-item>
+        <a md-line href="http://www.google.com">test 2</a>
+        <md-checkbox id="real-checkb2" [aria-label]="ingredient"> </md-checkbox>
+      </md-list-item>
+      <md-list-item>
+        <a md-line href="http://www.google.com">test 3</a>
+        <md-checkbox id="real-checkb3" [aria-label]="ingredient"> </md-checkbox>
+      </md-list-item>
+      <md-list-item>
+        <a md-line href="http://www.google.com">test 4</a>
+        <md-checkbox id="real-checkb4" [aria-label]="ingredient"> </md-checkbox>
       </md-list-item>
     </mat-selection-list>
 
-    <md-selection-list dense>
+    <md-selection-list dense id="selection-list-2">
       <md-list-item *ngFor="let link of links">
-        <a md-line href="http://www.google.com">{{ link.name }}</a>
-        <button md-icon-button (click)="infoClicked=!infoClicked">
-          <md-icon class="material-icons">info</md-icon>
-        </button>
+        <a md-line href="http://www.google.com">line 1</a>
+        <md-pseudo-checkbox id="fake-checkb"></md-pseudo-checkbox>
       </md-list-item>
     </md-selection-list>
 
-
-    <md-nav-list>
-      <md-list-item *ngFor="let link of links">
-        <a md-line href="http://www.google.com">{{ link.name }}</a>
-        <button md-icon-button (click)="infoClicked=!infoClicked">
-          <md-icon>info</md-icon>
-        </button>
-      </md-list-item>
-    </md-nav-list>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MdCheckboxModule} from'@angular/material';
 
 
 @Component({
