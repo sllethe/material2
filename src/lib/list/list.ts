@@ -235,9 +235,6 @@ export class MdListItemWithCheckbox implements AfterContentInit {
       this.checkb = this._element.nativeElement.querySelector('md-checkbox');
       console.log(this.checkb.getAttribute('id'));
       this._element.nativeElement.querySelector('md-checkbox').addEventListener('click', this.onChangeBind, false);
-      this._element.nativeElement.querySelector('md-checkbox').onchange = function () {
-        console.log('change ot not: ' + this._element.nativeElement.querySelector('md-checkbox'));
-      };
       //console.log('this.pcheckbox : ' + this._element.nativeElement.querySelector('md-pseudo-checkbox'));
       // this.checkbox._elementRef.nativeElement.addEventListener('change', onchange);
     }
@@ -257,7 +254,7 @@ export class MdListItemWithCheckbox implements AfterContentInit {
 
   onchange(): void {
     console.log('change ot not: ' + this._element.nativeElement.querySelector('md-checkbox'));
-    // if(this.checkb.checked) {
+    // if(this._element.nativeElement.querySelector('md-checkbox').checked) {
     //   this.selectionList.checkedItemList.push(this._element.nativeElement);
     //   console.log(this.selectionList.checkedItemList);
     // }else {
