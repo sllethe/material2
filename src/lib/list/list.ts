@@ -160,10 +160,12 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
     this._isSelectionList = !!selectionList;
   }
 
-  // ngAfterViewInit() {
+  // ngOnInit() {
   //   if(this._isSelectionList == true) {
-  //     this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
-  //       '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
+  //     console.log('need to be appended : ' + this._element.nativeElement.firstChild);
+  //     this._element.nativeElement.firstChild.insertAdjacentHTML('beforeEnd', '<md-checkbox class="mat-selection-list-checkbox" [aria-label]="ingredient"> </md-checkbox>');
+  //     // this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
+  //     //   '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
   //   }
   // }
 
@@ -193,5 +195,78 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
+}
+
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+})
+export class MdSelectionListCheckboxer {
+
+  checkedItemList: Array<HTMLElement> = new Array();
+
+  constructor(public _element: ElementRef,
+              //public checkbox: MdCheckbox,
+              @Optional() private _list: MdList) { }
+}
+
+@Directive({
+  selector:'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
+})
+export class MdListItemWithCheckbox implements AfterContentInit {
+  private checkb: any;
+  private pcheckb: any;
+
+  private onChangeBind: EventListener = this.onchange.bind(this);
+
+
+  @ContentChild(MdPseudoCheckbox) pp: MdPseudoCheckbox;
+  constructor(private _element: ElementRef,
+              @Optional() public checkbox: MdCheckbox,
+              @Optional() public selectionList: MdSelectionListCheckboxer,
+              @Optional() private _list: MdList,
+              @Optional() public pCheckbox: MdPseudoCheckbox) { }
+
+
+  ngAfterContentInit() {
+    // console.log('this.pcheckbox : ' + this._element.nativeElement.querySelector('md-pseudo-checkbox'));
+
+    // console.log('this.checkbox : ' + this._element.nativeElement.querySelector('md-checkbox'));
+    if(this._element.nativeElement.querySelector('md-checkbox') != null) {
+      this.checkb = this._element.nativeElement.querySelector('md-checkbox');
+      console.log(this.checkb.getAttribute('id'));
+      this._element.nativeElement.querySelector('md-checkbox').addEventListener('click', this.onChangeBind, false);
+      this._element.nativeElement.querySelector('md-checkbox').onchange = function () {
+        console.log('change ot not: ' + this._element.nativeElement.querySelector('md-checkbox'));
+      };
+      //console.log('this.pcheckbox : ' + this._element.nativeElement.querySelector('md-pseudo-checkbox'));
+      // this.checkbox._elementRef.nativeElement.addEventListener('change', onchange);
+    }
+
+    if(this._element.nativeElement.querySelector('md-pseudo-checkbox') != null) {
+      this.pcheckb = this._element.nativeElement.querySelector('md-pseudo-checkbox');
+      this.pcheckb.addEventListener('change', this.onchange());
+
+      //console.log('this.checkbox : ' + this._element.nativeElement.querySelector('md-checkbox'));
+      // this.checkbox._elementRef.nativeElement.addEventListener('change', onchange);
+    }
+
+    if(this.selectionList != null) {
+      console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
+    }
+  }
+
+  onchange(): void {
+    console.log('change ot not: ' + this._element.nativeElement.querySelector('md-checkbox'));
+    // if(this.checkb.checked) {
+    //   this.selectionList.checkedItemList.push(this._element.nativeElement);
+    //   console.log(this.selectionList.checkedItemList);
+    // }else {
+    //   let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
+    //   if(index != -1) {
+    //     this.selectionList.checkedItemList.splice(index, 1);
+    //   }
+    // }
+  }
+
 }
 
