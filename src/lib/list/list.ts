@@ -213,7 +213,6 @@ export class MdSelectionListCheckboxer {
   checkedItemList: Array<HTMLElement> = new Array();
 
   constructor(public _element: ElementRef,
-              //public checkbox: MdCheckbox,
               @Optional() private _list: MdList) { }
 }
 
@@ -223,6 +222,7 @@ export class MdSelectionListCheckboxer {
 export class MdListItemWithCheckbox implements AfterContentInit {
 
   private onChangeBind: EventListener = this.onchange.bind(this);
+  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
 
 
   @ContentChild(MdPseudoCheckbox) pp: MdPseudoCheckbox;
@@ -238,6 +238,8 @@ export class MdListItemWithCheckbox implements AfterContentInit {
     if(this.pp != null) {
       console.log(this.pp);
       this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
+      this.pp._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
+      this.pp._elementRef.nativeElement.setAttribute('tabindex', '0');
       //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
     }
 
@@ -260,7 +262,28 @@ export class MdListItemWithCheckbox implements AfterContentInit {
         this.selectionList.checkedItemList.splice(index, 1);
       }
     }
-    console.log("current ListItems: " + this.selectionList.checkedItemList);
+    console.log('current ListItems: ' + this.selectionList.checkedItemList);
+  }
+
+  onKeydown(e: KeyboardEvent): void {
+    console.log('who onkeyDown: ' + this.pp);
+    if(e.keyCode === 32) {
+      let focusedElement = document.activeElement;
+      console.log(focusedElement === this.pp._elementRef.nativeElement);
+      if(focusedElement === this.pp._elementRef.nativeElement) {
+        if (this.pp.state == 'unchecked') {
+          this.pp.state = 'checked';
+          this.selectionList.checkedItemList.push(this._element.nativeElement);
+        }else {
+          this.pp.state = 'unchecked';
+          let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
+          if(index != -1) {
+            this.selectionList.checkedItemList.splice(index, 1);
+          }
+        }
+        console.log('current ListItems: ' + this.selectionList.checkedItemList);
+      }
+    }
   }
 
 }
