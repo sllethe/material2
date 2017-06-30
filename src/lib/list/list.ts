@@ -220,6 +220,7 @@ export class MdListItemWithCheckbox implements AfterContentInit {
 
 
   @ContentChild(MdPseudoCheckbox) pp: MdPseudoCheckbox;
+  @ContentChild(MdCheckbox) lala: MdCheckbox;
   constructor(private _element: ElementRef,
               @Optional() public checkbox: MdCheckbox,
               @Optional() public selectionList: MdSelectionListCheckboxer,
@@ -228,24 +229,22 @@ export class MdListItemWithCheckbox implements AfterContentInit {
 
 
   ngAfterContentInit() {
-    // console.log('this.pcheckbox : ' + this._element.nativeElement.querySelector('md-pseudo-checkbox'));
+    if(this.pp != null) {
+      console.log(this.pp);
+      this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
+      //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
+    }
 
-    // console.log('this.checkbox : ' + this._element.nativeElement.querySelector('md-checkbox'));
     if(this._element.nativeElement.querySelector('md-checkbox') != null) {
       this.checkb = this._element.nativeElement.querySelector('md-checkbox');
-      console.log(this.checkb.getAttribute('id'));
-      this._element.nativeElement.querySelector('md-checkbox').addEventListener('click', this.onChangeBind, false);
-      //console.log('this.pcheckbox : ' + this._element.nativeElement.querySelector('md-pseudo-checkbox'));
-      // this.checkbox._elementRef.nativeElement.addEventListener('change', onchange);
+      //console.log(this.checkb.getAttribute('id'));
+      //this._element.nativeElement.querySelector('md-checkbox').addEventListener('click', this.onChangeBind, false);
     }
 
-    if(this._element.nativeElement.querySelector('md-pseudo-checkbox') != null) {
-      this.pcheckb = this._element.nativeElement.querySelector('md-pseudo-checkbox');
-      this.pcheckb.addEventListener('change', this.onchange());
-
-      //console.log('this.checkbox : ' + this._element.nativeElement.querySelector('md-checkbox'));
-      // this.checkbox._elementRef.nativeElement.addEventListener('change', onchange);
-    }
+    // if(this._element.nativeElement.querySelector('md-pseudo-checkbox') != null) {
+    //   this.pcheckb = this._element.nativeElement.querySelector('md-pseudo-checkbox');
+    //   this.pcheckb.addEventListener('change', this.onchange());
+    // }
 
     if(this.selectionList != null) {
       console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
@@ -253,16 +252,20 @@ export class MdListItemWithCheckbox implements AfterContentInit {
   }
 
   onchange(): void {
-    console.log('change ot not: ' + this._element.nativeElement.querySelector('md-checkbox'));
-    // if(this._element.nativeElement.querySelector('md-checkbox').checked) {
-    //   this.selectionList.checkedItemList.push(this._element.nativeElement);
-    //   console.log(this.selectionList.checkedItemList);
-    // }else {
-    //   let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
-    //   if(index != -1) {
-    //     this.selectionList.checkedItemList.splice(index, 1);
-    //   }
-    // }
+    console.log('who changed: ' + this.pp);
+    console.log('checked or not: ' + this.pp.state);
+    console.log(this.selectionList.checkedItemList);
+    if(this.pp.state == 'unchecked') {
+      this.pp.state = 'checked';
+      this.selectionList.checkedItemList.push(this._element.nativeElement);
+    }else {
+      this.pp.state = 'unchecked';
+      let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
+      if(index != -1) {
+        this.selectionList.checkedItemList.splice(index, 1);
+      }
+    }
+    
   }
 
 }
