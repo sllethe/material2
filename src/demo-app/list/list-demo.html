@@ -123,7 +123,7 @@
 
     <md-selection-list dense id="selection-list-2">
       <md-list-item *ngFor="let link of links">
-        <a md-line href="http://www.google.com">line 1</a>
+        <a md-line href="http://www.google.com">{{ link.name }}</a>
         <md-pseudo-checkbox id="fake-checkb"></md-pseudo-checkbox>
       </md-list-item>
     </md-selection-list>
