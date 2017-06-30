@@ -102,20 +102,6 @@
       </md-list-item>
     </md-nav-list>
 
-
-    <md-nav-list dense>
-      <md-list-item *ngFor="let link of links">
-        <a md-line href="http://www.google.com">{{ link.name }}</a>
-        <button md-icon-button (click)="infoClicked=!infoClicked">
-          <md-icon class="material-icons">info</md-icon>
-        </button>
-        <button md-icon-button (click)="infoClicked=!infoClicked">
-          <md-icon class="material-icons">info</md-icon>
-        </button>
-        <md-checkbox [aria-label]="ingredient"> </md-checkbox>
-      </md-list-item>
-    </md-nav-list>
-
     <mat-selection-list dense id="selection-list-1">
       <md-list-item>
         <a md-line href="http://www.google.com">test 1</a>

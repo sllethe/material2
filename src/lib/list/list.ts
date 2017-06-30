@@ -221,8 +221,6 @@ export class MdSelectionListCheckboxer {
   selector:'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
 })
 export class MdListItemWithCheckbox implements AfterContentInit {
-  private checkb: any;
-  private pcheckb: any;
 
   private onChangeBind: EventListener = this.onchange.bind(this);
 
@@ -243,17 +241,6 @@ export class MdListItemWithCheckbox implements AfterContentInit {
       //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
     }
 
-    if(this._element.nativeElement.querySelector('md-checkbox') != null) {
-      this.checkb = this._element.nativeElement.querySelector('md-checkbox');
-      //console.log(this.checkb.getAttribute('id'));
-      //this._element.nativeElement.querySelector('md-checkbox').addEventListener('click', this.onChangeBind, false);
-    }
-
-    // if(this._element.nativeElement.querySelector('md-pseudo-checkbox') != null) {
-    //   this.pcheckb = this._element.nativeElement.querySelector('md-pseudo-checkbox');
-    //   this.pcheckb.addEventListener('change', this.onchange());
-    // }
-
     if(this.selectionList != null) {
       console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
     }
@@ -262,7 +249,7 @@ export class MdListItemWithCheckbox implements AfterContentInit {
   onchange(): void {
     console.log('who changed: ' + this.pp);
     console.log('checked or not: ' + this.pp.state);
-    console.log(this.selectionList.checkedItemList);
+
     if(this.pp.state == 'unchecked') {
       this.pp.state = 'checked';
       this.selectionList.checkedItemList.push(this._element.nativeElement);
@@ -273,7 +260,7 @@ export class MdListItemWithCheckbox implements AfterContentInit {
         this.selectionList.checkedItemList.splice(index, 1);
       }
     }
-    
+    console.log("current ListItems: " + this.selectionList.checkedItemList);
   }
 
 }
