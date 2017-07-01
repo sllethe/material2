@@ -189,10 +189,6 @@ export class MdListItem implements AfterContentInit {
       && !this._list.disableRipple;
   }
 
-  isAddCheckbox() {
-    return this._isSelectionList;
-  }
-
   _handleFocus() {
     this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
   }
@@ -211,7 +207,7 @@ export class MdListItem implements AfterContentInit {
   moduleId: module.id,
   selector: 'md-list-option',
   host: {
-    'role': 'listitem',
+    'role': 'option',
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
