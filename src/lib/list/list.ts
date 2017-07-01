@@ -43,7 +43,7 @@ export class MdListDivider {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-list, mat-list, md-nav-list, mat-nav-list, md-selection-list, mat-selection-list, md-action-list, mat-action-list',
+  selector: 'md-list, mat-list, md-nav-list, mat-nav-list',
   host: {'role': 'list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
@@ -52,6 +52,27 @@ export class MdListDivider {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdList extends _MdListMixinBase implements CanDisableRipple {}
+
+
+@Component({
+  moduleId: module.id,
+  selector: 'md-selection-list, mat-selection-list',
+  host: {'role': 'list'},
+  template: '<ng-content></ng-content>',
+  styleUrls: ['list.css'],
+  encapsulation: ViewEncapsulation.None
+})
+export class MdSelectionList {
+  private _disableRipple: boolean = false;
+
+  /**
+   * Whether the ripple effect should be disabled on the list-items or not.
+   * This flag only has an effect for `md-nav-list` components.
+   */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -160,15 +181,6 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
     this._isSelectionList = !!selectionList;
   }
 
-  // ngOnInit() {
-  //   if(this._isSelectionList == true) {
-  //     console.log('need to be appended : ' + this._element.nativeElement.firstChild);
-  //     this._element.nativeElement.firstChild.insertAdjacentHTML('beforeEnd', '<md-checkbox class="mat-selection-list-checkbox" [aria-label]="ingredient"> </md-checkbox>');
-  //     // this._element.nativeElement.getElementsByClassName('mat-list-item-content')[0].nativeElement.insertAdjacentHTML('beforeEnd',
-  //     //   '<md-checkbox [aria-label]="ingredient"> </md-checkbox>');
-  //   }
-  // }
-
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
   }
@@ -181,6 +193,76 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
 
   isAddCheckbox() {
     return this._isSelectionList;
+  }
+
+  _handleFocus() {
+    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  _handleBlur() {
+    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  /** Retrieves the DOM element of the component host. */
+  _getHostElement(): HTMLElement {
+    return this._element.nativeElement;
+  }
+}
+
+@Component({
+  moduleId: module.id,
+  selector: 'md-list-option',
+  host: {
+    'role': 'listitem',
+    'class': 'mat-list-item',
+    '(focus)': '_handleFocus()',
+    '(blur)': '_handleBlur()',
+  },
+  templateUrl: 'list-item.html',
+  encapsulation: ViewEncapsulation.None
+})
+export class MdListOption implements AfterContentInit {
+  private _lineSetter: MdLineSetter;
+  private _disableRipple: boolean = false;
+  private _isNavList: boolean = false;
+  private _isSelectionList: boolean = false;
+
+  /**
+   * Whether the ripple effect on click should be disabled. This applies only to list items that are
+   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
+   */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+
+  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
+
+  @ContentChild(MdListAvatarCssMatStyler)
+  set _hasAvatar(avatar: MdListAvatarCssMatStyler) {
+    if (avatar != null) {
+      this._renderer.addClass(this._element.nativeElement, 'mat-list-item-avatar');
+    } else {
+      this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-avatar');
+    }
+  }
+
+  constructor(private _renderer: Renderer2,
+              private _element: ElementRef,
+              @Optional() private _slist: MdSelectionList,
+              @Optional() navList: MdNavListCssMatStyler,
+              @Optional() selectionList: MdSelectionListCssMatStyler) {
+    this._isNavList = !!navList;
+    this._isSelectionList = !!selectionList;
+  }
+
+  ngAfterContentInit() {
+    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+  }
+
+  /** Whether this list item should show a ripple effect when clicked.  */
+  isRippleEnabled() {
+    return !this.disableRipple && (this._isNavList || this._isSelectionList)
+      && !this._slist.disableRipple;
   }
 
   _handleFocus() {
