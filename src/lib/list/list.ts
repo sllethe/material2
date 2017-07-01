@@ -58,7 +58,7 @@ export class MdList {
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
-  host: {'role': 'list'},
+  host: {'role': 'listbox'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None
@@ -199,10 +199,6 @@ export class MdListItem implements AfterContentInit {
       && !this._list.disableRipple;
   }
 
-  isAddCheckbox() {
-    return this._isSelectionList;
-  }
-
   _handleFocus() {
     this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
   }
@@ -221,7 +217,7 @@ export class MdListItem implements AfterContentInit {
   moduleId: module.id,
   selector: 'md-list-option',
   host: {
-    'role': 'listitem',
+    'role': 'option',
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
@@ -294,12 +290,11 @@ export class MdSelectionListCheckboxer {
 
   checkedItemList: Array<HTMLElement> = new Array();
 
-  constructor(public _element: ElementRef,
-              @Optional() private _list: MdList) { }
+  constructor(public _element: ElementRef) { }
 }
 
 @Directive({
-  selector:'md-list-item, mat-list-item, a[md-list-item], a[mat-list-item]',
+  selector:'md-list-option',
 })
 export class MdListItemWithCheckbox implements AfterContentInit {
 
