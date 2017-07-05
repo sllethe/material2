@@ -245,9 +245,13 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
-  @Input() checkboxPosition = 'right';
+  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
-  @ViewChild('autocheckbox') pCheckbox;
+  @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  @ViewChild('autocheckbox1') pCheckbox1;
+  @ViewChild('autocheckbox2') pCheckbox2;
+  pCheckbox: MdPseudoCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -262,13 +266,17 @@ export class MdListOption implements AfterContentInit {
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
 
-    if(this.pCheckbox != null) {
-      console.log(this.pCheckbox);
-      this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
-      if(this.checkboxPosition == 'right') {
-        this.pCheckbox._elementRef.nativeElement.style.float = 'right';
+    if(this.pCheckbox1 != null) {
+      if(this.checkboxPosition == 'after') {
+        this.pCheckbox = this.pCheckbox2;
+        this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
+        this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
+        console.log(this.pCheckbox);
       }else {
-        this.pCheckbox._elementRef.nativeElement.style.alignContent = 'left';
+        this.pCheckbox = this.pCheckbox1;
+        this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
+        this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
+        console.log(this.pCheckbox);
       }
     }
 
@@ -294,7 +302,7 @@ export class MdListOption implements AfterContentInit {
   }
 
   onKeydown(e: KeyboardEvent): void {
-    console.log('who onkeyDown: ' + this.pCheckbox);
+    console.log('who onkeyDown: ' + this.pCheckbox1);
     if(e.keyCode === 32) {
       let focusedElement = document.activeElement;
       console.log(focusedElement === this.pCheckbox._elementRef.nativeElement);
