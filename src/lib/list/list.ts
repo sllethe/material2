@@ -273,13 +273,9 @@ export class MdListOption implements AfterContentInit {
       if(this.checkboxPosition == 'after') {
         this.pCheckbox = this.pCheckbox2;
         this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-        //this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
-        //console.log(this.pCheckbox);
       }else {
         this.pCheckbox = this.pCheckbox1;
         this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
-        //this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
-        //console.log(this.pCheckbox);
       }
     }
 
