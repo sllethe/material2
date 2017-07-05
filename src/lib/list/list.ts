@@ -223,7 +223,7 @@ export class MdListItem implements AfterContentInit {
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
   },
-  templateUrl: 'list-item.html',
+  templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None
 })
 export class MdListOption implements AfterContentInit {
@@ -231,6 +231,10 @@ export class MdListOption implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
+
+  private onChangeBind: EventListener = this.onchange.bind(this);
+  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
+
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -251,74 +255,26 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
+  @ViewChild('autocheckbox') pp;
+
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               @Optional() private _slist: MdSelectionList,
               @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionList: MdSelectionListCssMatStyler) {
+              @Optional() selectionListStyler: MdSelectionListCssMatStyler,
+              @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
-    this._isSelectionList = !!selectionList;
+    this._isSelectionList = !!selectionListStyler;
   }
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
-  }
 
-  /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && (this._isNavList || this._isSelectionList)
-      && !this._slist.disableRipple;
-  }
-
-  _handleFocus() {
-    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
-  }
-
-  _handleBlur() {
-    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
-  }
-
-  /** Retrieves the DOM element of the component host. */
-  _getHostElement(): HTMLElement {
-    return this._element.nativeElement;
-  }
-}
-
-@Directive({
-  selector: 'md-selection-list, mat-selection-list',
-})
-export class MdSelectionListCheckboxer {
-
-  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
-
-  constructor(public _element: ElementRef) { }
-}
-
-@Directive({
-  selector:'md-list-option',
-})
-export class MdListItemWithCheckbox implements AfterContentInit {
-
-  private onChangeBind: EventListener = this.onchange.bind(this);
-  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
-
-
-  @ContentChild(MdPseudoCheckbox) pp: MdPseudoCheckbox;
-  @ContentChild(MdCheckbox) lala: MdCheckbox;
-  constructor(private _element: ElementRef,
-              @Optional() public checkbox: MdCheckbox,
-              @Optional() public selectionList: MdSelectionListCheckboxer,
-              @Optional() private _list: MdList,
-              @Optional() public pCheckbox: MdPseudoCheckbox) { }
-
-
-  ngAfterContentInit() {
     if(this.pp != null) {
       console.log(this.pp);
       this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
       this.pp._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
       this.pp._elementRef.nativeElement.setAttribute('tabindex', '0');
-      //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
     }
 
     if(this.selectionList != null) {
@@ -359,6 +315,99 @@ export class MdListItemWithCheckbox implements AfterContentInit {
       }
     }
   }
+
+  /** Whether this list item should show a ripple effect when clicked.  */
+  isRippleEnabled() {
+    return !this.disableRipple && (this._isNavList || this._isSelectionList)
+      && !this._slist.disableRipple;
+  }
+
+  _handleFocus() {
+    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  _handleBlur() {
+    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  /** Retrieves the DOM element of the component host. */
+  _getHostElement(): HTMLElement {
+    return this._element.nativeElement;
+  }
+}
+
+@Directive({
+  selector: 'md-selection-list, mat-selection-list',
+})
+export class MdSelectionListCheckboxer {
+
+  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
+
+  constructor(public _element: ElementRef) { }
+}
+
+@Directive({
+  selector:'md-list-option',
+})
+export class MdListItemWithCheckbox {
+
+  // private onChangeBind: EventListener = this.onchange.bind(this);
+  // private onKeyDownBind: EventListener = this.onKeydown.bind(this);
+  //
+  // @ViewChild('autocheckbox') pp;
+  // @ContentChild(MdCheckbox) lala: MdCheckbox;
+  // constructor(private _element: ElementRef,
+  //             @Optional() public selectionList: MdSelectionListCheckboxer,
+  //             @Optional() private _list: MdList) { }
+  //
+  //
+  // ngAfterContentInit() {
+  //   if(this.pp != null) {
+  //     console.log('MdPseudoCheckbox is : ' + this.pp);
+  //     this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
+  //     this.pp._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
+  //     this.pp._elementRef.nativeElement.setAttribute('tabindex', '0');
+  //     //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
+  //   }
+  //
+  //   if(this.selectionList != null) {
+  //     console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
+  //   }
+  // }
+  //
+  // onchange(): void {
+  //   console.log('who changed: ' + this.pp);
+  //   console.log('checked or not: ' + this.pp.state);
+  //
+  //   if(this.pp.state == 'unchecked') {
+  //     this.pp.state = 'checked';
+  //     this.selectionList.checkedItems.select(this._element.nativeElement);
+  //   }else {
+  //     this.pp.state = 'unchecked';
+  //
+  //     this.selectionList.checkedItems.deselect(this._element.nativeElement);
+  //   }
+  //   console.log(this.selectionList.checkedItems);
+  //   console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
+  // }
+  //
+  // onKeydown(e: KeyboardEvent): void {
+  //   console.log('who onkeyDown: ' + this.pp);
+  //   if(e.keyCode === 32) {
+  //     let focusedElement = document.activeElement;
+  //     console.log(focusedElement === this.pp._elementRef.nativeElement);
+  //     if(focusedElement === this.pp._elementRef.nativeElement) {
+  //       if (this.pp.state == 'unchecked') {
+  //         this.pp.state = 'checked';
+  //         this.selectionList.checkedItems.select(this._element.nativeElement);
+  //       }else {
+  //         this.pp.state = 'unchecked';
+  //         this.selectionList.checkedItems.deselect(this._element.nativeElement);
+  //       }
+  //       console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
+  //     }
+  //   }
+  // }
 
 }
 
