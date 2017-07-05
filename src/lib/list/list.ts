@@ -221,10 +221,6 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
 
-  private onChangeBind: EventListener = this.onchange.bind(this);
-  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
-
-
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
    * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
@@ -244,7 +240,7 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
-  @ViewChild('autocheckbox') pp;
+  @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
