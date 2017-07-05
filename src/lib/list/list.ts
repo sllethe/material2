@@ -223,10 +223,6 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
 
-  private onChangeBind: EventListener = this.onchange.bind(this);
-  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
-
-
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
    * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
@@ -246,7 +242,7 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
-  @ViewChild('autocheckbox') pp;
+  @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -261,11 +257,9 @@ export class MdListOption implements AfterContentInit {
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
 
-    if(this.pp != null) {
-      console.log(this.pp);
-      this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
-      this.pp._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
-      this.pp._elementRef.nativeElement.setAttribute('tabindex', '0');
+    if(this.pCheckbox != null) {
+      console.log(this.pCheckbox);
+      this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
     }
 
     if(this.selectionList != null) {
@@ -274,14 +268,14 @@ export class MdListOption implements AfterContentInit {
   }
 
   onchange(): void {
-    console.log('who changed: ' + this.pp);
-    console.log('checked or not: ' + this.pp.state);
+    console.log('who changed: ' + this.pCheckbox);
+    console.log('checked or not: ' + this.pCheckbox.state);
 
-    if(this.pp.state == 'unchecked') {
-      this.pp.state = 'checked';
+    if(this.pCheckbox.state == 'unchecked') {
+      this.pCheckbox.state = 'checked';
       this.selectionList.checkedItems.select(this._element.nativeElement);
     }else {
-      this.pp.state = 'unchecked';
+      this.pCheckbox.state = 'unchecked';
 
       this.selectionList.checkedItems.deselect(this._element.nativeElement);
     }
@@ -290,16 +284,16 @@ export class MdListOption implements AfterContentInit {
   }
 
   onKeydown(e: KeyboardEvent): void {
-    console.log('who onkeyDown: ' + this.pp);
+    console.log('who onkeyDown: ' + this.pCheckbox);
     if(e.keyCode === 32) {
       let focusedElement = document.activeElement;
-      console.log(focusedElement === this.pp._elementRef.nativeElement);
-      if(focusedElement === this.pp._elementRef.nativeElement) {
-        if (this.pp.state == 'unchecked') {
-          this.pp.state = 'checked';
+      console.log(focusedElement === this.pCheckbox._elementRef.nativeElement);
+      if(focusedElement === this.pCheckbox._elementRef.nativeElement) {
+        if (this.pCheckbox.state == 'unchecked') {
+          this.pCheckbox.state = 'checked';
           this.selectionList.checkedItems.select(this._element.nativeElement);
         }else {
-          this.pp.state = 'unchecked';
+          this.pCheckbox.state = 'unchecked';
           this.selectionList.checkedItems.deselect(this._element.nativeElement);
         }
         console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
@@ -345,7 +339,7 @@ export class MdListItemWithCheckbox {
   // private onChangeBind: EventListener = this.onchange.bind(this);
   // private onKeyDownBind: EventListener = this.onKeydown.bind(this);
   //
-  // @ViewChild('autocheckbox') pp;
+  // @ViewChild('autocheckbox') pCheckbox;
   // @ContentChild(MdCheckbox) lala: MdCheckbox;
   // constructor(private _element: ElementRef,
   //             @Optional() public selectionList: MdSelectionListCheckboxer,
@@ -353,11 +347,11 @@ export class MdListItemWithCheckbox {
   //
   //
   // ngAfterContentInit() {
-  //   if(this.pp != null) {
-  //     console.log('MdPseudoCheckbox is : ' + this.pp);
-  //     this.pp._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
-  //     this.pp._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
-  //     this.pp._elementRef.nativeElement.setAttribute('tabindex', '0');
+  //   if(this.pCheckbox != null) {
+  //     console.log('MdPseudoCheckbox is : ' + this.pCheckbox);
+  //     this.pCheckbox._elementRef.nativeElement.addEventListener('click', this.onChangeBind, false);
+  //     this.pCheckbox._elementRef.nativeElement.addEventListener('keydown', this.onKeyDownBind, false);
+  //     this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
   //     //console.log(this.lala._elementRef.nativeElement.getAttribute('_checked'));
   //   }
   //
@@ -367,14 +361,14 @@ export class MdListItemWithCheckbox {
   // }
   //
   // onchange(): void {
-  //   console.log('who changed: ' + this.pp);
-  //   console.log('checked or not: ' + this.pp.state);
+  //   console.log('who changed: ' + this.pCheckbox);
+  //   console.log('checked or not: ' + this.pCheckbox.state);
   //
-  //   if(this.pp.state == 'unchecked') {
-  //     this.pp.state = 'checked';
+  //   if(this.pCheckbox.state == 'unchecked') {
+  //     this.pCheckbox.state = 'checked';
   //     this.selectionList.checkedItems.select(this._element.nativeElement);
   //   }else {
-  //     this.pp.state = 'unchecked';
+  //     this.pCheckbox.state = 'unchecked';
   //
   //     this.selectionList.checkedItems.deselect(this._element.nativeElement);
   //   }
@@ -383,16 +377,16 @@ export class MdListItemWithCheckbox {
   // }
   //
   // onKeydown(e: KeyboardEvent): void {
-  //   console.log('who onkeyDown: ' + this.pp);
+  //   console.log('who onkeyDown: ' + this.pCheckbox);
   //   if(e.keyCode === 32) {
   //     let focusedElement = document.activeElement;
-  //     console.log(focusedElement === this.pp._elementRef.nativeElement);
-  //     if(focusedElement === this.pp._elementRef.nativeElement) {
-  //       if (this.pp.state == 'unchecked') {
-  //         this.pp.state = 'checked';
+  //     console.log(focusedElement === this.pCheckbox._elementRef.nativeElement);
+  //     if(focusedElement === this.pCheckbox._elementRef.nativeElement) {
+  //       if (this.pCheckbox.state == 'unchecked') {
+  //         this.pCheckbox.state = 'checked';
   //         this.selectionList.checkedItems.select(this._element.nativeElement);
   //       }else {
-  //         this.pp.state = 'unchecked';
+  //         this.pCheckbox.state = 'unchecked';
   //         this.selectionList.checkedItems.deselect(this._element.nativeElement);
   //       }
   //       console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
