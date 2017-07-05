@@ -105,26 +105,22 @@
     <mat-selection-list id="selection-list-1">
       <md-list-option>
         <a md-line href="http://www.google.com">test 1</a>
-        <md-pseudo-checkbox id="checkb" > </md-pseudo-checkbox>
       </md-list-option>
       <md-list-option>
         <a md-line href="http://www.google.com">test 2</a>
-        <md-pseudo-checkbox id="checkb2"> </md-pseudo-checkbox>
       </md-list-option>
       <md-list-option>
         <a md-line href="http://www.google.com">test 3</a>
-        <md-pseudo-checkbox id="checkb3"> </md-pseudo-checkbox>
       </md-list-option>
       <md-list-option>
         <a md-line href="http://www.google.com">test 4</a>
-        <md-pseudo-checkbox id="checkb4"> </md-pseudo-checkbox>
       </md-list-option>
     </mat-selection-list>
 
     <md-selection-list dense id="selection-list-2">
       <md-list-option *ngFor="let link of links">
         <a md-line href="http://www.google.com">{{ link.name }}</a>
-        <md-pseudo-checkbox id="fake-checkb"></md-pseudo-checkbox>
+        <!--<md-pseudo-checkbox></md-pseudo-checkbox>-->
       </md-list-option>
     </md-selection-list>
 

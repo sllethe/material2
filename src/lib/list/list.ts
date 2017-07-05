@@ -212,7 +212,7 @@ export class MdListItem implements AfterContentInit {
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
   },
-  templateUrl: 'list-item.html',
+  templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None
 })
 export class MdListOption implements AfterContentInit {
@@ -220,6 +220,10 @@ export class MdListOption implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
+
+  private onChangeBind: EventListener = this.onchange.bind(this);
+  private onKeyDownBind: EventListener = this.onKeydown.bind(this);
+
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -240,18 +244,20 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
+  @ViewChild('autocheckbox') pp;
+
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               @Optional() private _slist: MdSelectionList,
               @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionList: MdSelectionListCssMatStyler) {
+              @Optional() selectionListStyler: MdSelectionListCssMatStyler,
+              @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
-    this._isSelectionList = !!selectionList;
+    this._isSelectionList = !!selectionListStyler;
   }
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
-  }
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
