@@ -243,6 +243,8 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
+  @Input() checkboxPosition = 'right';
+
   @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
