@@ -19,7 +19,6 @@ import {
   MdDividerCssMatStyler,
   MdListSubheaderCssMatStyler,
   MdSelectionListCssMatStyler,
-  MdListItemWithCheckbox,
   MdSelectionListCheckboxer,
   MdSelectionList,
   MdListOption,
@@ -42,7 +41,6 @@ import {MdCheckboxModule} from '../checkbox/index';
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
     MdSelectionListCssMatStyler,
-    MdListItemWithCheckbox,
     MdSelectionListCheckboxer,
     MdCheckboxModule,
     MdSelectionModule,
@@ -60,7 +58,6 @@ import {MdCheckboxModule} from '../checkbox/index';
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
     MdSelectionListCssMatStyler,
-    MdListItemWithCheckbox,
     MdSelectionListCheckboxer,
     MdSelectionList,
     MdListOption
