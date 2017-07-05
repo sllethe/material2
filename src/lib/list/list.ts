@@ -245,6 +245,8 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
+  @Input() checkboxPosition = 'right';
+
   @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
@@ -263,6 +265,11 @@ export class MdListOption implements AfterContentInit {
     if(this.pCheckbox != null) {
       console.log(this.pCheckbox);
       this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
+      if(this.checkboxPosition == 'right') {
+        this.pCheckbox._elementRef.nativeElement.style.float = 'right';
+      }else {
+        this.pCheckbox._elementRef.nativeElement.style.alignContent = 'left';
+      }
     }
 
     if(this.selectionList != null) {
