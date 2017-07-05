@@ -1,14 +1,12 @@
-<div class="mat-list-item-content">
+<div class="mat-list-item-content" >
   <div class="mat-list-item-ripple" md-ripple
        [mdRippleTrigger]="_getHostElement()"
        [mdRippleDisabled]="!isRippleEnabled()">
   </div>
 
-  <!--<div class="mat-list-text"><ng-content select="[md-line], [mat-line]"></ng-content></div>-->
-
-  <md-pseudo-checkbox #autocheckbox1 ></md-pseudo-checkbox>
+  <md-pseudo-checkbox [state]="isSelected ? 'checked' : 'unchecked'" #autocheckbox1></md-pseudo-checkbox>
   <div class="mat-list-text"><ng-content></ng-content></div>
-  <md-pseudo-checkbox #autocheckbox2 ></md-pseudo-checkbox>
+  <md-pseudo-checkbox [state]="isSelected ? 'checked' : 'unchecked'" #autocheckbox2></md-pseudo-checkbox>
 
 
 </div>
