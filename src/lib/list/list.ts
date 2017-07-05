@@ -215,6 +215,8 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
     '(blur)': '_handleBlur()',
     '(click)': 'onchange()',
     '(keydown)':'onKeydown($event)',
+    '[tabIndex]': 'disabled ? -1 : 0',
+    '[attr.aria-selected]': '',
 
   },
   templateUrl: 'list-option.html',
@@ -225,6 +227,7 @@ export class MdListOption implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
+  isSelected: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -270,13 +273,13 @@ export class MdListOption implements AfterContentInit {
       if(this.checkboxPosition == 'after') {
         this.pCheckbox = this.pCheckbox2;
         this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-        this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
-        console.log(this.pCheckbox);
+        //this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
+        //console.log(this.pCheckbox);
       }else {
         this.pCheckbox = this.pCheckbox1;
         this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
-        this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
-        console.log(this.pCheckbox);
+        //this.pCheckbox._elementRef.nativeElement.setAttribute('tabindex', '0');
+        //console.log(this.pCheckbox);
       }
     }
 
@@ -286,14 +289,12 @@ export class MdListOption implements AfterContentInit {
   }
 
   onchange(): void {
-    console.log('who changed: ' + this.pCheckbox);
-    console.log('checked or not: ' + this.pCheckbox.state);
-
-    if(this.pCheckbox.state == 'unchecked') {
-      this.pCheckbox.state = 'checked';
+    console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this.isSelected);
+    if(this.isSelected == false) {
+      this.isSelected = true;
       this.selectionList.checkedItems.select(this._element.nativeElement);
     }else {
-      this.pCheckbox.state = 'unchecked';
+      this.isSelected = false;
 
       this.selectionList.checkedItems.deselect(this._element.nativeElement);
     }
@@ -305,13 +306,14 @@ export class MdListOption implements AfterContentInit {
     console.log('who onkeyDown: ' + this.pCheckbox1);
     if(e.keyCode === 32) {
       let focusedElement = document.activeElement;
-      console.log(focusedElement === this.pCheckbox._elementRef.nativeElement);
-      if(focusedElement === this.pCheckbox._elementRef.nativeElement) {
-        if (this.pCheckbox.state == 'unchecked') {
-          this.pCheckbox.state = 'checked';
+      console.log(focusedElement === this._element.nativeElement);
+      if(focusedElement === this._element.nativeElement) {
+        if(this.isSelected == false) {
+          this.isSelected = true;
           this.selectionList.checkedItems.select(this._element.nativeElement);
         }else {
-          this.pCheckbox.state = 'unchecked';
+          this.isSelected = false;
+
           this.selectionList.checkedItems.deselect(this._element.nativeElement);
         }
         console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
