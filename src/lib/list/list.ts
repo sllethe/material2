@@ -19,9 +19,10 @@ import {
   Renderer2, ViewChild, ViewChildren,
   ViewEncapsulation
 } from '@angular/core';
-import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox} from '../core';
+import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
 import {MdCheckbox} from '../checkbox';
 import {MdCheckboxModule} from '../checkbox';
+//import {SelectionModel} from "@angular/material";
 
 
 
@@ -288,7 +289,7 @@ export class MdListOption implements AfterContentInit {
 })
 export class MdSelectionListCheckboxer {
 
-  checkedItemList: Array<HTMLElement> = new Array();
+  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
 
   constructor(public _element: ElementRef) { }
 }
@@ -331,15 +332,14 @@ export class MdListItemWithCheckbox implements AfterContentInit {
 
     if(this.pp.state == 'unchecked') {
       this.pp.state = 'checked';
-      this.selectionList.checkedItemList.push(this._element.nativeElement);
+      this.selectionList.checkedItems.select(this._element.nativeElement);
     }else {
       this.pp.state = 'unchecked';
-      let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
-      if(index != -1) {
-        this.selectionList.checkedItemList.splice(index, 1);
-      }
+
+      this.selectionList.checkedItems.deselect(this._element.nativeElement);
     }
-    console.log('current ListItems: ' + this.selectionList.checkedItemList);
+    console.log(this.selectionList.checkedItems);
+    console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
   }
 
   onKeydown(e: KeyboardEvent): void {
@@ -350,15 +350,12 @@ export class MdListItemWithCheckbox implements AfterContentInit {
       if(focusedElement === this.pp._elementRef.nativeElement) {
         if (this.pp.state == 'unchecked') {
           this.pp.state = 'checked';
-          this.selectionList.checkedItemList.push(this._element.nativeElement);
+          this.selectionList.checkedItems.select(this._element.nativeElement);
         }else {
           this.pp.state = 'unchecked';
-          let index: number = this.selectionList.checkedItemList.indexOf(this._element.nativeElement);
-          if(index != -1) {
-            this.selectionList.checkedItemList.splice(index, 1);
-          }
+          this.selectionList.checkedItems.deselect(this._element.nativeElement);
         }
-        console.log('current ListItems: ' + this.selectionList.checkedItemList);
+        console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
       }
     }
   }
