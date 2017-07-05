@@ -243,9 +243,13 @@ export class MdListOption implements AfterContentInit {
     }
   }
 
-  @Input() checkboxPosition = 'right';
+  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
-  @ViewChild('autocheckbox') pCheckbox;
+  @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  @ViewChild('autocheckbox1') pCheckbox1;
+  @ViewChild('autocheckbox2') pCheckbox2;
+  pCheckbox: MdPseudoCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,

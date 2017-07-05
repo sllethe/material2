@@ -103,11 +103,26 @@
     </md-nav-list>
 
     <mat-selection-list id="selection-list-1">
-      <md-list-option>
+      <md-list-option [checkboxPosition]="before">
        test 1
       </md-list-option>
-      <md-list-option>
+      <md-list-option [checkboxPosition]="before">
       test 2
+      </md-list-option>
+      <md-list-option [checkboxPosition]="before">
+        test 3
+      </md-list-option>
+      <md-list-option [checkboxPosition]="before">
+        test 4
+      </md-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list id="selection-list-3">
+      <md-list-option>
+        test 1
+      </md-list-option>
+      <md-list-option>
+        test 2
       </md-list-option>
       <md-list-option>
         test 3
