@@ -222,6 +222,9 @@ export class MdListItem implements AfterContentInit {
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
+    '(click)': 'onchange()',
+    '(keydown)':'onKeydown($event)',
+
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None
