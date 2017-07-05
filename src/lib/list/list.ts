@@ -213,6 +213,8 @@ export class MdListItem implements AfterContentInit {
     '(blur)': '_handleBlur()',
     '(click)': 'onchange()',
     '(keydown)':'onKeydown($event)',
+    '[tabIndex]': 'disabled ? -1 : 0',
+    '[attr.aria-selected]': '',
 
   },
   templateUrl: 'list-option.html',
@@ -223,6 +225,7 @@ export class MdListOption implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
+  isSelected: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are

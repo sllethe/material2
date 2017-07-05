@@ -9,7 +9,7 @@
 
   <md-pseudo-checkbox #autocheckbox1 ></md-pseudo-checkbox>
   <div class="mat-list-text"><ng-content></ng-content></div>
-  <md-pseudo-checkbox #autocheckbox2 ></md-pseudo-checkbox>
+  <md-pseudo-checkbox [state]="isSelected ? 'checked' : 'unchecked'" #autocheckbox2></md-pseudo-checkbox>
 
 
 </div>
