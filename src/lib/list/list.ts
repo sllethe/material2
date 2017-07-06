@@ -228,7 +228,6 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   isSelected: boolean = false;
-  public isBefore: boolean;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -239,15 +238,6 @@ export class MdListOption implements AfterContentInit {
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
-
-  @ContentChild(MdListAvatarCssMatStyler)
-  set _hasAvatar(avatar: MdListAvatarCssMatStyler) {
-    if (avatar != null) {
-      this._renderer.addClass(this._element.nativeElement, 'mat-list-item-avatar');
-    } else {
-      this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-avatar');
-    }
-  }
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
