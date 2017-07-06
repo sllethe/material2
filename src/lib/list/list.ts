@@ -19,10 +19,10 @@ import {
   Renderer2, ViewChild, ViewChildren,
   ViewEncapsulation
 } from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
 import {MdCheckbox} from '../checkbox';
 import {MdCheckboxModule} from '../checkbox';
-//import {SelectionModel} from "@angular/material";
 
 
 
@@ -237,6 +237,7 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   isSelected: boolean = false;
+  public isBefore: boolean;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -261,9 +262,10 @@ export class MdListOption implements AfterContentInit {
 
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
-  @ViewChild('autocheckbox1') pCheckbox1;
-  @ViewChild('autocheckbox2') pCheckbox2;
-  pCheckbox: MdPseudoCheckbox;
+  // @ViewChild('autocheckbox1') pCheckbox1;
+  // @ViewChild('autocheckbox2') pCheckbox2;
+  // pCheckbox: any;
+  @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -273,20 +275,34 @@ export class MdListOption implements AfterContentInit {
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
     this._isSelectionList = !!selectionListStyler;
+    // if(this.checkboxPosition == 'after') {
+    //   this.isBefore = false;
+    //   //this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
+    // }else {
+    //   this.isBefore = true;
+    //   //this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
+    // }
+
   }
+
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
 
-    if(this.pCheckbox1 != null) {
-      if(this.checkboxPosition == 'after') {
-        this.pCheckbox = this.pCheckbox2;
-        this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-      }else {
-        this.pCheckbox = this.pCheckbox1;
-        this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
+    // if(this.pCheckbox1 != null || this.pCheckbox2 != null) {
+    //   if(this.checkboxPosition == 'after') {
+    //     this.pCheckbox = this.pCheckbox2;
+    //     this.isBefore = false;
+    //     this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
+    //   }else {
+    //     this.pCheckbox = this.pCheckbox1;
+    //     this.isBefore = true;
+    //     this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
+    //   }
+    // }
+      if(this.pCheckbox != null) {
+        console.log(this.pCheckbox);
       }
-    }
 
     if(this.selectionList != null) {
       console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
@@ -308,7 +324,7 @@ export class MdListOption implements AfterContentInit {
   }
 
   onKeydown(e: KeyboardEvent): void {
-    console.log('who onkeyDown: ' + this.pCheckbox1);
+    console.log('who onkeyDown: ' + this.pCheckbox);
     if(e.keyCode === 32) {
       let focusedElement = document.activeElement;
       console.log(focusedElement === this._element.nativeElement);

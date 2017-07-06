@@ -8,6 +8,7 @@
 
 import {NgModule} from '@angular/core';
 import {MdLineModule, MdRippleModule, MdCommonModule, MdSelectionModule} from '../core';
+import {CommonModule} from '@angular/common';
 import {
   MdList,
   MdListItem,
@@ -27,7 +28,7 @@ import {MdCheckboxModule} from '../checkbox/index';
 
 
 @NgModule({
-  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdCheckboxModule, MdSelectionModule],
+  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdCheckboxModule, MdSelectionModule,CommonModule],
   exports: [
     MdList,
     MdListItem,
