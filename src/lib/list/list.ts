@@ -265,14 +265,6 @@ export class MdListOption implements AfterContentInit {
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
     this._isSelectionList = !!selectionListStyler;
-    // if(this.checkboxPosition == 'after') {
-    //   this.isBefore = false;
-    //   //this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-    // }else {
-    //   this.isBefore = true;
-    //   //this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
-    // }
-
   }
 
 
