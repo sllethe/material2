@@ -43,6 +43,19 @@ $mat-dense-list-icon-size: 20px;
     position: relative;
   }
 
+  .mat-list-item-content-reverse {
+    display: flex;
+    //flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    height: $base-height;
+    padding: 0 $mat-list-side-padding;
+    position: relative;
+    flex-direction: row-reverse;
+    -webkit-justify-content: space-around; /* Safari */
+    justify-content: space-around;
+  }
+
   .mat-list-item-ripple {
     position: absolute;
     left: 0;
@@ -56,22 +69,22 @@ $mat-dense-list-icon-size: 20px;
     pointer-events: none;
   }
 
-  &.mat-list-item-avatar .mat-list-item-content {
+  &.mat-list-item-avatar .mat-list-item-content{
     height: $avatar-height;
   }
 
-  &.mat-2-line .mat-list-item-content {
+  &.mat-2-line .mat-list-item-content .mat-list-item-content-reverse {
     height: $two-line-height;
   }
 
 
-  &.mat-3-line .mat-list-item-content {
+  &.mat-3-line .mat-list-item-content .mat-list-item-content-reverse {
     height: $three-line-height;
   }
 
   // list items with more than 3 lines should expand to match
   // the height of its contained text
-  &.mat-multi-line .mat-list-item-content {
+  &.mat-multi-line .mat-list-item-content .mat-list-item-content-reverse{
     height: 100%;
     padding: 8px $mat-list-side-padding;
   }
@@ -201,9 +214,24 @@ $mat-dense-list-icon-size: 20px;
       outline: none;
     }
   }
+
+  .mat-list-item-content-reverse {
+    cursor: pointer;
+
+    &:hover, &.mat-list-item-focus {
+      outline: none;
+    }
+  }
 }
 
 .mat-selection-list-checkbox {
   width: 20px;
   height: 20px;
+}
+
+.mat-list-item-content-revert {
+  display: flex;
+  flex-direction: row-reverse;
+  -webkit-justify-content: space-around; /* Safari */
+  justify-content: space-around;
 }
