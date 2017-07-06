@@ -266,38 +266,11 @@ export class MdListOption implements AfterContentInit {
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
     this._isSelectionList = !!selectionListStyler;
-    // if(this.checkboxPosition == 'after') {
-    //   this.isBefore = false;
-    //   //this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-    // }else {
-    //   this.isBefore = true;
-    //   //this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
-    // }
-
   }
 
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
-
-    // if(this.pCheckbox1 != null || this.pCheckbox2 != null) {
-    //   if(this.checkboxPosition == 'after') {
-    //     this.pCheckbox = this.pCheckbox2;
-    //     this.isBefore = false;
-    //     this.pCheckbox1._elementRef.nativeElement.style.display = 'none';
-    //   }else {
-    //     this.pCheckbox = this.pCheckbox1;
-    //     this.isBefore = true;
-    //     this.pCheckbox2._elementRef.nativeElement.style.display = 'none';
-    //   }
-    // }
-      if(this.pCheckbox != null) {
-        console.log(this.pCheckbox);
-      }
-
-    if(this.selectionList != null) {
-      console.log('this.selectionList: ' + this.selectionList._element.nativeElement.getAttribute('id'));
-    }
   }
 
   onchange(): void {
