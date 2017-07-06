@@ -59,7 +59,7 @@
   }
 
   // Dense list
-  .mat-list[dense], .mat-nav-list[dense], mat-selection-list[dense] {
+  .mat-list[dense], .mat-nav-list[dense], .mat-selection-list[dense] {
     .mat-list-item {
       font-size: mat-font-size($config, caption);
       @include mat-line-base(mat-font-size($config, caption));
