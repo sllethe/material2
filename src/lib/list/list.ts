@@ -240,10 +240,9 @@ export class MdListOption implements AfterContentInit {
               private _element: ElementRef,
               @Optional() private _slist: MdSelectionList,
               @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionListStyler: MdSelectionList,
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
-    this._isSelectionList = !!selectionListStyler;
+    this._isSelectionList = !!_slist;
   }
 
 
