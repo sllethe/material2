@@ -1,5 +1,4 @@
-<div [ngClass]="(checkboxPosition == 'before')?'mat-list-item-content' : 'mat-list-item-content-reverse'" >
-<!--<div class="mat-list-item-content">-->
+<div class="mat-list-item-content"  [class.mat-list-item-content-reverse]="checkboxPosition == 'after'">
   <div class="mat-list-item-ripple" md-ripple
        [mdRippleTrigger]="_getHostElement()"
        [mdRippleDisabled]="!isRippleEnabled()">
@@ -9,4 +8,3 @@
   <div class="mat-list-text"><ng-content></ng-content></div>
 
 </div>
-
