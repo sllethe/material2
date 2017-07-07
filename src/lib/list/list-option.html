@@ -1,0 +1,11 @@
+<div [ngClass]="(checkboxPosition == 'before')?'mat-list-item-content' : 'mat-list-item-content-reverse'" >
+  <!--<div class="mat-list-item-content">-->
+  <div class="mat-list-item-ripple" md-ripple
+       [mdRippleTrigger]="_getHostElement()"
+       [mdRippleDisabled]="!isRippleEnabled()">
+  </div>
+
+  <md-pseudo-checkbox [state]="isSelected ? 'checked' : 'unchecked'" #autocheckbox ></md-pseudo-checkbox>
+  <div class="mat-list-text"><ng-content></ng-content></div>
+
+</div>
