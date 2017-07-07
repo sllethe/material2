@@ -128,20 +128,26 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     }
 
     attach() {
-        //this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
+        // this.upperScrollableContainer.addEventListener('scroll', this._onScrollBind, false);
 
-        //this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
+        // this.upperScrollableContainer.addEventListener('resize', this._onResizeBind, false);
 
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
-        //this.upperScrollableContainer.addEventListener('touchmove', this._onTouchMoveBind, false);
+        // this.upperScrollableContainer.addEventListener('touchmove',this._onTouchMoveBind, false);
 
-      Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5).subscribe(() => this.defineRestrictionsAndStick());
-      //Observable.fromEvent(this.upperScrollableContainer, 'scroll').throttleTime(150).subscribe(() => this.defineRestrictionsAndStick());
-      //Observable.fromEvent(this.upperScrollableContainer, 'scroll').subscribe(() => this.defineRestrictionsAndStick());
+      Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
+        .subscribe(() => this.defineRestrictionsAndStick());
 
-      Observable.fromEvent(this.upperScrollableContainer, 'touchmove').subscribe(() => this.defineRestrictionsAndStick());
+      // Observable.fromEvent(this.upperScrollableContainer, 'scroll').throttleTime(150).
+      // subscribe(() => this.defineRestrictionsAndStick());
+      // Observable.fromEvent(this.upperScrollableContainer, 'scroll').
+      // subscribe(() => this.defineRestrictionsAndStick());
 
-      Observable.fromEvent(this.upperScrollableContainer, 'resize').subscribe(() => this.onResize());
+      Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
+        .subscribe(() => this.defineRestrictionsAndStick());
+
+      Observable.fromEvent(this.upperScrollableContainer, 'resize')
+        .subscribe(() => this.onResize());
     }
 
     onScroll(): void {
