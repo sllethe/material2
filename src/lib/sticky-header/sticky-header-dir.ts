@@ -135,7 +135,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         // Have to add a 'onTouchMove' listener to make sticky header work on mobile phones
         // this.upperScrollableContainer.addEventListener('touchmove',this._onTouchMoveBind, false);
 
-      Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
+      // Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
+      //   .subscribe(() => this.defineRestrictionsAndStick());
+      Observable.fromEvent(this.upperScrollableContainer, 'scroll')
         .subscribe(() => this.defineRestrictionsAndStick());
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').throttleTime(150).
@@ -208,6 +210,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.element.classList.remove(STICK_END_CLASS);
         this.element.classList.add(STICK_START_CLASS);
 
+        // this.element.style.position = 'sticky';
+        // this.element.style.top = '0px';
+
         /**
          * Have to add the translate3d function for the sticky element's css style.
          * Because iPhone and iPad's browser is using its owning rendering engine. And
@@ -244,7 +249,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
           this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
           this.upperScrollableContainer.offsetLeft + 'px', 'auto',
           this._scrollingWidth + 'px');
-        //Object.assign(this.element.style, stickyCss);
+        // Object.assign(this.element.style, stickyCss);
         extendObject(this.element.style, stickyCss2);
     }
 
