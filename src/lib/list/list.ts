@@ -57,7 +57,8 @@ export class MdList extends _MdListMixinBase implements CanDisableRipple {}
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
-  host: {'role': 'listbox'},
+  host: {'role': 'listbox',
+    'class': 'mat-selection-list'},
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None
@@ -93,14 +94,6 @@ export class MdListCssMatStyler {}
   host: {'class': 'mat-nav-list'}
 })
 export class MdNavListCssMatStyler {}
-
-/////////////////////////////////////////////////////////////
-@Directive({
-  selector: 'md-selection-list, mat-selection-list',
-  host: {'class': 'mat-selection-list'}
-})
-export class MdSelectionListCssMatStyler {}
-///////////////////////////////////////////////////////////////
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -159,7 +152,6 @@ export class MdListSubheaderCssMatStyler {}
 export class MdListItem extends _MdListItemMixinBase implements AfterContentInit, CanDisableRipple {
   private _lineSetter: MdLineSetter;
   private _isNavList: boolean = false;
-  private _isSelectionList: boolean = false;
 
   @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
@@ -178,7 +170,6 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
               @Optional() navList: MdNavListCssMatStyler) {
     super();
     this._isNavList = !!navList;
-    this._isSelectionList = !!selectionList;
   }
 
   ngAfterContentInit() {
@@ -187,7 +178,7 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && (this._isNavList || this._isSelectionList)
+    return !this.disableRipple && (this._isNavList)
       && !this._list.disableRipple;
   }
 
@@ -252,7 +243,7 @@ export class MdListOption implements AfterContentInit {
               private _element: ElementRef,
               @Optional() private _slist: MdSelectionList,
               @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionListStyler: MdSelectionListCssMatStyler,
+              @Optional() selectionListStyler: MdSelectionList,
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
     this._isSelectionList = !!selectionListStyler;
