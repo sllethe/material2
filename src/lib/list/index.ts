@@ -19,7 +19,6 @@ import {
   MdNavListCssMatStyler,
   MdDividerCssMatStyler,
   MdListSubheaderCssMatStyler,
-  MdSelectionListCssMatStyler,
   MdSelectionListCheckboxer,
   MdSelectionList,
   MdListOption,
@@ -28,7 +27,7 @@ import {MdCheckboxModule} from '../checkbox/index';
 
 
 @NgModule({
-  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdCheckboxModule, MdSelectionModule,CommonModule],
+  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdCheckboxModule, MdSelectionModule, CommonModule],
   exports: [
     MdList,
     MdListItem,
@@ -41,7 +40,6 @@ import {MdCheckboxModule} from '../checkbox/index';
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
-    MdSelectionListCssMatStyler,
     MdSelectionListCheckboxer,
     MdCheckboxModule,
     MdSelectionModule,
@@ -58,7 +56,6 @@ import {MdCheckboxModule} from '../checkbox/index';
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
-    MdSelectionListCssMatStyler,
     MdSelectionListCheckboxer,
     MdSelectionList,
     MdListOption
