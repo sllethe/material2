@@ -100,5 +100,43 @@
         </button>
       </md-list-item>
     </md-nav-list>
+
+    <mat-selection-list id="selection-list-1">
+      <md-list-option checkboxPosition="before">
+        test 1
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        test 2
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        test 3
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        test 4
+      </md-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list id="selection-list-3">
+      <md-list-option>
+        test 1
+      </md-list-option>
+      <md-list-option>
+        test 2
+      </md-list-option>
+      <md-list-option>
+        test 3
+      </md-list-option>
+      <md-list-option>
+        test 4
+      </md-list-option>
+    </mat-selection-list>
+
+    <md-selection-list dense id="selection-list-2">
+      <md-list-option *ngFor="let link of links">
+        {{ link.name }}
+        <!--<md-pseudo-checkbox></md-pseudo-checkbox>-->
+      </md-list-option>
+    </md-selection-list>
+
   </div>
 </div>
