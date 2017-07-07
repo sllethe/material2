@@ -86,14 +86,6 @@ export class MdListCssMatStyler {}
 })
 export class MdNavListCssMatStyler {}
 
-/////////////////////////////////////////////////////////////
-@Directive({
-  selector: 'md-selection-list, mat-selection-list',
-  host: {'class': 'mat-selection-list'}
-})
-export class MdSelectionListCssMatStyler {}
-///////////////////////////////////////////////////////////////
-
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
@@ -150,7 +142,6 @@ export class MdListItem implements AfterContentInit {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
-  private _isSelectionList: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -174,10 +165,8 @@ export class MdListItem implements AfterContentInit {
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
               @Optional() private _list: MdList,
-              @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionList: MdSelectionListCssMatStyler) {
+              @Optional() navList: MdNavListCssMatStyler) {
     this._isNavList = !!navList;
-    this._isSelectionList = !!selectionList;
   }
 
   ngAfterContentInit() {
@@ -251,7 +240,7 @@ export class MdListOption implements AfterContentInit {
               private _element: ElementRef,
               @Optional() private _slist: MdSelectionList,
               @Optional() navList: MdNavListCssMatStyler,
-              @Optional() selectionListStyler: MdSelectionListCssMatStyler,
+              @Optional() selectionListStyler: MdSelectionList,
               @Optional() public selectionList: MdSelectionListCheckboxer) {
     this._isNavList = !!navList;
     this._isSelectionList = !!selectionListStyler;
