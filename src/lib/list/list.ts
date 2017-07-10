@@ -227,6 +227,7 @@ export class MdListOption implements AfterContentInit {
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
+  private _value: any;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -243,9 +244,17 @@ export class MdListOption implements AfterContentInit {
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the checkbox is disabled. */
-  @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled() {
+    return this._disabled;
+  }
+  @Input('disabled')
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+
+  @Input('value')
+  get value() { return this._value; }
+  set value( val: any) { this._value = coerceBooleanProperty(val); }
 
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
@@ -272,23 +281,26 @@ export class MdListOption implements AfterContentInit {
 
   onchange(): void {
     console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this.isSelected);
-    if(this.isSelected == false) {
-      this.isSelected = true;
-      this._selected = true;
-      this.selectionList.checkedItems.select(this._element.nativeElement);
-    }else {
-      this.isSelected = false;
-      this._selected = false;
+    if(this._disabled == false) {
+      if(this.isSelected == false) {
+        this.isSelected = true;
+        this._selected = true;
+        this.selectionList.checkedItems.select(this._element.nativeElement);
+      }else {
+        this.isSelected = false;
+        this._selected = false;
 
-      this.selectionList.checkedItems.deselect(this._element.nativeElement);
+        this.selectionList.checkedItems.deselect(this._element.nativeElement);
+      }
     }
+
     console.log(this.selectionList.checkedItems);
     console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
   }
 
   onKeydown(e: KeyboardEvent): void {
     console.log('who onkeyDown: ' + this.pCheckbox);
-    if(e.keyCode === 32) {
+    if(e.keyCode === 32 && this._disabled == false) {
       let focusedElement = document.activeElement;
       console.log(focusedElement === this._element.nativeElement);
       if(focusedElement === this._element.nativeElement) {
