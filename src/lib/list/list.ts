@@ -224,6 +224,7 @@ export class MdListOption implements AfterContentInit {
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
+  private _value: any;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -240,9 +241,17 @@ export class MdListOption implements AfterContentInit {
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the checkbox is disabled. */
-  @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  get disabled() {
+    return this._disabled;
+  }
+  @Input('disabled')
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+
+  @Input('value')
+  get value() { return this._value; }
+  set value( val: any) { this._value = coerceBooleanProperty(val); }
 
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
