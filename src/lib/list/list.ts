@@ -193,6 +193,11 @@ export class MdListItem implements AfterContentInit {
   }
 }
 
+/**
+ * Component for list-options of selection-list. Each list-option can automatically
+ * generate a checkbox and can put current item into the selectionModel of selection-list
+ * if the current item is checked.
+ */
 @Component({
   moduleId: module.id,
   selector: 'md-list-option',
