@@ -209,8 +209,8 @@ export class MdListItem implements AfterContentInit {
     '(click)': 'onchange()',
     '(keydown)':'onKeydown($event)',
     '[tabIndex]': 'disabled ? -1 : 0',
-    '[attr.aria-selected]': '',
-
+    '[attr.aria-selected]': 'selected.toString()',
+    '[attr.aria-disabled]': 'disabled.toString()',
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None
@@ -221,6 +221,9 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   isSelected: boolean = false;
+  private _selected: boolean = false;
+  /** Whether the checkbox is disabled. */
+  private _disabled: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -235,6 +238,11 @@ export class MdListOption implements AfterContentInit {
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
   @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  /** Whether the checkbox is disabled. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
