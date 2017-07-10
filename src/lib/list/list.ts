@@ -206,7 +206,7 @@ export class MdListItem implements AfterContentInit {
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
-    '(click)': 'onchange()',
+    '(click)': 'toggle()',
     '(keydown)':'onKeydown($event)',
     '[tabIndex]': 'disabled ? -1 : 0',
     '[attr.aria-selected]': 'selected.toString()',
