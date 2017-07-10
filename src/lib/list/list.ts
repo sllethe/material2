@@ -68,7 +68,7 @@ export class MdList {
 export class MdSelectionList {
   private _disableRipple: boolean = false;
 
-  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
+  selectedOptions: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
 
   /**
    * Whether the ripple effect should be disabled on the list-items or not.
@@ -290,16 +290,16 @@ export class MdListOption implements AfterContentInit {
     if(this._disabled == false) {
       if(this._selected == false) {
         this._selected = true;
-        this.selectionList.checkedItems.select(this._element.nativeElement);
+        this.selectionList.selectedOptions.select(this._element.nativeElement);
       }else {
         this._selected = false;
 
-        this.selectionList.checkedItems.deselect(this._element.nativeElement);
+        this.selectionList.selectedOptions.deselect(this._element.nativeElement);
       }
     }
 
-    console.log(this.selectionList.checkedItems);
-    console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
+    console.log(this.selectionList.selectedOptions);
+    console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
   }
 
   onKeydown(e: KeyboardEvent): void {
@@ -310,13 +310,13 @@ export class MdListOption implements AfterContentInit {
       if(focusedElement === this._element.nativeElement) {
         if(this._selected == false) {
           this._selected = true;
-          this.selectionList.checkedItems.select(this._element.nativeElement);
+          this.selectionList.selectedOptions.select(this._element.nativeElement);
         }else {
           this._selected = false;
 
-          this.selectionList.checkedItems.deselect(this._element.nativeElement);
+          this.selectionList.selectedOptions.deselect(this._element.nativeElement);
         }
-        console.log('current selectionModule: ' + this.selectionList.checkedItems.selected.length);
+        console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
       }
     }
   }
