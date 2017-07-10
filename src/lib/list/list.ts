@@ -263,9 +263,7 @@ export class MdListOption implements AfterContentInit {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
-              @Optional() public selectionList: MdSelectionList,
-              @Optional() navList: MdNavListCssMatStyler,) {
-    this._isNavList = !!navList;
+              @Optional() public selectionList: MdSelectionList,) {
     this._isSelectionList = !!selectionList;
   }
 
@@ -275,7 +273,7 @@ export class MdListOption implements AfterContentInit {
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && (this._isNavList || this._isSelectionList)
+    return !this.disableRipple && this._isSelectionList
       && !this.selectionList.disableRipple;
   }
 
