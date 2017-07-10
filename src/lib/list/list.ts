@@ -223,7 +223,6 @@ export class MdListItem extends _MdListItemMixinBase implements AfterContentInit
 export class MdListOption implements AfterContentInit {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
-  private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
@@ -280,12 +279,10 @@ export class MdListOption implements AfterContentInit {
   toggle(): void {
    // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
     if(this._disabled == false) {
-      if(this._selected == false) {
-        this._selected = true;
+      this._selected = !this._selected;
+      if(this._selected == true) {
         this.selectionList.selectedOptions.select(this);
       }else {
-        this._selected = false;
-
         this.selectionList.selectedOptions.deselect(this);
       }
     }
