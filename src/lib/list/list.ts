@@ -68,6 +68,8 @@ export class MdList {
 export class MdSelectionList {
   private _disableRipple: boolean = false;
 
+  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
+
   /**
    * Whether the ripple effect should be disabled on the list-items or not.
    * This flag only has an effect for `md-nav-list` components.
@@ -231,7 +233,6 @@ export class MdListOption implements AfterContentInit {
   private _disableRipple: boolean = false;
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
-  isSelected: boolean = false;
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
@@ -264,6 +265,10 @@ export class MdListOption implements AfterContentInit {
   get value() { return this._value; }
   set value( val: any) { this._value = coerceBooleanProperty(val); }
 
+  @Input('selected')
+  get selected() { return this._selected; }
+  set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
+
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
   // pCheckbox: any;
@@ -271,11 +276,10 @@ export class MdListOption implements AfterContentInit {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
-              @Optional() private _slist: MdSelectionList,
-              @Optional() navList: MdNavListCssMatStyler,
-              @Optional() public selectionList: MdSelectionListCheckboxer) {
+              @Optional() public selectionList: MdSelectionList,
+              @Optional() navList: MdNavListCssMatStyler,) {
     this._isNavList = !!navList;
-    this._isSelectionList = !!_slist;
+    this._isSelectionList = !!selectionList;
   }
 
 
@@ -283,19 +287,13 @@ export class MdListOption implements AfterContentInit {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
   }
 
-  get selected(): boolean {
-    return this._selected;
-  }
-
   onchange(): void {
-    console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this.isSelected);
+    console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
     if(this._disabled == false) {
-      if(this.isSelected == false) {
-        this.isSelected = true;
+      if(this._selected == false) {
         this._selected = true;
         this.selectionList.checkedItems.select(this._element.nativeElement);
       }else {
-        this.isSelected = false;
         this._selected = false;
 
         this.selectionList.checkedItems.deselect(this._element.nativeElement);
@@ -312,12 +310,10 @@ export class MdListOption implements AfterContentInit {
       let focusedElement = document.activeElement;
       console.log(focusedElement === this._element.nativeElement);
       if(focusedElement === this._element.nativeElement) {
-        if(this.isSelected == false) {
-          this.isSelected = true;
+        if(this._selected == false) {
           this._selected = true;
           this.selectionList.checkedItems.select(this._element.nativeElement);
         }else {
-          this.isSelected = false;
           this._selected = false;
 
           this.selectionList.checkedItems.deselect(this._element.nativeElement);
@@ -330,7 +326,7 @@ export class MdListOption implements AfterContentInit {
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
     return !this.disableRipple && (this._isNavList || this._isSelectionList)
-      && !this._slist.disableRipple;
+      && !this.selectionList.disableRipple;
   }
 
   _handleFocus() {
@@ -347,13 +343,4 @@ export class MdListOption implements AfterContentInit {
   }
 }
 
-@Directive({
-  selector: 'md-selection-list, mat-selection-list',
-})
-export class MdSelectionListCheckboxer {
-
-  checkedItems: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
-
-  constructor(public _element: ElementRef) { }
-}
 
