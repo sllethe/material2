@@ -218,7 +218,6 @@ export class MdListItem implements AfterContentInit {
 export class MdListOption implements AfterContentInit {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
-  private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
