@@ -220,8 +220,8 @@ export class MdListItem implements AfterContentInit {
     '(click)': 'onchange()',
     '(keydown)':'onKeydown($event)',
     '[tabIndex]': 'disabled ? -1 : 0',
-    '[attr.aria-selected]': '',
-
+    '[attr.aria-selected]': 'selected.toString()',
+    '[attr.aria-disabled]': 'disabled.toString()',
   },
   templateUrl: 'list-option.html',
   encapsulation: ViewEncapsulation.None
@@ -232,6 +232,9 @@ export class MdListOption implements AfterContentInit {
   private _isNavList: boolean = false;
   private _isSelectionList: boolean = false;
   isSelected: boolean = false;
+  private _selected: boolean = false;
+  /** Whether the checkbox is disabled. */
+  private _disabled: boolean = false;
 
   /**
    * Whether the ripple effect on click should be disabled. This applies only to list items that are
@@ -246,6 +249,11 @@ export class MdListOption implements AfterContentInit {
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
   @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  /** Whether the checkbox is disabled. */
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
@@ -266,13 +274,19 @@ export class MdListOption implements AfterContentInit {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
   }
 
+  get selected(): boolean {
+    return this._selected;
+  }
+
   onchange(): void {
     console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this.isSelected);
     if(this.isSelected == false) {
       this.isSelected = true;
+      this._selected = true;
       this.selectionList.checkedItems.select(this._element.nativeElement);
     }else {
       this.isSelected = false;
+      this._selected = false;
 
       this.selectionList.checkedItems.deselect(this._element.nativeElement);
     }
@@ -288,9 +302,11 @@ export class MdListOption implements AfterContentInit {
       if(focusedElement === this._element.nativeElement) {
         if(this.isSelected == false) {
           this.isSelected = true;
+          this._selected = true;
           this.selectionList.checkedItems.select(this._element.nativeElement);
         }else {
           this.isSelected = false;
+          this._selected = false;
 
           this.selectionList.checkedItems.deselect(this._element.nativeElement);
         }
