@@ -68,7 +68,7 @@ export class MdList {
 export class MdSelectionList {
   private _disableRipple: boolean = false;
 
-  selectedOptions: SelectionModel<HTMLElement> = new SelectionModel<HTMLElement>(true);
+  selectedOptions: SelectionModel<any> = new SelectionModel<any>(true);
 
   /**
    * Whether the ripple effect should be disabled on the list-items or not.
@@ -272,7 +272,7 @@ export class MdListOption implements AfterContentInit {
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
   // pCheckbox: any;
-  @ViewChild('autocheckbox') pCheckbox;
+ // @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
@@ -286,15 +286,15 @@ export class MdListOption implements AfterContentInit {
   }
 
   toggle(): void {
-    console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
+   // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
     if(this._disabled == false) {
       if(this._selected == false) {
         this._selected = true;
-        this.selectionList.selectedOptions.select(this._element.nativeElement);
+        this.selectionList.selectedOptions.select(this);
       }else {
         this._selected = false;
 
-        this.selectionList.selectedOptions.deselect(this._element.nativeElement);
+        this.selectionList.selectedOptions.deselect(this);
       }
     }
 
@@ -303,18 +303,18 @@ export class MdListOption implements AfterContentInit {
   }
 
   onKeydown(e: KeyboardEvent): void {
-    console.log('who onkeyDown: ' + this.pCheckbox);
+   // console.log('who onkeyDown: ' + this.pCheckbox);
     if(e.keyCode === 32 && this._disabled == false) {
       let focusedElement = document.activeElement;
       console.log(focusedElement === this._element.nativeElement);
       if(focusedElement === this._element.nativeElement) {
         if(this._selected == false) {
           this._selected = true;
-          this.selectionList.selectedOptions.select(this._element.nativeElement);
+          this.selectionList.selectedOptions.select(this);
         }else {
           this._selected = false;
 
-          this.selectionList.selectedOptions.deselect(this._element.nativeElement);
+          this.selectionList.selectedOptions.deselect(this);
         }
         console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
       }
