@@ -259,7 +259,7 @@ export class MdListOption implements AfterContentInit {
   // @ViewChild('autocheckbox1') pCheckbox1;
   // @ViewChild('autocheckbox2') pCheckbox2;
   // pCheckbox: any;
-  @ViewChild('autocheckbox') pCheckbox;
+ // @ViewChild('autocheckbox') pCheckbox;
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
