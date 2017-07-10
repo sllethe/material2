@@ -219,7 +219,7 @@ export class MdListItem implements AfterContentInit {
     'class': 'mat-list-item',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
-    '(click)': 'onchange()',
+    '(click)': 'toggle()',
     '(keydown)':'onKeydown($event)',
     '[tabIndex]': 'disabled ? -1 : 0',
     '[attr.aria-selected]': 'selected.toString()',
@@ -285,7 +285,7 @@ export class MdListOption implements AfterContentInit {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
   }
 
-  onchange(): void {
+  toggle(): void {
     console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
     if(this._disabled == false) {
       if(this._selected == false) {
