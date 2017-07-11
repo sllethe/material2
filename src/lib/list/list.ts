@@ -193,48 +193,9 @@ export class MdListItem implements AfterContentInit {
   }
 }
 
-/**
- * Component for list-options of selection-list. Each list-option can automatically
- * generate a checkbox and can put current item into the selectionModel of selection-list
- * if the current item is checked.
- */
-@Component({
-  moduleId: module.id,
-  selector: 'md-list-option',
-  host: {
-    'role': 'option',
-    'class': 'mat-list-item',
-    '(focus)': '_handleFocus()',
-    '(blur)': '_handleBlur()',
-    '(click)': 'toggle()',
-    '(keydown)':'onKeydown($event)',
-    '[tabIndex]': 'disabled ? -1 : 0',
-    '[attr.aria-selected]': 'selected.toString()',
-    '[attr.aria-disabled]': 'disabled.toString()',
-  },
-  templateUrl: 'list-option.html',
-  encapsulation: ViewEncapsulation.None
-})
-export class MdListOption implements AfterContentInit {
-  private _lineSetter: MdLineSetter;
-  private _disableRipple: boolean = false;
-  private _isSelectionList: boolean = false;
-  private _selected: boolean = false;
-  /** Whether the checkbox is disabled. */
-  private _disabled: boolean = false;
-  private _value: any;
 
-  /**
-   * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
-  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
 
-  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
 
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
