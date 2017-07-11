@@ -17,12 +17,20 @@ import {
   Optional,
   QueryList,
   Renderer2, ViewChild, ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
+import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdCheckbox} from '../checkbox';
 import {MdCheckboxModule} from '../checkbox';
+import {Subscription} from 'rxjs/Subscription';
+import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
+import {Focusable} from '../core/a11y/focus-key-manager';
 
 
 
@@ -56,18 +64,196 @@ export class MdList {
 }
 
 
+
+export interface MdSelectionListOptionEvent {
+  option: MdListOption;
+}
+
+/**
+ * Component for list-options of selection-list. Each list-option can automatically
+ * generate a checkbox and can put current item into the selectionModel of selection-list
+ * if the current item is checked.
+ */
+@Component({
+  moduleId: module.id,
+  selector: 'md-list-option',
+  host: {
+    'role': 'option',
+    'class': 'mat-list-item',
+    '(focus)': '_handleFocus()',
+    '(blur)': '_handleBlur()',
+    '(click)': 'toggle()',
+    // '(keydown)':'onKeydown($event)',
+    '[tabIndex]': 'disabled ? -1 : 0',
+    '[attr.aria-selected]': 'selected.toString()',
+    '[attr.aria-disabled]': 'disabled.toString()',
+  },
+  templateUrl: 'list-option.html',
+  encapsulation: ViewEncapsulation.None
+})
+export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
+  private _lineSetter: MdLineSetter;
+  private _disableRipple: boolean = false;
+  private _isSelectionList: boolean = false;
+  private _selected: boolean = false;
+  /** Whether the checkbox is disabled. */
+  private _disabled: boolean = false;
+  private _value: any;
+
+  /** Whether the option has focus. */
+  _hasFocus: boolean = false;
+
+  /**
+   * Whether the ripple effect on click should be disabled. This applies only to list items that are
+   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
+   */
+  @Input()
+  get disableRipple() { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+
+  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
+
+  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
+
+  @Input() checkboxPosition: 'before' | 'after' = 'after';
+
+  /** Whether the checkbox is disabled. */
+  get disabled() {
+    return this._disabled;
+  }
+  @Input('disabled')
+  set disabled(value: any) {
+    this._disabled = coerceBooleanProperty(value);
+  }
+
+  @Input('value')
+  get value() { return this._value; }
+  set value( val: any) { this._value = coerceBooleanProperty(val); }
+
+  @Input('selected')
+  get selected() { return this._selected; }
+  set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
+
+  /** Emitted when the chip is focused. */
+  onFocus = new EventEmitter<MdSelectionListOptionEvent>();
+
+  /** Emitted when the chip is selected. */
+  @Output() select = new EventEmitter<MdSelectionListOptionEvent>();
+
+  /** Emitted when the chip is deselected. */
+  @Output() deselect = new EventEmitter<MdSelectionListOptionEvent>();
+
+  /** Emitted when the chip is destroyed. */
+  @Output() destroy = new EventEmitter<MdSelectionListOptionEvent>();
+
+  constructor(private _renderer: Renderer2,
+              private _element: ElementRef,
+              @Optional() public selectionList: MdSelectionList,) {
+    this._isSelectionList = !!selectionList;
+  }
+
+
+  ngAfterContentInit() {
+    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.emit({option: this});
+  }
+
+  toggle(): void {
+    // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
+    if(this._disabled == false) {
+      this._selected = !this._selected;
+      if(this._selected == true) {
+        this.selectionList.selectedOptions.select(this);
+      }else {
+        this.selectionList.selectedOptions.deselect(this);
+      }
+    }
+
+    console.log(this.selectionList.selectedOptions);
+    console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
+  }
+
+  onKeydown(e: KeyboardEvent): void {
+    // console.log('who onkeyDown: ' + this.pCheckbox);
+    if(e.keyCode === 32 && this._disabled == false) {
+      let focusedElement = document.activeElement;
+      console.log(focusedElement === this._element.nativeElement);
+      if(focusedElement === this._element.nativeElement) {
+        this.toggle();
+      }
+    }
+  }
+
+  /** Allows for programmatic focusing of the option. */
+  focus(): void {
+    this._element.nativeElement.focus();
+    this.onFocus.emit({option: this});
+  }
+
+  /** Whether this list item should show a ripple effect when clicked.  */
+  isRippleEnabled() {
+    return !this.disableRipple && this._isSelectionList
+      && !this.selectionList.disableRipple;
+  }
+
+  _handleFocus() {
+    this._hasFocus = true;
+    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  _handleBlur() {
+    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+  }
+
+  /** Retrieves the DOM element of the component host. */
+  _getHostElement(): HTMLElement {
+    return this._element.nativeElement;
+  }
+}
+
+
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
   host: {'role': 'listbox',
-    'class': 'mat-selection-list'},
+    '[attr.tabindex]': '_tabIndex',
+    'class': 'mat-selection-list',
+    // Events
+    '(focus)': 'focus()',
+    '(keydown)': 'keydown($event)'},
+  queries: {
+    options: new ContentChildren(MdListOption)
+  },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSelectionList {
+export class MdSelectionList implements AfterContentInit, OnDestroy {
   private _disableRipple: boolean = false;
 
+  /** Tab index for the selection-list. */
+  _tabIndex = 0;
+
+  /** Track which options we're listening to for focus/destruction. */
+  private _subscribed: WeakMap<MdListOption, boolean> = new WeakMap();
+
+  /** Subscription to tabbing out from the selection-list. */
+  private _tabOutSubscription: Subscription;
+
+  /** Whether or not the chip is selectable. */
+  protected _selectable: boolean = true;
+
+  /** The FocusKeyManager which handles focus. */
+  _keyManager: FocusKeyManager;
+
+  /** The chip components contained within this selection-list. */
+  options: QueryList<MdListOption>;
+
+  // options which are selected.
   selectedOptions: SelectionModel<any> = new SelectionModel<any>(true);
 
   /**
@@ -77,6 +263,160 @@ export class MdSelectionList {
   @Input()
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+
+  ngAfterContentInit(): void {
+    this._keyManager = new FocusKeyManager(this.options).withWrap();
+
+    // Prevents the selection-list from capturing focus and redirecting
+    // it back to the first chip when the user tabs out.
+    this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
+      this._tabIndex = -1;
+      setTimeout(() => this._tabIndex = 0);
+    });
+
+    // Go ahead and subscribe all of the initial chips
+    this._subscribeOptions(this.options);
+
+    // When the list changes, re-subscribe
+    this.options.changes.subscribe((options: QueryList<MdListOption>) => {
+      this._subscribeOptions(options);
+    });
+
+    console.log(this.options);
+  }
+
+  ngOnDestroy(): void {
+    if (this._tabOutSubscription) {
+      this._tabOutSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Whether or not this chip is selectable. When a chip is not selectable,
+   * it's selected state is always ignored.
+   */
+  @Input()
+  get selectable(): boolean { return this._selectable; }
+  set selectable(value: boolean) {
+    this._selectable = coerceBooleanProperty(value);
+  }
+
+  focus() {
+    // TODO: ARIA says this should focus the first `selected` chip.
+    this._keyManager.setFirstItemActive();
+  }
+
+  /** Passes relevant key presses to our key manager. */
+  keydown(event: KeyboardEvent) {
+    let target = event.target as HTMLElement;
+
+    // If they are on a chip, check for space/left/right, otherwise pass to our key manager
+    if (target && target.classList.contains('mat-list-item')) {
+      switch (event.keyCode) {
+        case SPACE:
+          // If we are selectable, toggle the focused chip
+          if (this.selectable) {
+            this._toggleSelectOnFocusedChip();
+          }
+
+          // Always prevent space from scrolling the page since the list has focus
+          event.preventDefault();
+          break;
+        case LEFT_ARROW:
+          this._keyManager.setPreviousItemActive();
+          event.preventDefault();
+          break;
+        case RIGHT_ARROW:
+          this._keyManager.setNextItemActive();
+          event.preventDefault();
+          break;
+        default:
+          this._keyManager.onKeydown(event);
+      }
+    }
+  }
+
+  /** Toggles the selected state of the currently focused chip. */
+  protected _toggleSelectOnFocusedChip(): void {
+    // Allow disabling of chip selection
+    if (!this.selectable) {
+      return;
+    }
+
+    let focusedIndex = this._keyManager.activeItemIndex;
+
+    if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
+      let focusedOption: MdListOption = this.options.toArray()[focusedIndex];
+
+      if (focusedOption) {
+        focusedOption.toggle();
+      }
+    }
+  }
+
+
+  /**
+   * Iterate through the list of chips and add them to our list of
+   * subscribed chips.
+   *
+   * @param chips The list of chips to be subscribed.
+   */
+  protected _subscribeOptions(options: QueryList<MdListOption>): void {
+    options.forEach(option => this._addOption(option));
+  }
+
+  /**
+   * Add a specific option to our subscribed list. If the option has
+   * already been subscribed, this ensures it is only subscribed
+   * once.
+   *
+   * @param option The option to be subscribed (or checked for existing
+   * subscription).
+   */
+  protected _addOption(option: MdListOption) {
+    // If we've already been subscribed to a parent, do nothing
+    if (this._subscribed.has(option)) {
+      return;
+    }
+
+    // Watch for focus events outside of the keyboard navigation
+    option.onFocus.subscribe(() => {
+      let chipIndex: number = this.options.toArray().indexOf(option);
+
+      if (this._isValidIndex(chipIndex)) {
+        this._keyManager.updateActiveItemIndex(chipIndex);
+      }
+    });
+
+    // On destroy, remove the item from our list, and check focus
+    option.destroy.subscribe(() => {
+      let chipIndex: number = this.options.toArray().indexOf(option);
+
+      if (this._isValidIndex(chipIndex) && option._hasFocus) {
+        // Check whether the chip is the last item
+        if (chipIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(chipIndex);
+        } else if (chipIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(chipIndex - 1);
+        }
+      }
+
+      this._subscribed.delete(option);
+      option.destroy.unsubscribe();
+    });
+
+    this._subscribed.set(option, true);
+  }
+
+  /**
+   * Utility to ensure all indexes are valid.
+   *
+   * @param index The index to be checked.
+   * @returns True if the index is valid for our list of chips.
+   */
+  private _isValidIndex(index: number): boolean {
+    return index >= 0 && index < this.options.length;
+  }
 }
 
 /**
@@ -206,136 +546,6 @@ export class MdListItem implements AfterContentInit {
   }
 }
 
-/**
- * Component for list-options of selection-list. Each list-option can automatically
- * generate a checkbox and can put current item into the selectionModel of selection-list
- * if the current item is checked.
- */
-@Component({
-  moduleId: module.id,
-  selector: 'md-list-option',
-  host: {
-    'role': 'option',
-    'class': 'mat-list-item',
-    '(focus)': '_handleFocus()',
-    '(blur)': '_handleBlur()',
-    '(click)': 'toggle()',
-    '(keydown)':'onKeydown($event)',
-    '[tabIndex]': 'disabled ? -1 : 0',
-    '[attr.aria-selected]': 'selected.toString()',
-    '[attr.aria-disabled]': 'disabled.toString()',
-  },
-  templateUrl: 'list-option.html',
-  encapsulation: ViewEncapsulation.None
-})
-export class MdListOption implements AfterContentInit {
-  private _lineSetter: MdLineSetter;
-  private _disableRipple: boolean = false;
-  private _isSelectionList: boolean = false;
-  private _selected: boolean = false;
-  /** Whether the checkbox is disabled. */
-  private _disabled: boolean = false;
-  private _value: any;
 
-  /**
-   * Whether the ripple effect on click should be disabled. This applies only to list items that are
-   * part of a nav list. The value of `disableRipple` on the `md-nav-list` overrides this flag.
-   */
-  @Input()
-  get disableRipple() { return this._disableRipple; }
-  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
-
-  @ContentChildren(MdLine) _lines: QueryList<MdLine>;
-
-  /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
-
-  @Input() checkboxPosition: 'before' | 'after' = 'after';
-
-  /** Whether the checkbox is disabled. */
-  get disabled() {
-    return this._disabled;
-  }
-  @Input('disabled')
-  set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-
-  @Input('value')
-  get value() { return this._value; }
-  set value( val: any) { this._value = coerceBooleanProperty(val); }
-
-  @Input('selected')
-  get selected() { return this._selected; }
-  set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
-
-  // @ViewChild('autocheckbox1') pCheckbox1;
-  // @ViewChild('autocheckbox2') pCheckbox2;
-  // pCheckbox: any;
- // @ViewChild('autocheckbox') pCheckbox;
-
-  constructor(private _renderer: Renderer2,
-              private _element: ElementRef,
-              @Optional() public selectionList: MdSelectionList,) {
-    this._isSelectionList = !!selectionList;
-  }
-
-
-  ngAfterContentInit() {
-    this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
-  }
-
-  toggle(): void {
-   // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
-    if(this._disabled == false) {
-      this._selected = !this._selected;
-      if(this._selected == true) {
-        this.selectionList.selectedOptions.select(this);
-      }else {
-        this.selectionList.selectedOptions.deselect(this);
-      }
-    }
-
-    console.log(this.selectionList.selectedOptions);
-    console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
-  }
-
-  onKeydown(e: KeyboardEvent): void {
-   // console.log('who onkeyDown: ' + this.pCheckbox);
-    if(e.keyCode === 32 && this._disabled == false) {
-      let focusedElement = document.activeElement;
-      console.log(focusedElement === this._element.nativeElement);
-      if(focusedElement === this._element.nativeElement) {
-        if(this._selected == false) {
-          this._selected = true;
-          this.selectionList.selectedOptions.select(this);
-        }else {
-          this._selected = false;
-
-          this.selectionList.selectedOptions.deselect(this);
-        }
-        console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
-      }
-    }
-  }
-
-  /** Whether this list item should show a ripple effect when clicked.  */
-  isRippleEnabled() {
-    return !this.disableRipple && this._isSelectionList
-      && !this.selectionList.disableRipple;
-  }
-
-  _handleFocus() {
-    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
-  }
-
-  _handleBlur() {
-    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
-  }
-
-  /** Retrieves the DOM element of the component host. */
-  _getHostElement(): HTMLElement {
-    return this._element.nativeElement;
-  }
-}
 
 
