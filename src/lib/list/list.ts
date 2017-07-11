@@ -29,7 +29,7 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {MdCheckbox} from '../checkbox';
 import {MdCheckboxModule} from '../checkbox';
 import {Subscription} from 'rxjs/Subscription';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB} from '../core/keyboard/keycodes';
+import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
 
 
@@ -84,7 +84,8 @@ export interface MdSelectionListOptionEvent {
     '(blur)': '_handleBlur()',
     '(click)': 'toggle()',
     // '(keydown)':'onKeydown($event)',
-    '[tabIndex]': 'disabled ? -1 : 0',
+    //'[tabIndex]': 'disabled ? -1 : 0',
+    'tabindex': '-1',
     '[attr.aria-selected]': 'selected.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
@@ -134,16 +135,16 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   get selected() { return this._selected; }
   set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
 
-  /** Emitted when the chip is focused. */
+  /** Emitted when the option is focused. */
   onFocus = new EventEmitter<MdSelectionListOptionEvent>();
 
-  /** Emitted when the chip is selected. */
+  /** Emitted when the option is selected. */
   @Output() select = new EventEmitter<MdSelectionListOptionEvent>();
 
-  /** Emitted when the chip is deselected. */
+  /** Emitted when the option is deselected. */
   @Output() deselect = new EventEmitter<MdSelectionListOptionEvent>();
 
-  /** Emitted when the chip is destroyed. */
+  /** Emitted when the option is destroyed. */
   @Output() destroy = new EventEmitter<MdSelectionListOptionEvent>();
 
   constructor(private _renderer: Renderer2,
@@ -244,13 +245,13 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
 
-  /** Whether or not the chip is selectable. */
+  /** Whether or not the option is selectable. */
   protected _selectable: boolean = true;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager;
 
-  /** The chip components contained within this selection-list. */
+  /** The option components contained within this selection-list. */
   options: QueryList<MdListOption>;
 
   // options which are selected.
@@ -264,17 +265,19 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
+  constructor(private _element: ElementRef) { }
+
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager(this.options).withWrap();
 
     // Prevents the selection-list from capturing focus and redirecting
-    // it back to the first chip when the user tabs out.
+    // it back to the first option when the user tabs out.
     this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
       this._tabIndex = -1;
       setTimeout(() => this._tabIndex = 0);
     });
 
-    // Go ahead and subscribe all of the initial chips
+    // Go ahead and subscribe all of the initial options
     this._subscribeOptions(this.options);
 
     // When the list changes, re-subscribe
@@ -292,7 +295,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Whether or not this chip is selectable. When a chip is not selectable,
+   * Whether or not this option is selectable. When a option is not selectable,
    * it's selected state is always ignored.
    */
   @Input()
@@ -302,21 +305,20 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   }
 
   focus() {
-    // TODO: ARIA says this should focus the first `selected` chip.
-    this._keyManager.setFirstItemActive();
+    this._element.nativeElement.focus();
   }
 
   /** Passes relevant key presses to our key manager. */
   keydown(event: KeyboardEvent) {
     let target = event.target as HTMLElement;
 
-    // If they are on a chip, check for space/left/right, otherwise pass to our key manager
-    if (target && target.classList.contains('mat-list-item')) {
+    // If they are on a option ot a selection-list, check for space/left/right, otherwise pass to our key manager  mat-selection-list  mat-list-item
+    if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item'))) {
       switch (event.keyCode) {
         case SPACE:
-          // If we are selectable, toggle the focused chip
+          // If we are selectable, toggle the focused option
           if (this.selectable) {
-            this._toggleSelectOnFocusedChip();
+            this._toggleSelectOnFocusedOption();
           }
 
           // Always prevent space from scrolling the page since the list has focus
@@ -336,9 +338,9 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     }
   }
 
-  /** Toggles the selected state of the currently focused chip. */
-  protected _toggleSelectOnFocusedChip(): void {
-    // Allow disabling of chip selection
+  /** Toggles the selected state of the currently focused option. */
+  protected _toggleSelectOnFocusedOption(): void {
+    // Allow disabling of option selection
     if (!this.selectable) {
       return;
     }
@@ -356,10 +358,10 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
 
   /**
-   * Iterate through the list of chips and add them to our list of
-   * subscribed chips.
+   * Iterate through the list of options and add them to our list of
+   * subscribed options.
    *
-   * @param chips The list of chips to be subscribed.
+   * @param options The list of options to be subscribed.
    */
   protected _subscribeOptions(options: QueryList<MdListOption>): void {
     options.forEach(option => this._addOption(option));
@@ -381,23 +383,23 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
     // Watch for focus events outside of the keyboard navigation
     option.onFocus.subscribe(() => {
-      let chipIndex: number = this.options.toArray().indexOf(option);
+      let optionIndex: number = this.options.toArray().indexOf(option);
 
-      if (this._isValidIndex(chipIndex)) {
-        this._keyManager.updateActiveItemIndex(chipIndex);
+      if (this._isValidIndex(optionIndex)) {
+        this._keyManager.updateActiveItemIndex(optionIndex);
       }
     });
 
     // On destroy, remove the item from our list, and check focus
     option.destroy.subscribe(() => {
-      let chipIndex: number = this.options.toArray().indexOf(option);
+      let optionIndex: number = this.options.toArray().indexOf(option);
 
-      if (this._isValidIndex(chipIndex) && option._hasFocus) {
-        // Check whether the chip is the last item
-        if (chipIndex < this.options.length - 1) {
-          this._keyManager.setActiveItem(chipIndex);
-        } else if (chipIndex - 1 >= 0) {
-          this._keyManager.setActiveItem(chipIndex - 1);
+      if (this._isValidIndex(optionIndex) && option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
         }
       }
 
@@ -412,7 +414,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
    * Utility to ensure all indexes are valid.
    *
    * @param index The index to be checked.
-   * @returns True if the index is valid for our list of chips.
+   * @returns True if the index is valid for our list of options.
    */
   private _isValidIndex(index: number): boolean {
     return index >= 0 && index < this.options.length;
