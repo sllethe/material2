@@ -76,7 +76,7 @@ export interface MdSelectionListOptionEvent {
  */
 @Component({
   moduleId: module.id,
-  selector: 'md-list-option',
+  selector: 'md-list-option, mat-list-option',
   host: {
     'role': 'option',
     'class': 'mat-list-item',
