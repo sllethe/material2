@@ -56,7 +56,7 @@ export class MdList extends _MdListMixinBase implements CanDisableRipple {}
 
 @Component({
   moduleId: module.id,
-  selector: 'md-list-option',
+  selector: 'md-list-option, mat-list-option',
   host: {
     'role': 'option',
     'class': 'mat-list-item',
