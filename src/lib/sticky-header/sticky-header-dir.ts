@@ -73,7 +73,7 @@ export class CdkStickyHeader  {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    public isIE: boolean = false;
+    isIE: boolean = false;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
