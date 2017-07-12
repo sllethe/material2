@@ -246,6 +246,8 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
 
+  private _optionSubscription: Subscription;
+
   /** Whether or not the option is selectable. */
   protected _selectable: boolean = true;
 >>>>>>> b8b209a7... refined toggle()
