@@ -227,6 +227,8 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
 
+  private _optionSubscription: Subscription;
+
   /** Whether or not the option is selectable. */
   protected _selectable: boolean = true;
 
@@ -267,7 +269,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     this._subscribeOptions(this.options);
 
     // When the list changes, re-subscribe
-    this.options.changes.subscribe((options: QueryList<MdListOption>) => {
+    this._optionSubscription = this.options.changes.subscribe((options: QueryList<MdListOption>) => {
       this._subscribeOptions(options);
     });
 
@@ -277,6 +279,10 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   ngOnDestroy(): void {
     if (this._tabOutSubscription) {
       this._tabOutSubscription.unsubscribe();
+    }
+
+    if (this._optionSubscription) {
+      this._optionSubscription.unsubscribe();
     }
   }
 
