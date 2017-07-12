@@ -349,11 +349,6 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
   /** Toggles the selected state of the currently focused option. */
   protected _toggleSelectOnFocusedOption(): void {
-    // Allow disabling of option selection
-    if (!this.selectable) {
-      return;
-    }
-
     let focusedIndex = this._keyManager.activeItemIndex;
 
     if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
