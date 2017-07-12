@@ -13,6 +13,10 @@
       color: mat-color($foreground, text);
     }
 
+    .mat-list-option {
+      color: mat-color($foreground, text);
+    }
+
     .mat-subheader {
       color: mat-color($foreground, secondary-text);
     }
@@ -31,6 +35,14 @@
   }
 
   .mat-selection-list .mat-list-item {
+    outline: none;
+
+    &:hover, &.mat-list-item-focus {
+      background: mat-color($background, 'hover');
+    }
+  }
+
+  .mat-selection-list .mat-list-option {
     outline: none;
 
     &:hover, &.mat-list-item-focus {
