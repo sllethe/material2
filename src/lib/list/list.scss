@@ -151,6 +151,17 @@ $mat-dense-list-icon-size: 20px;
       $mat-list-icon-size
     );
   }
+
+  .mat-list-option {
+    @include mat-list-item-base(
+                    $mat-list-base-height,
+                    $mat-list-avatar-height,
+                    $mat-list-two-line-height,
+                    $mat-list-three-line-height,
+                    $mat-list-icon-size
+    );
+
+  }
 }
 
 
@@ -170,6 +181,17 @@ $mat-dense-list-icon-size: 20px;
       $mat-dense-three-line-height,
       $mat-dense-list-icon-size
     );
+  }
+
+  .mat-list-option {
+    @include mat-list-item-base(
+                    $mat-dense-base-height,
+                    $mat-dense-avatar-height,
+                    $mat-dense-two-line-height,
+                    $mat-dense-three-line-height,
+                    $mat-dense-list-icon-size
+    );
+
   }
 }
 
@@ -219,3 +241,5 @@ $mat-dense-list-icon-size: 20px;
   -webkit-justify-content: space-around; /* Safari */
   justify-content: space-around;
 }
+
+

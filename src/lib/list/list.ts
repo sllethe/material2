@@ -79,7 +79,7 @@ export interface MdSelectionListOptionEvent {
   selector: 'md-list-option, mat-list-option',
   host: {
     'role': 'option',
-    'class': 'mat-list-item',
+    'class': 'mat-list-item, mat-list-option',
     '(focus)': '_handleFocus()',
     '(blur)': '_handleBlur()',
     '(click)': 'toggle()',
@@ -313,7 +313,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     let target = event.target as HTMLElement;
 
     // If they are on a option ot a selection-list, check for space/left/right, otherwise pass to our key manager  mat-selection-list  mat-list-item
-    if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item'))) {
+    if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item') || target.classList.contains('mat-list-option'))) {
       switch (event.keyCode) {
         case SPACE:
           // If we are selectable, toggle the focused option
