@@ -326,14 +326,14 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
           // Always prevent space from scrolling the page since the list has focus
           event.preventDefault();
           break;
-        case LEFT_ARROW:
-          this._keyManager.setPreviousItemActive();
-          event.preventDefault();
-          break;
-        case RIGHT_ARROW:
-          this._keyManager.setNextItemActive();
-          event.preventDefault();
-          break;
+        // case LEFT_ARROW:
+        //   this._keyManager.setPreviousItemActive();
+        //   event.preventDefault();
+        //   break;
+        // case RIGHT_ARROW:
+        //   this._keyManager.setNextItemActive();
+        //   event.preventDefault();
+        //   break;
         default:
           this._keyManager.onKeydown(event);
       }
