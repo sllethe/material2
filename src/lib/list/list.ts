@@ -7,13 +7,13 @@
  */
 
 import {
-  AfterContentInit, AfterViewInit,
+  AfterContentInit,
   Component,
   ContentChild,
   ContentChildren,
   Directive,
   ElementRef,
-  Input, OnInit,
+  Input,
   Optional,
   QueryList,
   Renderer2,
@@ -23,7 +23,6 @@ import {
   EventEmitter,
   Output, ChangeDetectorRef
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
@@ -90,7 +89,8 @@ export interface MdSelectionListOptionEvent {
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   templateUrl: 'list-option.html',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   private _lineSetter: MdLineSetter;
@@ -145,6 +145,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
+              private _changeDetector: ChangeDetectorRef,
               @Optional() public selectionList: MdSelectionList,) { }
 
 
@@ -169,22 +170,23 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
     if(this._disabled == false) {
       this.selected = !this.selected;
+      this._changeDetector.markForCheck();
       this.selectionList.selectedOptions.toggle(this);
     }
     console.log(this.selectionList.selectedOptions);
-    console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
+    console.log('current selectionModule length: ' + this.selectionList.selectedOptions.selected.length);
   }
 
-  onKeydown(e: KeyboardEvent): void {
-    // console.log('who onkeyDown: ' + this.pCheckbox);
-    if(e.keyCode === 32 && this._disabled == false) {
-      let focusedElement = document.activeElement;
-      console.log(focusedElement === this._element.nativeElement);
-      if(focusedElement === this._element.nativeElement) {
-        this.toggle();
-      }
-    }
-  }
+  // onKeydown(e: KeyboardEvent): void {
+  //   // console.log('who onkeyDown: ' + this.pCheckbox);
+  //   if(e.keyCode === 32 && this._disabled == false) {
+  //     let focusedElement = document.activeElement;
+  //     console.log(focusedElement === this._element.nativeElement);
+  //     if(focusedElement === this._element.nativeElement) {
+  //       this.toggle();
+  //     }
+  //   }
+  // }
 
   /** Allows for programmatic focusing of the option. */
   focus(): void {
