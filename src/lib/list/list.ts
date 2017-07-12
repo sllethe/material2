@@ -233,7 +233,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   options: QueryList<MdListOption>;
 
   // options which are selected.
-  selectedOptions: SelectionModel<any> = new SelectionModel<any>(true);
+  selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
 
   /**
    * Whether the ripple effect should be disabled on the list-items or not.
