@@ -44,7 +44,9 @@ const STICK_END_CLASS = 'sticky-end';
 @Directive({
     selector: '[cdkStickyHeader]',
 })
-export class CdkStickyHeader implements OnDestroy, AfterViewInit {
+
+// implements OnDestroy, AfterViewInit
+export class CdkStickyHeader  {
 
     /**
      * Set the sticky-header's z-index as 10 in default. Make it as an input
@@ -71,6 +73,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
+    public isIE: boolean = false;
+
     /**
      * the original css of the sticky element, used to reset the sticky element
      * when it is being unstuck
@@ -92,6 +96,27 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         if (parentReg != null) {
             this.parentRegion = parentReg.getElementRef().nativeElement;
         }
+
+      let browserVersion: string = navigator.appVersion;
+        console.log('browserVersion: ' + browserVersion);
+      console.log('browserName: ' + navigator.appName);
+      console.log('MSIE: ' + navigator.userAgent.indexOf('MSIE'));
+
+      if(browserVersion.includes('iPhone')) {
+        console.log('+++' + 'iPhone');
+        this._element.nativeElement.style.top = '0px';
+        this._element.nativeElement.style.position = '-webkit-sticky';
+      } else if(browserVersion.includes('Tablet')) {
+        this.isIE = true;
+        console.log('is IE');
+      } else if(!browserVersion.includes('IE')) {
+        console.log('---' + 'not iPhone');
+        this._element.nativeElement.style.top = '0px';
+        this._element.nativeElement.style.position = 'sticky';
+      }else {
+        this.isIE = true;
+        console.log('is IE');
+      }
     }
 
     ngAfterViewInit(): void {
@@ -116,9 +141,11 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
         this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
 
-        this.attach();
+        if(this.isIE == true) {
+          this.attach();
 
-        this.defineRestrictionsAndStick();
+          this.defineRestrictionsAndStick();
+        }
     }
 
     ngOnDestroy(): void {
@@ -234,7 +261,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
          **/
         this.element.style.transform = 'translate3d(0px,0px,0px)';
 
-        let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
+        //let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
+      let stuckRight: any = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.clientWidth;
+      console.log('stuckRight1: ' + this.upperScrollableContainer.getBoundingClientRect().right);
+      console.log('stuckRight2: ' + stuckRight);
+      console.log('original width : ' + this.originalCss.width);
+      console.log('this._scrollingWidth : ' + this._scrollingWidth);
 
         // let stickyCss:any = {
         //     zIndex: this.zIndex,
@@ -243,12 +275,17 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //     right: stuckRight + 'px',
         //     left: this.upperScrollableContainer.offsetLeft + 'px',
         //     bottom: 'auto',
-        //     width: this._scrollingWidth + 'px',
+        //     width: this.originalCss.width,
         // };
-        let stickyCss2:any = this.generateCssStyle(this.zIndex, 'fixed',
-          this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
-          this.upperScrollableContainer.offsetLeft + 'px', 'auto',
-          this._scrollingWidth + 'px');
+        // let stickyCss2:any = this.generateCssStyle(this.zIndex, 'fixed',
+        //   this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
+        //   this.upperScrollableContainer.offsetLeft + 'px', 'auto',
+        //   this._scrollingWidth + 'px');
+
+      let stickyCss2:any = this.generateCssStyle(this.zIndex, 'fixed',
+        this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
+        this.upperScrollableContainer.offsetLeft + 'px', 'auto',
+        this.originalCss.width);
         // Object.assign(this.element.style, stickyCss);
         extendObject(this.element.style, stickyCss2);
     }
