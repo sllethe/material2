@@ -118,19 +118,16 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the checkbox is disabled. */
-  get disabled() {
-    return this._disabled;
-  }
-  @Input('disabled')
-  set disabled(value: any) {
-    this._disabled = coerceBooleanProperty(value);
-  }
 
-  @Input('value')
+  @Input()
+  get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+
+  @Input()
   get value() { return this._value; }
   set value( val: any) { this._value = coerceBooleanProperty(val); }
 
-  @Input('selected')
+  @Input()
   get selected() { return this._selected; }
   set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
 
@@ -232,6 +229,8 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 export class MdSelectionList implements AfterContentInit, OnDestroy {
   private _disableRipple: boolean = false;
 
+  private _disabled: boolean = false;
+
   /** Tab index for the selection-list. */
   _tabIndex = 0;
 
@@ -260,6 +259,10 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   @Input()
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+
+  @Input()
+  get disabled() { return this._disabled; }
+  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   constructor(private _element: ElementRef) { }
 
