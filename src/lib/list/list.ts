@@ -138,14 +138,17 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   toggle(): void {
     // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
-    if(this._disabled == false) {
-      this._selected = !this._selected;
-      if(this._selected == true) {
-        this.selectionList.selectedOptions.select(this);
-      }else {
-        this.selectionList.selectedOptions.deselect(this);
-      }
-    }
+    // if(this._disabled == false) {
+    //   this._selected = !this._selected;
+    //   if(this._selected == true) {
+    //     this.selectionList.selectedOptions.select(this);
+    //   }else {
+    //     this.selectionList.selectedOptions.deselect(this);
+    //   }
+    // }
+
+    this.selected = !this.selected;
+    this.selectionList.selectedOptions.toggle(this);
 
     console.log(this.selectionList.selectedOptions);
     console.log('current selectionModule: ' + this.selectionList.selectedOptions.selected.length);
