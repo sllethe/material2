@@ -95,7 +95,6 @@ export interface MdSelectionListOptionEvent {
 export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
-  private _isSelectionList: boolean = false;
   private _selected: boolean = false;
   /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
@@ -149,9 +148,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   constructor(private _renderer: Renderer2,
               private _element: ElementRef,
-              @Optional() public selectionList: MdSelectionList,) {
-    this._isSelectionList = !!selectionList;
-  }
+              @Optional() public selectionList: MdSelectionList,) { }
 
 
   ngAfterContentInit() {
@@ -196,8 +193,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   /** Whether this list item should show a ripple effect when clicked.  */
   isRippleEnabled() {
-    return !this.disableRipple && this._isSelectionList
-      && !this.selectionList.disableRipple;
+    return !this.disableRipple && !this.selectionList.disableRipple;
   }
 
   _handleFocus() {
