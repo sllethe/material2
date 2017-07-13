@@ -96,9 +96,12 @@ export class CdkStickyHeader  {
         if (parentReg != null) {
             this.parentRegion = parentReg.getElementRef().nativeElement;
         }
+        this.detectBrowser();
+    }
 
+    detectBrowser(): void {
       let browserVersion: string = navigator.appVersion;
-        console.log('browserVersion: ' + browserVersion);
+      console.log('browserVersion: ' + browserVersion);
       console.log('browserName: ' + navigator.appName);
       console.log('MSIE: ' + navigator.userAgent.indexOf('MSIE'));
 
