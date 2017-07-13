@@ -325,10 +325,8 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item') || target.classList.contains('mat-list-option'))) {
       switch (event.keyCode) {
         case SPACE:
-          // If we are selectable, toggle the focused option
-          if (this.selectable) {
-            this._toggleSelectOnFocusedOption();
-          }
+
+          this._toggleSelectOnFocusedOption();
 
           // Always prevent space from scrolling the page since the list has focus
           event.preventDefault();
@@ -349,6 +347,10 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
   /** Toggles the selected state of the currently focused option. */
   protected _toggleSelectOnFocusedOption(): void {
+    if (!this.selectable) {
+      return;
+    }
+
     let focusedIndex = this._keyManager.activeItemIndex;
 
     if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
