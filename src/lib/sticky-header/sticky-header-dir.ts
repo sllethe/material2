@@ -133,11 +133,11 @@ export class CdkStickyHeader  {
       console.log('is ios: ' + isiOS);
 
 
-      if(isiOS == true || (isSafari == true && isChrome == false)) {
+      if(isiOS === true || (isSafari === true && isChrome === false)) {
         console.log('+++' + 'iPhone/safari');
         this._element.nativeElement.style.top = '0px';
         this._element.nativeElement.style.position = '-webkit-sticky';
-      } else if (isChrome == true || isFirefox == true || isAndroid == true || isOpera == true) {
+      } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
         console.log('---' + 'not iPhone');
         this._element.nativeElement.style.top = '0px';
         this._element.nativeElement.style.position = 'sticky';
