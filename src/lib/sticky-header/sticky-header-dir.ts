@@ -105,14 +105,39 @@ export class CdkStickyHeader  {
       console.log('browserName: ' + navigator.appName);
       console.log('MSIE: ' + navigator.userAgent.indexOf('MSIE'));
 
-      if(browserVersion.includes('iPhone')) {
-        console.log('+++' + 'iPhone');
+      // check if browser is using Safari
+      let isSafari = (navigator.userAgent.toLocaleLowerCase().indexOf('safari') != -1);
+      console.log('is safari: ' + isSafari);
+
+      // check if browser is Chrome
+      let isChrome = (navigator.userAgent.toLocaleLowerCase().indexOf('chrome') != -1);
+      console.log('is chrome: ' + isChrome);
+
+      // check if browser is Firefox
+      let isFirefox = (navigator.userAgent.toLocaleLowerCase().indexOf('firefox') != -1);
+      console.log('is firefox: ' + isFirefox);
+
+      // check if browser is Opera
+      let isOpera = (navigator.userAgent.toLocaleLowerCase().indexOf('presto') != -1);
+      console.log('is isOpera: ' + isOpera);
+
+      // check if browser is IE
+      this.isIE = browserVersion.includes('.NET');
+      console.log('is IE: ' + this.isIE);
+
+      // Check if is mobile browser
+      let u = navigator.userAgent;
+      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; // android
+      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios
+
+      console.log('is ios: ' + isiOS);
+
+
+      if(isiOS == true || (isSafari == true && isChrome == false)) {
+        console.log('+++' + 'iPhone/safari');
         this._element.nativeElement.style.top = '0px';
         this._element.nativeElement.style.position = '-webkit-sticky';
-      } else if(browserVersion.includes('Tablet')) {
-        this.isIE = true;
-        console.log('is IE');
-      } else if(!browserVersion.includes('IE')) {
+      } else if (isChrome == true || isFirefox == true || isAndroid == true || isOpera == true) {
         console.log('---' + 'not iPhone');
         this._element.nativeElement.style.top = '0px';
         this._element.nativeElement.style.position = 'sticky';
