@@ -66,6 +66,8 @@ export interface MdSelectionListOptionEvent {
   option: MdListOption;
 }
 
+const FOCUS_STYLE: string = 'mat-list-item-focus';
+
 /**
  * Component for list-options of selection-list. Each list-option can automatically
  * generate a checkbox and can put current item into the selectionModel of selection-list
@@ -93,7 +95,7 @@ export interface MdSelectionListOptionEvent {
 export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   private _lineSetter: MdLineSetter;
   private _disableRipple: boolean = false;
-  private _selected: boolean = false;
+  public _selected: boolean = false;
   /** Whether the checkbox is disabled. */
   private _disabled: boolean = false;
   private _value: any;
@@ -199,11 +201,11 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   _handleFocus() {
     this._hasFocus = true;
-    this._renderer.addClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._renderer.addClass(this._element.nativeElement, FOCUS_STYLE);
   }
 
   _handleBlur() {
-    this._renderer.removeClass(this._element.nativeElement, 'mat-list-item-focus');
+    this._renderer.removeClass(this._element.nativeElement, FOCUS_STYLE);
   }
 
   /** Retrieves the DOM element of the component host. */
