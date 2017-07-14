@@ -148,11 +148,11 @@ export class CdkStickyHeader  {
     }
 
     ngAfterViewInit(): void {
-
+      if(this.isIE === true) {
         if (this.parentRegion != null) {
-            this.stickyParent = this.parentRegion;
+          this.stickyParent = this.parentRegion;
         }else {
-            this.stickyParent = this.element.parentElement;
+          this.stickyParent = this.element.parentElement;
         }
 
         // this.originalCss = {
@@ -164,16 +164,16 @@ export class CdkStickyHeader  {
         //     bottom: this.getCssValue(this.element, 'bottom'),
         //     width: this.getCssValue(this.element, 'width'),
         // };
-      this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
-        this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
-        this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
-        this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
+        this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
+          this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
+          this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
+          this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
 
-        if(this.isIE == true) {
-          this.attach();
 
-          this.defineRestrictionsAndStick();
-        }
+        this.attach();
+
+        this.defineRestrictionsAndStick();
+      }
     }
 
     ngOnDestroy(): void {
