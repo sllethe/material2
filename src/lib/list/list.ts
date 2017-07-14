@@ -305,7 +305,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     let target = event.target as HTMLElement;
 
     // If they are on a option ot a selection-list, check for space/left/right, otherwise pass to our key manager  mat-selection-list  mat-list-item
-    if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item') || target.classList.contains('mat-list-option'))) {
+    //if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item') || target.classList.contains('mat-list-option'))) {
       switch (event.keyCode) {
         case SPACE:
 
@@ -325,7 +325,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
         default:
           this._keyManager.onKeydown(event);
       }
-    }
+    //}
   }
 
   /** Toggles the selected state of the currently focused option. */
