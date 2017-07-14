@@ -34,7 +34,7 @@
     }
   }
 
-  .mat-selection-list .mat-list-item {
+  .mat-list-option {
     outline: none;
 
     &:hover, &.mat-list-item-focus {
@@ -42,13 +42,13 @@
     }
   }
 
-  .mat-selection-list .mat-list-option {
-    outline: none;
-
-    &:hover, &.mat-list-item-focus {
-      background: mat-color($background, 'hover');
-    }
-  }
+  //.mat-selection-list .mat-list-option {
+  //  outline: none;
+  //
+  //  &:hover, &.mat-list-item-focus {
+  //    background: mat-color($background, 'hover');
+  //  }
+  //}
 }
 
 @mixin mat-list-typography($config) {
