@@ -47,10 +47,10 @@ $mat-dense-list-icon-size: 20px;
     display: flex;
     //flex-direction: row;
     align-items: center;
-    box-sizing: border-box;
-    height: $base-height;
+    //box-sizing: border-box;
+    //height: $base-height;
     padding: 0 $mat-list-side-padding;
-    position: relative;
+    //position: relative;
     flex-direction: row-reverse;
     justify-content: space-around;
   }
