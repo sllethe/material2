@@ -96,6 +96,9 @@ export class CdkStickyHeader  {
 
     private _supportList: Array<string>;
 
+    stickyHeaderPadding: string;
+    stickyRegionHeight: number;
+
   constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: CdkStickyRegion) {
@@ -232,7 +235,8 @@ export class CdkStickyHeader  {
           this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
           this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
           this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
-
+        this.stickyHeaderPadding = this.getCssValue(this.element, 'padding');
+        this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
 
         this.attach();
 
@@ -311,17 +315,14 @@ export class CdkStickyHeader  {
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         let elemHeight: number = this.element.offsetHeight;
-        let containerHeight: number = this.getCssNumber(this.stickyParent, 'height');
         this._containerStart = containerTop.top;
 
         // the padding of the element being sticked
-        let elementPadding: any = this.getCssValue(this.element, 'padding');
-
-        let paddingNumber: any = Number(elementPadding.slice(0, -2));
+        let paddingNumber: any = Number(this.stickyHeaderPadding.slice(0, -2));
         this._scrollingWidth = this.upperScrollableContainer.clientWidth -
             paddingNumber - paddingNumber;
 
-        this._scrollFinish = this._containerStart + (containerHeight - elemHeight);
+        this._scrollFinish = this._containerStart + (this.stickyRegionHeight - elemHeight);
     }
 
     /**
