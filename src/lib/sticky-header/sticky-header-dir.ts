@@ -12,7 +12,8 @@ import {extendObject} from '../core/util/object-extend';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
-//import 'rxjs/add/operator/throttleTime';
+import {Subscription} from 'rxjs/Subscription';
+import {createElement} from "@angular/core/src/view/element";
 
 
 
@@ -87,7 +88,15 @@ export class CdkStickyHeader  {
 
     private _scrollingWidth: number;
 
-    constructor(private _element: ElementRef,
+    private _onScrollSubscription: Subscription;
+
+    private _onTouchSubscription: Subscription;
+
+    private _onResizeSubscription: Subscription;
+
+    private _supportList: Array<string>;
+
+  constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: CdkStickyRegion) {
         this.element = _element.nativeElement;
@@ -96,56 +105,111 @@ export class CdkStickyHeader  {
         if (parentReg != null) {
             this.parentRegion = parentReg.getElementRef().nativeElement;
         }
-        this.detectBrowser();
+
+        // console.log('+++++++++++++' + this.checkSupport());
+        this.getSupportList();
+        console.log(this._supportList);
+        this.setStrategyAccordingToCompatibility();
     }
 
-    detectBrowser(): void {
-      let browserVersion: string = navigator.appVersion;
-      console.log('browserVersion: ' + browserVersion);
-      console.log('browserName: ' + navigator.appName);
-      console.log('MSIE: ' + navigator.userAgent.indexOf('MSIE'));
+    // checkSupport(): boolean {
+    //   let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
+    //   let stickyText = '';
+    //   for (let i = 0; i < prefixTestList.length; i++ ) {
+    //     stickyText += 'position:' + prefixTestList[i] + 'sticky;';
+    //   }
+    //   // 创建一个dom来检查
+    //   let div = document.createElement('div');
+    //   let body = document.body;
+    //   div.style.cssText = 'display:none;' + stickyText;
+    //   body.appendChild(div);
+    //   let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
+    //   body.removeChild(div);
+    //   div = null;
+    //   return isSupport;
+    //
+    // }
 
-      // check if browser is using Safari
-      let isSafari = (navigator.userAgent.toLocaleLowerCase().indexOf('safari') != -1);
-      console.log('is safari: ' + isSafari);
-
-      // check if browser is Chrome
-      let isChrome = (navigator.userAgent.toLocaleLowerCase().indexOf('chrome') != -1);
-      console.log('is chrome: ' + isChrome);
-
-      // check if browser is Firefox
-      let isFirefox = (navigator.userAgent.toLocaleLowerCase().indexOf('firefox') != -1);
-      console.log('is firefox: ' + isFirefox);
-
-      // check if browser is Opera
-      let isOpera = (navigator.userAgent.toLocaleLowerCase().indexOf('presto') != -1);
-      console.log('is isOpera: ' + isOpera);
-
-      // check if browser is IE
-      this.isIE = browserVersion.includes('.NET');
-      console.log('is IE: ' + this.isIE);
-
-      // Check if is mobile browser
-      let u = navigator.userAgent;
-      let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; // android
-      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios
-
-      console.log('is ios: ' + isiOS);
-
-
-      if(isiOS === true || (isSafari === true && isChrome === false)) {
-        console.log('+++' + 'iPhone/safari');
-        this._element.nativeElement.style.top = '0px';
-        this._element.nativeElement.style.position = '-webkit-sticky';
-      } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
-        console.log('---' + 'not iPhone');
-        this._element.nativeElement.style.top = '0px';
-        this._element.nativeElement.style.position = 'sticky';
-      }else {
-        this.isIE = true;
-        console.log('is IE');
+  getSupportList(): void {
+    let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
+    this._supportList = new Array<string>();
+    let stickyText = '';
+    for (let i = 0; i < prefixTestList.length; i++ ) {
+      stickyText += 'position:' + prefixTestList[i] + 'sticky;';
+      // Create a DOM to check if the browser support current prefix for sticky-position.
+      let div = document.createElement('div');
+      let body = document.body;
+      div.style.cssText = 'display:none;' + stickyText;
+      body.appendChild(div);
+      let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
+      body.removeChild(div);
+      div = null;
+      if(isSupport == true) {
+        this._supportList.push(prefixTestList[i]);
       }
     }
+  }
+
+  setStrategyAccordingToCompatibility(): void {
+    if(this._supportList.length == 0) {
+      this.isIE = true;
+    }else {
+      let prefix: string = this._supportList[0];
+      console.log('========' + prefix + 'sticky');
+
+      this._element.nativeElement.style.top = '0px';
+      this._element.nativeElement.style.position = prefix + 'sticky';
+    }
+  }
+
+
+    // detectBrowser(): void {
+    //   let browserVersion: string = navigator.appVersion;
+    //   console.log('browserVersion: ' + browserVersion);
+    //   console.log('browserName: ' + navigator.appName);
+    //   console.log('MSIE: ' + navigator.userAgent.indexOf('MSIE'));
+    //
+    //   // check if browser is using Safari
+    //   let isSafari = (navigator.userAgent.toLocaleLowerCase().indexOf('safari') != -1);
+    //   console.log('is safari: ' + isSafari);
+    //
+    //   // check if browser is Chrome
+    //   let isChrome = (navigator.userAgent.toLocaleLowerCase().indexOf('chrome') != -1);
+    //   console.log('is chrome: ' + isChrome);
+    //
+    //   // check if browser is Firefox
+    //   let isFirefox = (navigator.userAgent.toLocaleLowerCase().indexOf('firefox') != -1);
+    //   console.log('is firefox: ' + isFirefox);
+    //
+    //   // check if browser is Opera
+    //   let isOpera = (navigator.userAgent.toLocaleLowerCase().indexOf('presto') != -1);
+    //   console.log('is isOpera: ' + isOpera);
+    //
+    //   // check if browser is IE
+    //   this.isIE = browserVersion.includes('.NET');
+    //   console.log('is IE: ' + this.isIE);
+    //
+    //   // Check if is mobile browser
+    //   let u = navigator.userAgent;
+    //   let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; // android
+    //   let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios
+    //
+    //   console.log('is ios: ' + isiOS);
+    //
+    //
+    //   if(isiOS === true || (isSafari === true && isChrome === false)) {
+    //     console.log('+++' + 'iPhone/safari');
+    //     this._element.nativeElement.style.top = '0px';
+    //     this._element.nativeElement.style.position = '-webkit-sticky';
+    //   } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
+    //     console.log('---' + 'not iPhone');
+    //     this._element.nativeElement.style.top = '0px';
+    //     this._element.nativeElement.style.position = 'sticky';
+    //   }else {
+    //     this.isIE = true;
+    //     console.log('is IE');
+    //   }
+    // }
 
     ngAfterViewInit(): void {
       if(this.isIE === true) {
@@ -177,9 +241,21 @@ export class CdkStickyHeader  {
     }
 
     ngOnDestroy(): void {
-        this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
-        this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
-        this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
+        // this.upperScrollableContainer.removeEventListener('scroll', this._onScrollBind);
+        // this.upperScrollableContainer.removeEventListener('resize', this._onResizeBind);
+        // this.upperScrollableContainer.removeEventListener('touchmove', this._onTouchMoveBind);
+
+      if (this._onScrollSubscription) {
+        this._onScrollSubscription.unsubscribe();
+      }
+
+      if (this._onResizeSubscription) {
+        this._onResizeSubscription.unsubscribe();
+      }
+
+      if (this._onTouchSubscription) {
+        this._onTouchSubscription.unsubscribe();
+      }
     }
 
     attach() {
@@ -192,7 +268,7 @@ export class CdkStickyHeader  {
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
       //   .subscribe(() => this.defineRestrictionsAndStick());
-      Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+      this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
         .subscribe(() => this.defineRestrictionsAndStick());
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').throttleTime(150).
@@ -200,10 +276,10 @@ export class CdkStickyHeader  {
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').
       // subscribe(() => this.defineRestrictionsAndStick());
 
-      Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
+      this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
         .subscribe(() => this.defineRestrictionsAndStick());
 
-      Observable.fromEvent(this.upperScrollableContainer, 'resize')
+      this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
         .subscribe(() => this.onResize());
     }
 
