@@ -151,8 +151,8 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
     if(this._disabled == false) {
       this.selected = !this.selected;
-      this._changeDetector.markForCheck();
       this.selectionList.selectedOptions.toggle(this);
+      this._changeDetector.markForCheck();
     }
     console.log(this.selectionList.selectedOptions);
     console.log('current selectionModule length: ' + this.selectionList.selectedOptions.selected.length);
