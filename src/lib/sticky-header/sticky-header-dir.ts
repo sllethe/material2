@@ -75,7 +75,7 @@ export class CdkStickyHeader  {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    isIE: boolean = false;
+    isStickyPositionSupported: boolean = false;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
@@ -95,8 +95,6 @@ export class CdkStickyHeader  {
 
     private _onResizeSubscription: Subscription;
 
-    //private _supportList: Array<string>;
-
     stickyHeaderPadding: string;
     stickyRegionHeight: number;
 
@@ -111,7 +109,7 @@ export class CdkStickyHeader  {
         }
 
         // console.log('+++++++++++++' + this.checkSupport());
-        //this.getSupportList();
+        // this.getSupportList();
         // console.log(this._supportList);
         this.setStrategyAccordingToCompatibility();
     }
@@ -159,7 +157,7 @@ export class CdkStickyHeader  {
     let supportList = this.getSupportList();
     console.log(supportList);
     if(supportList.length == 0) {
-      this.isIE = true;
+      this.isStickyPositionSupported = true;
     }else {
       let prefix: string = supportList[0];
       console.log('========' + prefix + 'sticky');
@@ -193,8 +191,8 @@ export class CdkStickyHeader  {
     //   console.log('is isOpera: ' + isOpera);
     //
     //   // check if browser is IE
-    //   this.isIE = browserVersion.includes('.NET');
-    //   console.log('is IE: ' + this.isIE);
+    //   this.isStickyPositionSupported = browserVersion.includes('.NET');
+    //   console.log('is IE: ' + this.isStickyPositionSupported);
     //
     //   // Check if is mobile browser
     //   let u = navigator.userAgent;
@@ -208,18 +206,19 @@ export class CdkStickyHeader  {
     //     console.log('+++' + 'iPhone/safari');
     //     this._element.nativeElement.style.top = '0px';
     //     this._element.nativeElement.style.position = '-webkit-sticky';
-    //   } else if (isChrome === true || isFirefox === true || isAndroid === true || isOpera === true) {
+    //   } else if (isChrome === true || isFirefox === true
+  // || isAndroid === true || isOpera === true) {
     //     console.log('---' + 'not iPhone');
     //     this._element.nativeElement.style.top = '0px';
     //     this._element.nativeElement.style.position = 'sticky';
     //   }else {
-    //     this.isIE = true;
+    //     this.isStickyPositionSupported = true;
     //     console.log('is IE');
     //   }
     // }
 
     ngAfterViewInit(): void {
-      if(this.isIE === true) {
+      if(this.isStickyPositionSupported === true) {
         if (this.parentRegion != null) {
           this.stickyParent = this.parentRegion;
         }else {
@@ -370,8 +369,9 @@ export class CdkStickyHeader  {
          **/
         this.element.style.transform = 'translate3d(0px,0px,0px)';
 
-        //let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
-      let stuckRight: any = this.upperScrollableContainer.offsetLeft + this.upperScrollableContainer.clientWidth;
+        // let stuckRight: any = this.upperScrollableContainer.getBoundingClientRect().right;
+      let stuckRight: any = this.upperScrollableContainer.offsetLeft
+        + this.upperScrollableContainer.clientWidth;
       console.log('stuckRight1: ' + this.upperScrollableContainer.getBoundingClientRect().right);
       console.log('stuckRight2: ' + stuckRight);
       console.log('original width : ' + this.originalCss.width);
@@ -391,7 +391,7 @@ export class CdkStickyHeader  {
         //   this.upperScrollableContainer.offsetLeft + 'px', 'auto',
         //   this._scrollingWidth + 'px');
 
-      let stickyCss2:any = this.generateCssStyle(this.zIndex, 'fixed',
+      let stickyCss2:any = this.generateCssStyle(this.zIndex + '', 'fixed',
         this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
         this.upperScrollableContainer.offsetLeft + 'px', 'auto',
         this.originalCss.width);
@@ -423,7 +423,7 @@ export class CdkStickyHeader  {
         let unstuckCss2: any = this.generateCssStyle(this.originalCss.zIndex,
           'absolute', 'auto', '0', 'auto', '0', this.originalCss.width);
         extendObject(this.element.style, unstuckCss2);
-        //Object.assign(this.element.style, unstuckCss);
+        // Object.assign(this.element.style, unstuckCss);
     }
 
 
@@ -451,8 +451,8 @@ export class CdkStickyHeader  {
         this.sticker();
     }
 
-  generateCssStyle(zIndex:any, position:any, top:any, right:any,
-                   left:any, bottom:any, width:any): any {
+  generateCssStyle(zIndex:string, position:string, top:string, right:string,
+                   left:string, bottom:string, width:string): any {
     let curCSS = {
       zIndex: zIndex,
       position: position,
