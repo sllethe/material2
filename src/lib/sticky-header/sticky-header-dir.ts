@@ -236,7 +236,8 @@ export class StickyHeaderDirective implements OnDestroy, AfterViewInit {
             right: stuckRight + 'px',
             left: this.upperScrollableContainer.offsetLeft + 'px',
             bottom: 'auto',
-            width: this._scrollingWidth + 'px',
+           // width: this._scrollingWidth + 'px',
+            width: this.originalCss.width,
         };
         Object.assign(this.elem.style, this.stickyCss);
     }
