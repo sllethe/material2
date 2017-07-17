@@ -94,7 +94,7 @@ export class CdkStickyHeader  {
 
     private _onResizeSubscription: Subscription;
 
-    private _supportList: Array<string>;
+    //private _supportList: Array<string>;
 
     stickyHeaderPadding: string;
     stickyRegionHeight: number;
@@ -110,8 +110,8 @@ export class CdkStickyHeader  {
         }
 
         // console.log('+++++++++++++' + this.checkSupport());
-        this.getSupportList();
-        console.log(this._supportList);
+        //this.getSupportList();
+        // console.log(this._supportList);
         this.setStrategyAccordingToCompatibility();
     }
 
@@ -133,9 +133,9 @@ export class CdkStickyHeader  {
     //
     // }
 
-  getSupportList(): void {
+  getSupportList(): Array<string> {
     let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
-    this._supportList = new Array<string>();
+    let supportList: Array<string> = new Array<string>();
     let stickyText = '';
     for (let i = 0; i < prefixTestList.length; i++ ) {
       stickyText += 'position:' + prefixTestList[i] + 'sticky;';
@@ -148,16 +148,19 @@ export class CdkStickyHeader  {
       body.removeChild(div);
       div = null;
       if(isSupport == true) {
-        this._supportList.push(prefixTestList[i]);
+        supportList.push(prefixTestList[i]);
       }
     }
+    return supportList;
   }
 
   setStrategyAccordingToCompatibility(): void {
-    if(this._supportList.length == 0) {
+    let supportList = this.getSupportList();
+    console.log(supportList);
+    if(supportList.length == 0) {
       this.isIE = true;
     }else {
-      let prefix: string = this._supportList[0];
+      let prefix: string = supportList[0];
       console.log('========' + prefix + 'sticky');
 
       this._element.nativeElement.style.top = '0px';
