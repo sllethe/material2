@@ -75,7 +75,7 @@ export class CdkStickyHeader  {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    isStickyPositionSupported: boolean = false;
+    isStickyPositionSupported: boolean = true;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
@@ -157,7 +157,7 @@ export class CdkStickyHeader  {
     let supportList = this.getSupportList();
     console.log(supportList);
     if(supportList.length == 0) {
-      this.isStickyPositionSupported = true;
+      this.isStickyPositionSupported = false;
     }else {
       let prefix: string = supportList[0];
       console.log('========' + prefix + 'sticky');
@@ -218,7 +218,7 @@ export class CdkStickyHeader  {
     // }
 
     ngAfterViewInit(): void {
-      if(this.isStickyPositionSupported === true) {
+      if(this.isStickyPositionSupported === false) {
         if (this.parentRegion != null) {
           this.stickyParent = this.parentRegion;
         }else {
