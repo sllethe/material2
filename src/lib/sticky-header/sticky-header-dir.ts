@@ -275,8 +275,7 @@ export class CdkStickyHeader  {
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
       //   .subscribe(() => this.defineRestrictionsAndStick());
-      this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
-        .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+      this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll').subscribe(() => this.defineRestrictionsAndStick());
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').throttleTime(150).
       // subscribe(() => this.defineRestrictionsAndStick());
@@ -284,10 +283,10 @@ export class CdkStickyHeader  {
       // subscribe(() => this.defineRestrictionsAndStick());
 
       this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-        .debounceTime(DEBOUNCE_TIME).subscribe(() => this.defineRestrictionsAndStick());
+        .subscribe(() => this.defineRestrictionsAndStick());
 
       this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
-        .debounceTime(DEBOUNCE_TIME).subscribe(() => this.onResize());
+        .subscribe(() => this.onResize());
     }
 
     onScroll(): void {
