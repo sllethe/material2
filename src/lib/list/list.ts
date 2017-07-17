@@ -82,7 +82,9 @@ const FOCUS_STYLE: string = 'mat-list-item-focus';
     'role': 'option',
     'class': 'mat-list-item, mat-list-option',
     '(focus)': '_handleFocus()',
+    //'(focus)': 'focus()',
     '(blur)': '_handleBlur()',
+    //'(focus)': '_hasFocus = true',
     '(click)': 'toggle()',
     // '(keydown)':'onKeydown($event)',
     //'[tabIndex]': 'disabled ? -1 : 0',
@@ -103,6 +105,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   private _value: any;
 
   /** Whether the option has focus. */
+  @Input()
   _hasFocus: boolean = false;
 
   /**
@@ -130,7 +133,9 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   set value( val: any) { this._value = coerceBooleanProperty(val); }
 
   @Input()
-  get selected() { return this._selected; }
+  get selected() {
+    return this._selected;
+  }
   set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
 
   /** Emitted when the option is focused. */
@@ -172,6 +177,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
     if(this._disabled == false) {
       this.selected = !this.selected;
+      console.log('===================' + this.selected);
       this.selectionList.selectedOptions.toggle(this);
       this._changeDetector.markForCheck();
     }
@@ -193,6 +199,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   /** Allows for programmatic focusing of the option. */
   focus(): void {
     this._element.nativeElement.focus();
+    //this._handleFocus();
     this.onFocus.emit({option: this});
   }
 
@@ -204,9 +211,11 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   _handleFocus() {
     this._hasFocus = true;
     this._renderer.addClass(this._element.nativeElement, FOCUS_STYLE);
+    this.onFocus.emit({option: this});
   }
 
   _handleBlur() {
+    this._hasFocus = false;
     this._renderer.removeClass(this._element.nativeElement, FOCUS_STYLE);
   }
 
