@@ -137,7 +137,7 @@ export class CdkStickyHeader  {
     let supportList: Array<string> = new Array<string>();
     let stickyText = '';
     for (let i = 0; i < prefixTestList.length; i++ ) {
-      stickyText += 'position:' + prefixTestList[i] + 'sticky;';
+      stickyText = 'position:' + prefixTestList[i] + 'sticky;';
       // Create a DOM to check if the browser support current prefix for sticky-position.
       let div = document.createElement('div');
       let body = document.body;
