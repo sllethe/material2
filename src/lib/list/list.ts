@@ -61,7 +61,9 @@ export class MdList extends _MdListMixinBase implements CanDisableRipple {}
     'role': 'option',
     'class': 'mat-list-item, mat-list-option',
     '(focus)': '_handleFocus()',
+    //'(focus)': 'focus()',
     '(blur)': '_handleBlur()',
+    //'(focus)': '_hasFocus = true',
     '(click)': 'toggle()',
     // '(keydown)':'onKeydown($event)',
     //'[tabIndex]': 'disabled ? -1 : 0',
@@ -82,6 +84,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   private _value: any;
 
   /** Whether the option has focus. */
+  @Input()
   _hasFocus: boolean = false;
 
   /**
@@ -109,7 +112,9 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   set value( val: any) { this._value = coerceBooleanProperty(val); }
 
   @Input()
-  get selected() { return this._selected; }
+  get selected() {
+    return this._selected;
+  }
   set selected( val: boolean) { this._selected = coerceBooleanProperty(val); }
 
   /** Emitted when the option is focused. */
@@ -151,6 +156,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
     if(this._disabled == false) {
       this.selected = !this.selected;
+      console.log('===================' + this.selected);
       this.selectionList.selectedOptions.toggle(this);
       this._changeDetector.markForCheck();
     }
@@ -172,6 +178,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   /** Allows for programmatic focusing of the option. */
   focus(): void {
     this._element.nativeElement.focus();
+    //this._handleFocus();
     this.onFocus.emit({option: this});
   }
 
@@ -183,9 +190,11 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   _handleFocus() {
     this._hasFocus = true;
     this._renderer.addClass(this._element.nativeElement, FOCUS_STYLE);
+    this.onFocus.emit({option: this});
   }
 
   _handleBlur() {
+    this._hasFocus = false;
     this._renderer.removeClass(this._element.nativeElement, FOCUS_STYLE);
   }
 
@@ -253,6 +262,16 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   get disabled() { return this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
+  /**
+   * Whether or not this option is selectable. When a option is not selectable,
+   * it's selected state is always ignored.
+   */
+  @Input()
+  get selectable(): boolean { return this._selectable; }
+  set selectable(value: boolean) {
+    this._selectable = coerceBooleanProperty(value);
+  }
+
   constructor(private _element: ElementRef) { }
 
   ngAfterContentInit(): void {
@@ -286,16 +305,6 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     }
   }
 
-  /**
-   * Whether or not this option is selectable. When a option is not selectable,
-   * it's selected state is always ignored.
-   */
-  @Input()
-  get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) {
-    this._selectable = coerceBooleanProperty(value);
-  }
-
   focus() {
     this._element.nativeElement.focus();
   }
@@ -303,9 +312,6 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   /** Passes relevant key presses to our key manager. */
   keydown(event: KeyboardEvent) {
     let target = event.target as HTMLElement;
-
-    // If they are on a option ot a selection-list, check for space/left/right, otherwise pass to our key manager  mat-selection-list  mat-list-item
-    //if (target && (target.classList.contains('mat-selection-list') || target.classList.contains('mat-list-item') || target.classList.contains('mat-list-option'))) {
       switch (event.keyCode) {
         case SPACE:
 
@@ -314,18 +320,9 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
           // Always prevent space from scrolling the page since the list has focus
           event.preventDefault();
           break;
-        // case LEFT_ARROW:
-        //   this._keyManager.setPreviousItemActive();
-        //   event.preventDefault();
-        //   break;
-        // case RIGHT_ARROW:
-        //   this._keyManager.setNextItemActive();
-        //   event.preventDefault();
-        //   break;
         default:
           this._keyManager.onKeydown(event);
       }
-    //}
   }
 
   /** Toggles the selected state of the currently focused option. */
