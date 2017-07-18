@@ -47,7 +47,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     private _onScrollBind: EventListener = this.onScroll.bind(this);
     private _onResizeBind: EventListener = this.onResize.bind(this);
     private _onTouchMoveBind: EventListener = this.onTouchMove.bind(this);
-    public isStuck: boolean = false;
+    public isStuck: boolean = true;
 
     // the element with the 'md-sticky' tag
     public element: HTMLElement;
@@ -58,7 +58,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    isStickyPositionSupported: boolean = false;
+    isStickyPositionSupported: boolean = true;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
@@ -68,8 +68,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
     private _containerStart: number;
     private _scrollFinish: number;
-
-    private _scrollingWidth: number;
 
     private _onScrollSubscription: Subscription;
 
@@ -88,10 +86,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             this.parentRegion = parentReg.getElementRef().nativeElement;
         }
 
-        // console.log('+++++++++++++' + this.checkSupport());
-        // this.getSupportList();
-        // console.log(this._supportList);
-        //this.setStrategyAccordingToCompatibility();
+        this.setStrategyAccordingToCompatibility();
     }
 
     // checkSupport(): boolean {
