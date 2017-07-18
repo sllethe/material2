@@ -10,6 +10,7 @@ import {NgModule} from '@angular/core';
 
 import {
   A11yModule,
+  BidiModule,
   MdCommonModule,
   MdRippleModule,
   ObserveContentModule,
@@ -44,10 +45,10 @@ import {MdAutocompleteModule} from './autocomplete/index';
 import {StyleModule} from './core/style/index';
 import {MdDatepickerModule} from './datepicker/index';
 import {MdExpansionModule} from './expansion/index';
-import {CdkStickyHeaderModule} from './sticky-header/index';
 import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
+import {CdkStickyHeaderModule} from './sticky-header/index';
 
 
 const MATERIAL_MODULES = [
@@ -82,12 +83,13 @@ const MATERIAL_MODULES = [
   MdTooltipModule,
   OverlayModule,
   PortalModule,
+  BidiModule,
   StyleModule,
   A11yModule,
   PlatformModule,
   MdCommonModule,
   ObserveContentModule,
-  CdkStickyHeaderModule,
+  CdkStickyHeaderModule
 ];
 
 /** @deprecated */

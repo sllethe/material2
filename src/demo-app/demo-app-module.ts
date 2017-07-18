@@ -51,6 +51,7 @@ import {
   MdCheckboxModule,
   MdChipsModule,
   MdCoreModule,
+  MdTableModule,
   MdDatepickerModule,
   MdDialogModule,
   MdExpansionModule,
@@ -60,6 +61,7 @@ import {
   MdListModule,
   MdMenuModule,
   MdNativeDateModule,
+  MdPaginatorModule,
   MdProgressBarModule,
   MdProgressSpinnerModule,
   MdRadioModule,
@@ -69,13 +71,15 @@ import {
   MdSliderModule,
   MdSlideToggleModule,
   MdSnackBarModule,
+  MdSortModule,
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
   OverlayContainer,
   StyleModule,
-  CdkStickyHeaderModule,
+  CdkStickyHeaderModule
 } from '@angular/material';
+import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
@@ -90,6 +94,7 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     MdCardModule,
     MdCheckboxModule,
     MdChipsModule,
+    MdTableModule,
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
@@ -99,6 +104,7 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     MdListModule,
     MdMenuModule,
     MdCoreModule,
+    MdPaginatorModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
     MdRadioModule,
@@ -108,10 +114,12 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     MdSlideToggleModule,
     MdSliderModule,
     MdSnackBarModule,
+    MdSortModule,
     MdTabsModule,
     MdToolbarModule,
     MdTooltipModule,
     MdNativeDateModule,
+    CdkTableModule,
     StyleModule,
     CdkStickyHeaderModule,
   ]
