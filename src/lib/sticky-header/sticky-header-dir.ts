@@ -13,6 +13,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import {Subscription} from 'rxjs/Subscription';
+import {Platform} from '../core/platform';
 // import {createElement} from '@angular/core';
 
 @Directive({
@@ -78,16 +79,18 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
   constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
-                @Optional() public parentReg: CdkStickyRegion) {
-        this.element = _element.nativeElement;
-        this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-        this.scrollableRegion = scrollable.getElementRef().nativeElement;
-        if (parentReg != null) {
-            this.parentRegion = parentReg.getElementRef().nativeElement;
-        }
-
-        this.setStrategyAccordingToCompatibility();
+                @Optional() public parentReg: CdkStickyRegion,
+              platform: Platform) {
+    if (platform.isBrowser) {
+      this.element = _element.nativeElement;
+      this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
+      this.scrollableRegion = scrollable.getElementRef().nativeElement;
+      if (parentReg != null) {
+        this.parentRegion = parentReg.getElementRef().nativeElement;
+      }
+      this.setStrategyAccordingToCompatibility();
     }
+  }
 
     // checkSupport(): boolean {
     //   let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
