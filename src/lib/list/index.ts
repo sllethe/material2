@@ -18,10 +18,10 @@ import {
   MdListCssMatStyler,
   MdNavListCssMatStyler,
   MdDividerCssMatStyler,
-  MdListSubheaderCssMatStyler,
-  MdSelectionList,
-  MdListOption,
+  MdListSubheaderCssMatStyler
 } from './list';
+import {MdSelectionList} from './selection-list';
+import {MdListOption} from './list-option';
 import {MdCheckboxModule} from '../checkbox/index';
 
 
