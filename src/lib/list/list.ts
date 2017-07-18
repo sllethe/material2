@@ -68,7 +68,6 @@ export interface MdSelectionListOptionEvent {
   option: MdListOption;
 }
 
-const FOCUS_STYLE: string = 'mat-list-item-focus';
 
 /**
  * Component for list-options of selection-list. Each list-option can automatically
