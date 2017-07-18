@@ -231,7 +231,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.defineRestrictionsAndStick();
     }
     onResize(): void {
-        this.defineRestrictionsAndStick();
+        //this.defineRestrictionsAndStick();
+        //this.originalCss.width = this.parentRegion.clientWidth;
+        //console.log('resize: ' + this.parentRegion.clientWidth);
 
         /**
          * If there's already a header being stick when the page is
@@ -307,6 +309,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //   this.upperScrollableContainer.offsetLeft + 'px', 'auto',
         //   this._scrollingWidth + 'px');
 
+      console.log('//////////////////////+ ' + this.originalCss.width);
       let stickyCss2:any = this.generateCssStyle(this.zIndex + '', 'fixed',
         this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
         this.upperScrollableContainer.offsetLeft + 'px', 'auto',
