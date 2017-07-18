@@ -159,10 +159,25 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //     bottom: this.getCssValue(this.element, 'bottom'),
         //     width: this.getCssValue(this.element, 'width'),
         // };
-        this.originalCss = this.generateCssStyle(this.getCssValue(this.element, 'zIndex'),
-          this.getCssValue(this.element, 'position'), this.getCssValue(this.element, 'top'),
-          this.getCssValue(this.element, 'right'), this.getCssValue(this.element, 'left'),
-          this.getCssValue(this.element, 'bottom'), this.getCssValue(this.element, 'width'));
+        let boundingClientRecVal = this.element.getBoundingClientRect();
+        console.log('boundingClientRecVal : ' + boundingClientRecVal.top);
+        console.log('getCssValue: ' + this.getCssValue(this.element, 'top'));
+        this.originalCss = this.generateCssStyle(
+          this.getCssValue(this.element, 'zIndex'),
+          this.getCssValue(this.element, 'position'),
+          this.getCssValue(this.element, 'top'),
+          this.getCssValue(this.element, 'right'),
+          this.getCssValue(this.element, 'left'),
+          this.getCssValue(this.element, 'bottom'),
+          this.getCssValue(this.element, 'width'));
+        // this.originalCss = this.generateCssStyle(
+        //   this.getCssValue(this.element, 'zIndex'),
+        //   this.getCssValue(this.element, 'position'),
+        //   boundingClientRecVal.top + '',
+        //   boundingClientRecVal.right + '',
+        //   boundingClientRecVal.left + '',
+        //   boundingClientRecVal.bottom + '',
+        //   boundingClientRecVal.width + '') ;
 
         this.attach();
 
