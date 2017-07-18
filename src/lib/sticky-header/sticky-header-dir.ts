@@ -107,7 +107,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     //
     // }
 
-  getSupportList(): Array<string> {
+  getSupportList(): string[] {
     let prefixTestList = ['', '-webkit-', '-ms-', '-moz-', '-o-'];
     let supportList: Array<string> = new Array<string>();
     let stickyText = '';
