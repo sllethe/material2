@@ -79,7 +79,7 @@ import {
   StyleModule,
   CdkStickyHeaderModule
 } from '@angular/material';
-import {CdkTableModule} from '@angular/cdk';
+import {CdkTableModule } from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 

@@ -10,15 +10,11 @@ import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule} from '../core';
 import {CdkStickyRegion, CdkStickyHeader} from './sticky-header-dir';
 
-
-
-
 @NgModule({
     imports: [OverlayModule, MdCommonModule, CommonModule],
     declarations: [CdkStickyRegion, CdkStickyHeader],
     exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
 })
 export class CdkStickyHeaderModule {}
-
 
 export * from './sticky-header-dir';
