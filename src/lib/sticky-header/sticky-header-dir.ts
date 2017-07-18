@@ -121,9 +121,12 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       let body = document.body;
       div.style.cssText = 'display:none;' + stickyText;
       body.appendChild(div);
-      let isSupport = /sticky/i.test(window.getComputedStyle(div).position);
+      let isSupport = /sticky/i.test(this.getCssValue(div,'position'));
+      //getCssValue(element: any, property: string)
+      //window.getComputedStyle(div).position
+
       body.removeChild(div);
-      div = null;
+      //div = null;
       if(isSupport == true) {
         supportList.push(prefixTestList[i]);
       }
@@ -149,7 +152,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       if(this.isStickyPositionSupported === false) {
         if (this.parentRegion != null) {
           this.stickyParent = this.parentRegion;
-        }else {
+        }else if(this.element.parentElement != null) {
           this.stickyParent = this.element.parentElement;
         }
 
