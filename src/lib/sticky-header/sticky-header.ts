@@ -59,13 +59,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    private _isStickyPositionSupported: boolean = true;
+    //private _isStickyPositionSupported: boolean = true;
+    private _isStickyPositionSupported: boolean = false;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
      * when it is being unstuck
      */
-    public originalCss: any;
+    private _originalStyles = {} as CSSStyleDeclaration;
+    //private _originalStyles: any;
+    //= {} as CSSStyleDeclaration;
 
     private _containerStart: number;
     private _scrollFinish: number;
@@ -80,7 +83,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: CdkStickyRegion,
-              platform: Platform) {
+                platform: Platform) {
     if (platform.isBrowser) {
       this.element = _element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
@@ -88,7 +91,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       if (parentReg != null) {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
-      this.setStrategyAccordingToCompatibility();
+      //this.setStrategyAccordingToCompatibility();
     }
   }
 
@@ -179,14 +182,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //   this.getCssValue(this.element, 'width'));
 
 
-        this.originalCss = this.generateCssStyle(
-          values.getPropertyValue('zIndex'),
+        this._originalStyles = this.generateCssStyle(
           values.getPropertyValue('position'),
           values.getPropertyValue('top'),
           values.getPropertyValue('right'),
           values.getPropertyValue('left'),
           values.getPropertyValue('bottom'),
-          values.getPropertyValue('width'));
+          values.getPropertyValue('width'),
+          values.getPropertyValue('zIndex'));
 
         this.attach();
 
@@ -282,7 +285,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      */
     resetElement(): void {
         this.element.classList.remove(STICK_START_CLASS);
-        extendObject(this.element.style, this.originalCss);
+        extendObject(this.element.style, this._originalStyles);
     }
 
     /**
@@ -318,13 +321,19 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //   this.upperScrollableContainer.offsetLeft + 'px', 'auto',
         //   this._scrollingWidth + 'px');
 
-      console.log('//////////////////////+ ' + this.originalCss.width);
-      let stickyCss2:any = this.generateCssStyle(this.zIndex + '', 'fixed',
-        this.upperScrollableContainer.offsetTop + 'px', stuckRight + 'px',
-        this.upperScrollableContainer.offsetLeft + 'px', 'auto',
-        this.originalCss.width);
+      console.log('//////////////////////+ ' + this._originalStyles.width);
+
+        let stickyCss2:any = this.generateCssStyle(
+          'fixed',
+          this.upperScrollableContainer.offsetTop + 'px',
+          stuckRight + 'px',
+          this.upperScrollableContainer.offsetLeft + 'px',
+          'auto',
+          this._originalStyles.width,
+          this.zIndex + '',);
         // Object.assign(this.element.style, stickyCss);
         extendObject(this.element.style, stickyCss2);
+
     }
 
     unstuckElement(): void {
@@ -338,10 +347,10 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             right: '0',
             left: 'auto',
             bottom: '0',
-            width: this.originalCss.width,
+            width: this._originalStyles.width,
         };
-        let unstuckCss2: any = this.generateCssStyle(this.originalCss.zIndex,
-          'absolute', 'auto', '0', 'auto', '0', this.originalCss.width);
+        // let unstuckCss2: any = this.generateCssStyle(this._originalStyles.zIndex,
+        //   'absolute', 'auto', '0', 'auto', '0', this._originalStyles.width);
         extendObject(this.element.style, unstuckCss);
         // Object.assign(this.element.style, unstuckCss);
     }
@@ -371,16 +380,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.sticker();
     }
 
-  generateCssStyle(zIndex:string, position:string, top:string, right:string,
-                   left:string, bottom:string, width:string): any {
+  generateCssStyle(position:string, top:string, right:string,
+                   left:string, bottom:string, width:string | null, zIndex?:string): any {
     let curCSS = {
-      zIndex: zIndex,
       position: position,
       top: top,
       right: right,
       left: left,
       bottom: bottom,
       width: width,
+      zIndex: zIndex,
     };
     return curCSS;
   }
