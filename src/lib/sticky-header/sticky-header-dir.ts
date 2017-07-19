@@ -59,7 +59,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    isStickyPositionSupported: boolean = true;
+    isStickyPositionSupported: boolean = false;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
@@ -88,7 +88,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       if (parentReg != null) {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
-      this.setStrategyAccordingToCompatibility();
+      //this.setStrategyAccordingToCompatibility();
     }
   }
 
@@ -165,25 +165,29 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //     bottom: this.getCssValue(this.element, 'bottom'),
         //     width: this.getCssValue(this.element, 'width'),
         // };
-        let boundingClientRecVal = this.element.getBoundingClientRect();
-        console.log('boundingClientRecVal : ' + boundingClientRecVal.top);
-        console.log('getCssValue: ' + this.getCssValue(this.element, 'top'));
-        this.originalCss = this.generateCssStyle(
-          this.getCssValue(this.element, 'zIndex'),
-          this.getCssValue(this.element, 'position'),
-          this.getCssValue(this.element, 'top'),
-          this.getCssValue(this.element, 'right'),
-          this.getCssValue(this.element, 'left'),
-          this.getCssValue(this.element, 'bottom'),
-          this.getCssValue(this.element, 'width'));
+        // let boundingClientRecVal = this.element.getBoundingClientRect();
+        // console.log('boundingClientRecVal : ' + boundingClientRecVal.top);
+        // console.log('getCssValue: ' + this.getCssValue(this.element, 'top'));
+        let values = window.getComputedStyle(this.element, '');
         // this.originalCss = this.generateCssStyle(
         //   this.getCssValue(this.element, 'zIndex'),
         //   this.getCssValue(this.element, 'position'),
-        //   boundingClientRecVal.top + '',
-        //   boundingClientRecVal.right + '',
-        //   boundingClientRecVal.left + '',
-        //   boundingClientRecVal.bottom + '',
-        //   boundingClientRecVal.width + '') ;
+        //   this.getCssValue(this.element, 'top'),
+        //   this.getCssValue(this.element, 'right'),
+        //   this.getCssValue(this.element, 'left'),
+        //   this.getCssValue(this.element, 'bottom'),
+        //   this.getCssValue(this.element, 'width'));
+
+
+        this.originalCss = this.generateCssStyle(
+          values.getPropertyValue('zIndex'),
+          values.getPropertyValue('position'),
+          values.getPropertyValue('top'),
+          values.getPropertyValue('right'),
+          values.getPropertyValue('left'),
+          values.getPropertyValue('bottom'),
+          values.getPropertyValue('width'));
+        
 
         this.attach();
 
