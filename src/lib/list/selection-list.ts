@@ -160,7 +160,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
     let focusedIndex = this._keyManager.activeItemIndex;
 
-    if (typeof focusedIndex === 'number' && this._isValidIndex(focusedIndex)) {
+    if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
       let focusedOption: MdListOption = this.options.toArray()[focusedIndex];
 
       if (focusedOption) {
