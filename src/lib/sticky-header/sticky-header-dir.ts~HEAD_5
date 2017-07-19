@@ -56,15 +56,19 @@ export class StickyParentDirective implements OnInit, OnDestroy, AfterViewInit {
 export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @Input('sticky-zIndex') zIndex: number = 10;
+    @Input('sticky-width') width: string = 'auto'; //sticky's width
+    @Input('sticky-offset-bottom') offsetBottom: number = 0;
 
-    private activated = new EventEmitter();
-    private deactivated = new EventEmitter();
+    @Input('sticky-class') stickClass: string = 'sticky';
+    @Input('sticky-end-class') endStickClass: string = 'sticky-end';
+    @Input('sticky-media-query') mediaQuery: string = '';
+
+    @Output() activated = new EventEmitter();
+    @Output() deactivated = new EventEmitter();
 
     private onScrollBind: EventListener = this.onScroll.bind(this);
     private onResizeBind: EventListener = this.onResize.bind(this);
 
-    private stickStartClass: string = 'sticky';
-    private stickEndClass: string = 'sticky-end';
     private isStuck: boolean = false;
 
     // the element with the 'md-sticky' tag
@@ -94,9 +98,6 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     // the padding of 'elem'
     private elementPadding: any;
     private paddingNumber: any;
-
-    // sticky element's width
-    private width: string = 'auto';
 
     constructor(private element: ElementRef, public findScroll: Scrollable) {
         this.elem = element.nativeElement;
@@ -166,8 +167,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.sticker();
 
         if (this.isStuck) {
-            this.unstickElement();
-            this.stickElement();
+            this.unstuckElement();
+            this.stuckElement();
         }
     }
 
@@ -185,21 +186,22 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.paddingNumber = Number(this.elementPadding.slice(0,-2));
         this.scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
 
-        this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
+        this.scrollFinish = this.containerStart - this.offsetBottom + (this.containerHeight - this.elemHeight);
     }
 
     // reset element to its original CSS
     resetElement(): void {
-        this.elem.classList.remove(this.stickStartClass);
+        this.elem.classList.remove(this.stickClass);
         Object.assign(this.elem.style, this.originalCss);
     }
 
     // stuck element, make the element stick to the top of the scrollable container.
-    stickElement(): void {
+    stuckElement(): void {
+
         this.isStuck = true;
 
-        this.elem.classList.remove(this.stickEndClass);
-        this.elem.classList.add(this.stickStartClass);
+        this.elem.classList.remove(this.endStickClass);
+        this.elem.classList.add(this.stickClass);
 
         this.elem.style.zIndex = this.zIndex;
         this.elem.style.position = 'fixed';
@@ -216,24 +218,39 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // unstuck element
-    unstickElement(): void {
+    unstuckElement(): void {
         this.isStuck = false;
 
-        this.elem.classList.add(this.stickEndClass);
+        this.elem.classList.add(this.endStickClass);
 
         this.stickyParent.style.position = 'relative';
         this.elem.style.position = 'absolute';
         this.elem.style.top = 'auto';
-        this.elem.style.right = 0;
-        this.elem.style.left = 'auto';
-        this.elem.style.bottom = 'auto';
+        this.elem.style.right = this.upperScrollableContainer.right + 'px';
+        this.elem.style.left = this.upperScrollableContainer.left + 'px';
+        this.elem.style.bottom = this.offsetBottom + 'px';
         this.elem.style.width = this.width;
 
         this.deactivated.next(this.elem);
     }
 
+    matchMediaQuery(): any {
+        if (!this.mediaQuery) {
+            return true;
+        }
+        return (
+            window.matchMedia('(' + this.mediaQuery + ')').matches ||
+            window.matchMedia(this.mediaQuery).matches
+        );
+    }
 
     sticker(): void {
+
+        if (this.isStuck && !this.matchMediaQuery()) {
+            this.resetElement();
+            return;
+        }
+
         // detecting when a container's height changes
         let currentContainerHeight: number = this.getCssNumber(this.stickyParent, 'height');
         if (currentContainerHeight !== this.containerHeight) {
@@ -246,12 +263,12 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         // unstick when the element is scrolled out of the sticky region
         if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition > this.scrollFinish) {
             this.resetElement();
-            if (currentPosition > this.scrollFinish) this.unstickElement();
+            if (currentPosition > this.scrollFinish) this.unstuckElement();
             this.isStuck = false;
         }
         // stick when the element is within the sticky region
         else if (this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
-            this.stickElement();
+            this.stuckElement();
         }
     }
 
