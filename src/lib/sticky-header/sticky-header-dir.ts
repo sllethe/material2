@@ -187,7 +187,6 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
           values.getPropertyValue('left'),
           values.getPropertyValue('bottom'),
           values.getPropertyValue('width'));
-        
 
         this.attach();
 
