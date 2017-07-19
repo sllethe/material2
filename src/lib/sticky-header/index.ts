@@ -7,11 +7,11 @@
  */
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
+import {OverlayModule, MdCommonModule, PlatformModule} from '../core';
 import {CdkStickyRegion, CdkStickyHeader} from './sticky-header';
 
 @NgModule({
-    imports: [OverlayModule, MdCommonModule, CommonModule],
+    imports: [OverlayModule, MdCommonModule, CommonModule, PlatformModule],
     declarations: [CdkStickyRegion, CdkStickyHeader],
     exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
 })
