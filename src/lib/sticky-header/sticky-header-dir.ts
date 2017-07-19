@@ -59,7 +59,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    isStickyPositionSupported: boolean = false;
+    isStickyPositionSupported: boolean = true;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
@@ -88,7 +88,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       if (parentReg != null) {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
-      //this.setStrategyAccordingToCompatibility();
+      this.setStrategyAccordingToCompatibility();
     }
   }
 
