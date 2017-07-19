@@ -40,9 +40,9 @@ import {MdListOption} from './list-option';
     // Events
     '(focus)': 'focus()',
     '(keydown)': 'keydown($event)'},
-  queries: {
-    options: new ContentChildren(MdListOption)
-  },
+  // queries: {
+  //   options: new ContentChildren(MdListOption)
+  // },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
@@ -71,7 +71,8 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   _keyManager: FocusKeyManager;
 
   /** The option components contained within this selection-list. */
-  options: QueryList<MdListOption>;
+  @ContentChildren(MdListOption) options;
+  //options: QueryList<MdListOption>;
 
   // options which are selected.
   selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
