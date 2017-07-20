@@ -107,7 +107,22 @@
     <h2>Selection List</h2>
     <mat-selection-list id="selection-list-1">
       <md-list-option checkboxPosition="before" disabled="true">
-        Inbox (test disabled)
+        Inbox (disabled selection-option)
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Starred
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Sent Mail
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Drafts
+      </md-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list id="disabled-selection-list" [disabled]="true">
+      <md-list-option checkboxPosition="before" disabled="true">
+        Inbox (disabled list)
       </md-list-option>
       <md-list-option checkboxPosition="before">
         Starred
