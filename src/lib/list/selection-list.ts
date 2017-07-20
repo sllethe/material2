@@ -28,8 +28,17 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {MdListOption} from './list-option';
+import {MdListOption, MdSelectionListOptionEvent} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/of';
+import {merge} from 'rxjs/operator/merge';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/startWith';
 
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
@@ -124,11 +133,16 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     }
 
     // Go ahead and subscribe all of the initial options
-    this._subscribeOptions(this.options);
+    // this._subscribeOptions(this.options);
 
     // When the list changes, re-subscribe
-    this._optionsChangeSubscription = this.options.changes.subscribe((options: QueryList<MdListOption>) => {
-      this._subscribeOptions(options);
+    this._optionsChangeSubscription = this.options.changes.startWith(this.options).switchMap((options) => {
+      console.log(' this is the options ', options);
+      let result = Observable.merge(...options.map(option => option.onFocus));
+      console.log(` this is the result`, result);
+      return result;
+    }).subscribe(e => {
+      console.log('THIS IS THE NEW ONE', e);
     });
 
     console.log(this.options);
@@ -189,7 +203,39 @@ export class MdSelectionList extends _MdSelectionListMixinBase
    * @param options The list of options to be subscribed.
    */
   protected _subscribeOptions(options: QueryList<MdListOption>): void {
-    options.forEach(option => this._addOption(option));
+    // this.options.changes.switchMap((options) => {
+    //   return Observable.merge(options.map(option => option.onFocus))
+    // })
+
+
+    let onFocusStream = Observable.merge(options.map(option => option.onFocus));
+    let destroyStream = Observable.merge(options.map(option => option.destroy))
+      .do(e => console.log(e));
+
+    onFocusStream.subscribe((optionEvent: any) => {
+      console.log('THIS IS THE OPTION EVENT FROM FOCUS', optionEvent);
+      let optionIndex: number = this.options.toArray().indexOf(optionEvent.option);
+      this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+
+    destroyStream.subscribe((optionEvent: any) => {
+      let optionIndex: number = this.options.toArray().indexOf(optionEvent.option);
+
+      console.log(optionEvent);
+      if (optionEvent.option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
+        }
+      }
+
+      // this._subscribed.delete(optionEvent.option);
+      optionEvent.option.destroy.unsubscribe();
+    });
+
+    // options.forEach(option => {this._subscribed.set(option, true);});
   }
 
   /**
