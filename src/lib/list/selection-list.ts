@@ -29,11 +29,16 @@ import {Subscription} from 'rxjs/Subscription';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {MdListOption} from './list-option';
+import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+
+export class MdSelectionListBase {}
+export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
 
 
 @Component({
   moduleId: module.id,
   selector: 'md-selection-list, mat-selection-list',
+  inputs: ['disabled'],
   host: {'role': 'listbox',
     '[attr.tabindex]': '_tabIndex',
     'class': 'mat-selection-list',
@@ -49,10 +54,11 @@ import {MdListOption} from './list-option';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MdSelectionList implements AfterContentInit, OnDestroy {
+export class MdSelectionList extends _MdSelectionListMixinBase
+  implements Focusable, CanDisable, AfterContentInit, OnDestroy {
   private _disableRipple: boolean = false;
 
-  private _disabled: boolean = false;
+  // private _disabled: boolean = false;
 
   /** Tab index for the selection-list. */
   _tabIndex = 0;
@@ -73,7 +79,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 
   /** The option components contained within this selection-list. */
   @ContentChildren(MdListOption) options;
-  //options: QueryList<MdListOption>;
+  // options: QueryList<MdListOption>;
 
   // options which are selected.
   selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
@@ -86,9 +92,9 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
-  @Input()
-  get disabled() { return this._disabled; }
-  set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
+  // @Input()
+  // get disabled() { return this._disabled; }
+  // set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
   /**
    * Whether or not this option is selectable. When a option is not selectable,
@@ -100,7 +106,9 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     this._selectable = coerceBooleanProperty(value);
   }
 
-  constructor(private _element: ElementRef) { }
+  constructor(private _element: ElementRef) {
+    super();
+  }
 
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager(this.options).withWrap();
