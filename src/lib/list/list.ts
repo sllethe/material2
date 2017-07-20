@@ -408,6 +408,7 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
 }
 
 /**
+git branch
  * Directive whose purpose is to add the mat- CSS styling to this selector.
  * @docs-private
  */
