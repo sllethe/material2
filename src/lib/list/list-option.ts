@@ -31,7 +31,10 @@ import {Focusable} from '../core/a11y/focus-key-manager';
 import {MdSelectionList} from './selection-list';
 
 
-export interface MdSelectionListOptionEvent {
+// export interface MdSelectionListOptionEvent {
+//   option: MdListOption;
+// }
+export class MdSelectionListOptionEvent {
   option: MdListOption;
 }
 

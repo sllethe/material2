@@ -80,6 +80,8 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   private _optionsChangeSubscription: Subscription;
 
+  private _optionsChangeSubscriptionDestory: Subscription;
+
   /** Whether or not the option is selectable. */
   protected _selectable: boolean = true;
 
@@ -133,16 +135,35 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     }
 
     // Go ahead and subscribe all of the initial options
-    // this._subscribeOptions(this.options);
+   // this._subscribeOptions(this.options);
 
     // When the list changes, re-subscribe
     this._optionsChangeSubscription = this.options.changes.startWith(this.options).switchMap((options) => {
-      console.log(' this is the options ', options);
       let result = Observable.merge(...options.map(option => option.onFocus));
-      console.log(` this is the result`, result);
       return result;
     }).subscribe(e => {
-      console.log('THIS IS THE NEW ONE', e);
+      console.log('THIS IS THE OPTION EVENT FROM FOCUS', e);
+      // let optionIndex: number = this.options.toArray().indexOf(e);
+      // this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+
+    this._optionsChangeSubscriptionDestory = this.options.changes.startWith(this.options).switchMap((options) => {
+      let result = Observable.merge(...options.map(option => option.destroy));
+      return result;
+      }).subscribe(e => {
+        console.log('THIS IS THE OPTIONS EVENT FROM DESTORY', e);
+      // let optionIndex: number = this.options.toArray().indexOf(e);
+      //
+      // console.log(e);
+      // if (e._hasFocus) {
+      //   // Check whether the option is the last item
+      //   if (optionIndex < this.options.length - 1) {
+      //     this._keyManager.setActiveItem(optionIndex);
+      //   } else if (optionIndex - 1 >= 0) {
+      //     this._keyManager.setActiveItem(optionIndex - 1);
+      //   }
+      // }
+      // e.destroy.unsubscribe();
     });
 
     console.log(this.options);
