@@ -39,7 +39,8 @@ import {MdListOption} from './list-option';
     'class': 'mat-selection-list',
     // Events
     '(focus)': 'focus()',
-    '(keydown)': 'keydown($event)'},
+    '(keydown)': 'keydown($event)',
+    '[attr.aria-disabled]': 'disabled.toString()'},
   // queries: {
   //   options: new ContentChildren(MdListOption)
   // },
