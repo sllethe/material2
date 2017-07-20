@@ -78,7 +78,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     // the upper scrollable container
     private upperScrollableContainer: any;
 
-    // the original css of the sticky element, used to reset the sticky element when it is being unstick
+    // the original css of the sticky element,
+    // used to reset the sticky element when it is being unstick
     private originalCss: any;
 
     // the height of 'stickyParent'
@@ -186,7 +187,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    // define the restrictions of the sticky header(including stickyWidth, when to start, when to finish)
+    // define the restrictions of the sticky header
+    // (including stickyWidth, when to start, when to finish)
     defineRestrictions(): void {
         let containerTop: any = this.stickyParent.getBoundingClientRect();
         this.elemHeight = this.getCssNumber(this.elem, 'height');
@@ -198,7 +200,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         this.elementPadding = this.getCssValue(this.elem, 'padding');
 
         this.paddingNumber = Number(this.elementPadding.slice(0,-2));
-        this.scrollingWidth = this.upperScrollableContainer.clientWidth - this.paddingNumber - this.paddingNumber;
+        this.scrollingWidth = this.upperScrollableContainer.clientWidth -
+          this.paddingNumber - this.paddingNumber;
 
         this.scrollFinish = this.containerStart + (this.containerHeight - this.elemHeight);
     }
@@ -289,14 +292,16 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
         let currentPosition: number = this.upperScrollableContainer.offsetTop;
 
         // unstick when the element is scrolled out of the sticky region
-        if (this.isStuck && (currentPosition < this.containerStart || currentPosition > this.scrollFinish) || currentPosition > this.scrollFinish) {
+        if (this.isStuck &&
+          (currentPosition < this.containerStart || currentPosition > this.scrollFinish)
+          || currentPosition > this.scrollFinish) {
             this.resetElement();
-            if (currentPosition > this.scrollFinish) this.unstickElement();
+            if (currentPosition > this.scrollFinish) {
+              this.unstickElement();
+            }
             this.isStuck = false;
-        }
-        // stick when the element is within the sticky region
-        // this.isStuck === false &&
-        else if ( this.isStuck === false && currentPosition > this.containerStart && currentPosition < this.scrollFinish) {
+        } else if ( this.isStuck === false && currentPosition > this.containerStart &&
+          currentPosition < this.scrollFinish) {
             this.stickElement();
             console.log('stick');
         }
@@ -306,9 +311,8 @@ export class StickyHeaderDirective implements OnInit, OnDestroy, AfterViewInit {
     private getCssValue(element: any, property: string): any {
         let result: any = '';
         if (typeof window.getComputedStyle !== 'undefined') {
-            result = window.getComputedStyle(element, null).getPropertyValue(property);
-        }
-        else if (typeof element.currentStyle !== 'undefined')  {
+            result = window.getComputedStyle(element, '').getPropertyValue(property);
+        } else if (typeof element.currentStyle !== 'undefined')  {
             // result = element.currentStyle[property];
             result = element.currentStyle.property;
         }
