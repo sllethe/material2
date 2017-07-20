@@ -47,7 +47,8 @@ const FOCUS_STYLE: string = 'mat-list-item-focus';
   selector: 'md-list-option, mat-list-option',
   host: {
     'role': 'option',
-    'class': 'mat-list-item, mat-list-option',
+    //'class': 'mat-list-item, mat-list-option',
+    'class': 'mat-list-item mat-list-option',
     '(focus)': '_handleFocus()',
     //'(focus)': 'focus()',
     '(blur)': '_handleBlur()',
