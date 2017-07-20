@@ -14,6 +14,7 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import {Subscription} from 'rxjs/Subscription';
 import {Platform} from '../core/platform';
+//import {isPositionStickySupported} from '../../cdk/platform/features';
 // import {createElement} from '@angular/core';
 
 @Directive({
@@ -84,7 +85,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   constructor(private _element: ElementRef,
                 public scrollable: Scrollable,
                 @Optional() public parentReg: CdkStickyRegion,
-                platform: Platform) {
+                public platform: Platform) {
     if (platform.isBrowser) {
       this.element = _element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
@@ -93,6 +94,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
       // this.setStrategyAccordingToCompatibility();
+      this.setStrategy();
     }
   }
 
@@ -152,6 +154,42 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this._element.nativeElement.style.position = prefix + 'sticky';
     }
   }
+
+  setStrategy(): void {
+    this._isStickyPositionSupported = this.isPositionStickySupported();
+    if (this._isStickyPositionSupported == true) {
+      this._element.nativeElement.style.top = '0px';
+      this._element.nativeElement.style.cssText += 'position: -webkit-sticky; position: sticky; ';
+      // // TODO add css class with both 'sticky' and '-webkit-sticky' on position when @directory support adding CSS class
+      // this._element.nativeElement.style.position = 'sticky';
+      // if (this.platform.SAFARI || this.platform.WEBKIT) {
+      //   this._isStickyPositionSupported = false;
+      //   console.log('////////////////' + 'unsupport');
+      // }
+      console.log(this.element.style.cssText);
+    }
+  }
+
+
+
+
+  /**
+   * Whether the browser support css `position: sticky`.
+   * Based on the check from modernizr:
+   * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/css/positionsticky.js
+   */
+  isPositionStickySupported(): boolean {
+    let computedPositionStickySupported: boolean | null = null;
+    if (computedPositionStickySupported != null) {
+      return computedPositionStickySupported;
+    }
+
+    const elementStyle = document.createElement('div').style;
+    elementStyle.cssText = ['', '-webkit-'].map(p => `position: ${p}sticky`).join(';');
+    computedPositionStickySupported = elementStyle.cssText.indexOf('sticky') !== -1;
+    return computedPositionStickySupported;
+  }
+
 
     ngAfterViewInit(): void {
       if(this._isStickyPositionSupported === false) {
