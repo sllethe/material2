@@ -96,15 +96,15 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   // get disabled() { return this._disabled; }
   // set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
 
-  /**
-   * Whether or not this option is selectable. When a option is not selectable,
-   * it's selected state is always ignored.
-   */
-  @Input()
-  get selectable(): boolean { return this._selectable; }
-  set selectable(value: boolean) {
-    this._selectable = coerceBooleanProperty(value);
-  }
+  // /**
+  //  * Whether or not this option is selectable. When a option is not selectable,
+  //  * it's selected state is always ignored.
+  //  */
+  // @Input()
+  // get selectable(): boolean { return this._selectable; }
+  // set selectable(value: boolean) {
+  //   this._selectable = coerceBooleanProperty(value);
+  // }
 
   constructor(private _element: ElementRef) {
     super();
@@ -166,9 +166,9 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   /** Toggles the selected state of the currently focused option. */
   protected _toggleSelectOnFocusedOption(): void {
-    if (!this.selectable) {
-      return;
-    }
+    // if (!this.selectable) {
+    //   return;
+    // }
 
     let focusedIndex = this._keyManager.activeItemIndex;
 
