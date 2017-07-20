@@ -104,12 +104,12 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager(this.options).withWrap();
 
-    // Prevents the selection-list from capturing focus and redirecting
-    // it back to the first option when the user tabs out.
-    this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
-      this._tabIndex = -1;
-      setTimeout(() => this._tabIndex = 0);
-    });
+    // // Prevents the selection-list from capturing focus and redirecting
+    // // it back to the first option when the user tabs out.
+    // this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
+    //   this._tabIndex = -1;
+    //   setTimeout(() => this._tabIndex = 0);
+    // });
 
     // Go ahead and subscribe all of the initial options
     this._subscribeOptions(this.options);
