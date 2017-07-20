@@ -40,6 +40,8 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/startWith';
 
+export class MdSelectionListBase {}
+export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
 
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
