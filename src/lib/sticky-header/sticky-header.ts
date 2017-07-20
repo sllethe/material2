@@ -59,24 +59,17 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     // the upper scrollable container
     public upperScrollableContainer: HTMLElement;
 
-    //private _isStickyPositionSupported: boolean = true;
+    // private _isStickyPositionSupported: boolean = true;
     private _isStickyPositionSupported: boolean = false;
 
     /**
      * the original css of the sticky element, used to reset the sticky element
      * when it is being unstuck
      */
-    // private _originalStyles = {} as CSSStyleDeclaration;
-    private _originalStyles = {
-      position: '',
-      top: '',
-      right: '',
-      left: '',
-      bottom: '',
-      width:  '',
-      zIndex: ''};
-    //private _originalStyles: any;
-    //= {} as CSSStyleDeclaration;
+     private _originalStyles: any;
+    // private _originalStyles = {};
+    // private _originalStyles: any;
+    // = {} as CSSStyleDeclaration;
 
     private _stickyRegionTop: number;
     private _stickyRegionBottomThreshold: number;
@@ -99,7 +92,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       if (parentReg != null) {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
-      //this.setStrategyAccordingToCompatibility();
+      // this.setStrategyAccordingToCompatibility();
     }
   }
 
@@ -132,15 +125,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       let body = document.body;
       div.style.cssText = 'display:none;' + stickyText;
       body.appendChild(div);
-      let isSupport = /sticky/i.test(this.getCssValue(div,'position'));
-      //getCssValue(element: any, property: string)
-      //window.getComputedStyle(div).position
-
-      body.removeChild(div);
-      //div = null;
-      if(isSupport == true) {
-        supportList.push(prefixTestList[i]);
+      let position = window.getComputedStyle(div).position;
+      if(position != null) {
+        let isSupport = /sticky/i.test(position);
+        body.removeChild(div);
+        if(isSupport == true) {
+          supportList.push(prefixTestList[i]);
+        }
       }
+      // getCssValue(element: any, property: string)
+      // window.getComputedStyle(div).position
     }
     return supportList;
   }
@@ -179,7 +173,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         // let boundingClientRecVal = this.element.getBoundingClientRect();
         // console.log('boundingClientRecVal : ' + boundingClientRecVal.top);
         // console.log('getCssValue: ' + this.getCssValue(this.element, 'top'));
-        let values = window.getComputedStyle(this.element, '');
+
         // this.originalCss = this.generateCssStyle(
         //   this.getCssValue(this.element, 'zIndex'),
         //   this.getCssValue(this.element, 'position'),
@@ -188,15 +182,15 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         //   this.getCssValue(this.element, 'left'),
         //   this.getCssValue(this.element, 'bottom'),
         //   this.getCssValue(this.element, 'width'));
-
+        let values = window.getComputedStyle(this.element, '');
         this._originalStyles = {
-          position: values.getPropertyValue('position'),
-          top: values.getPropertyValue('top'),
-          right: values.getPropertyValue('right'),
-          left: values.getPropertyValue('left'),
-          bottom: values.getPropertyValue('bottom'),
-          width:  values.getPropertyValue('width'),
-          zIndex: values.getPropertyValue('zIndex')
+          position: values.position,
+          top: values.top,
+          right: values.right,
+          left: values.left,
+          bottom: values.bottom,
+          width:  values.width,
+          zIndex: values.zIndex
         };
 
         this.attach();
@@ -251,9 +245,9 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.defineRestrictionsAndStick();
     }
     onResize(): void {
-        //this.defineRestrictionsAndStick();
-        //this.originalCss.width = this.parentRegion.clientWidth;
-        //console.log('resize: ' + this.parentRegion.clientWidth);
+        // this.defineRestrictionsAndStick();
+        // this.originalCss.width = this.parentRegion.clientWidth;
+        // console.log('resize: ' + this.parentRegion.clientWidth);
 
         /**
          * If there's already a header being stick when the page is
@@ -275,14 +269,14 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         let elemHeight: number = this.element.offsetHeight;
         this._stickyRegionTop = clientRect.top;
 
-      //this.stickyHeaderPadding = this.getCssValue(this.element, 'padding');
-      //this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
+      // this.stickyHeaderPadding = this.getCssValue(this.element, 'padding');
+      // this.stickyRegionHeight = this.getCssNumber(this.stickyParent, 'height');
       // console.log('------------' + this.stickyRegionHeight);
       // console.log('----===--------' + clientRect.height);
 
         // the padding of the element being sticked
-        //let paddingNumber: any = Number(this.stickyHeaderPadding.slice(0, -2));
-        //this._scrollingWidth = this.upperScrollableContainer.clientWidth -
+        // let paddingNumber: any = Number(this.stickyHeaderPadding.slice(0, -2));
+        // this._scrollingWidth = this.upperScrollableContainer.clientWidth -
         //    paddingNumber - paddingNumber;
 
         this._stickyRegionBottomThreshold = this._stickyRegionTop + (clientRect.height - elemHeight);
@@ -369,7 +363,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
         // unstuck when the element is scrolled out of the sticky region
         if (this.isStuck &&
-            (currentPosition < this._stickyRegionTop || currentPosition > this._stickyRegionBottomThreshold) ||
+            (currentPosition < this._stickyRegionTop ||
+            currentPosition > this._stickyRegionBottomThreshold) ||
             currentPosition >= this._stickyRegionBottomThreshold) {
             this.resetElement();
             if (currentPosition >= this._stickyRegionBottomThreshold) {
@@ -377,7 +372,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
             }
             this.isStuck = false;
         }else if ( this.isStuck === false &&
-            currentPosition > this._stickyRegionTop && currentPosition < this._stickyRegionBottomThreshold) {
+            currentPosition > this._stickyRegionTop &&
+          currentPosition < this._stickyRegionBottomThreshold) {
             this.stickElement();
             console.log('stick');
         }
