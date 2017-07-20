@@ -125,6 +125,9 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
 
   ngAfterContentInit() {
     this._lineSetter = new MdLineSetter(this._lines, this._renderer, this._element);
+    if (this.selectionList.disabled) {
+      this._disabled = true;
+    }
   }
 
   ngOnDestroy(): void {

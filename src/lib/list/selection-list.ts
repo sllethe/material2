@@ -110,6 +110,9 @@ export class MdSelectionList implements AfterContentInit, OnDestroy {
     //   this._tabIndex = -1;
     //   setTimeout(() => this._tabIndex = 0);
     // });
+    if (this.disabled) {
+      this._tabIndex = -1;
+    }
 
     // Go ahead and subscribe all of the initial options
     this._subscribeOptions(this.options);
