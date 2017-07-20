@@ -66,7 +66,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * the original css of the sticky element, used to reset the sticky element
      * when it is being unstuck
      */
-     private _originalStyles: any;
+     private _originalStyles = {} as CSSStyleDeclaration;
     // private _originalStyles = {};
     // private _originalStyles: any;
     // = {} as CSSStyleDeclaration;
@@ -191,7 +191,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
           bottom: values.bottom,
           width:  values.width,
           zIndex: values.zIndex
-        };
+        } as CSSStyleDeclaration;
 
         this.attach();
 
