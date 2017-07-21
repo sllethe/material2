@@ -143,8 +143,9 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       return result;
     }).subscribe(e => {
       console.log('THIS IS THE OPTION EVENT FROM FOCUS', e);
-      // let optionIndex: number = this.options.toArray().indexOf(e);
-      // this._keyManager.updateActiveItemIndex(optionIndex);
+       let optionIndex: number = this.options.toArray().indexOf(e);
+       console.log('-------' + optionIndex);
+       //this._keyManager.updateActiveItemIndex(optionIndex);
     });
 
     this._optionsChangeSubscriptionDestory = this.options.changes.startWith(this.options).switchMap((options) => {
@@ -152,9 +153,9 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       return result;
       }).subscribe(e => {
         console.log('THIS IS THE OPTIONS EVENT FROM DESTORY', e);
-      // let optionIndex: number = this.options.toArray().indexOf(e);
+       let optionIndex: number = this.options.toArray().indexOf(e);
       //
-      // console.log(e);
+       console.log('+++++' + optionIndex);
       // if (e._hasFocus) {
       //   // Check whether the option is the last item
       //   if (optionIndex < this.options.length - 1) {
