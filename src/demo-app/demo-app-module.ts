@@ -79,9 +79,7 @@ import {
   StyleModule,
   CdkStickyHeaderModule,
 } from '@angular/material';
-import {TableHeaderDemo} from './data-table/table-header-demo';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
-import {CdkTableModule} from '@angular/cdk';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -119,8 +117,6 @@ import {CdkTableModule} from '@angular/cdk';
     MdToolbarModule,
     MdTooltipModule,
     MdNativeDateModule,
-    CdkTableModule,
-    CdkDataTableModule,
     StyleModule,
     CdkStickyHeaderModule,
   ]
@@ -177,7 +173,6 @@ export class DemoMaterialModule {}
     SlideToggleDemo,
     SpagettiPanel,
     StyleDemo,
-    TableHeaderDemo,
     ToolbarDemo,
     TooltipDemo,
     TableDemo,
