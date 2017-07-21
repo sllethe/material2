@@ -9,37 +9,24 @@
 import {
   AfterContentInit,
   Component,
-  ContentChild,
   ContentChildren,
-  Directive,
   ElementRef,
   Input,
-  Optional,
-  QueryList,
   Renderer2,
   ViewEncapsulation,
   ChangeDetectionStrategy,
   OnDestroy,
-  EventEmitter,
-  Output, ChangeDetectorRef
 } from '@angular/core';
-import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
+import {coerceBooleanProperty, SelectionModel} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
-import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
+import {SPACE, TAB} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {Observable} from 'rxjs/Observable';
 import {MdListOption, MdSelectionListOptionEvent} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/observable/of';
-import {merge} from 'rxjs/operator/merge';
-
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/startWith';
+import {RxChain, map, doOperator, filter, switchMap, startWith} from '../core/rxjs/index';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {merge} from 'rxjs/observable/merge';
 
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
@@ -52,13 +39,9 @@ export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
   host: {'role': 'listbox',
     '[attr.tabindex]': '_tabIndex',
     'class': 'mat-selection-list',
-    // Events
     '(focus)': 'focus()',
     '(keydown)': 'keydown($event)',
     '[attr.aria-disabled]': 'disabled.toString()'},
-  // queries: {
-  //   options: new ContentChildren(MdListOption)
-  // },
   template: '<ng-content></ng-content>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
@@ -68,8 +51,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   implements Focusable, CanDisable, AfterContentInit, OnDestroy {
   private _disableRipple: boolean = false;
 
-  // private _disabled: boolean = false;
-
   /** Tab index for the selection-list. */
   _tabIndex = 0;
 
@@ -78,13 +59,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
-
-  private _optionsChangeSubscriptionOnFocus: Subscription;
-
-  private _optionsChangeSubscriptionDestory: Subscription;
-
-  /** Whether or not the option is selectable. */
-  protected _selectable: boolean = true;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager;
@@ -96,6 +70,13 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   // options which are selected.
   selectedOptions: SelectionModel<MdListOption> = new SelectionModel<MdListOption>(true);
 
+  /** Subscription to all list options' onFocus events */
+  private _optionsChangeSubscriptionOnFocus: Subscription;
+
+  /** Subscription to all list options' destroy events  */
+  private _optionsChangeSubscriptionDestroy: Subscription;
+
+
   /**
    * Whether the ripple effect should be disabled on the list-items or not.
    * This flag only has an effect for `md-nav-list` components.
@@ -104,20 +85,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   get disableRipple() { return this._disableRipple; }
   set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
 
-  // @Input()
-  // get disabled() { return this._disabled; }
-  // set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
-
-  // /**
-  //  * Whether or not this option is selectable. When a option is not selectable,
-  //  * it's selected state is always ignored.
-  //  */
-  // @Input()
-  // get selectable(): boolean { return this._selectable; }
-  // set selectable(value: boolean) {
-  //   this._selectable = coerceBooleanProperty(value);
-  // }
-
   constructor(private _element: ElementRef) {
     super();
   }
@@ -125,51 +92,13 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   ngAfterContentInit(): void {
     this._keyManager = new FocusKeyManager(this.options).withWrap();
 
-    // // Prevents the selection-list from capturing focus and redirecting
-    // // it back to the first option when the user tabs out.
-    // this._tabOutSubscription = this._keyManager.tabOut.subscribe(() => {
-    //   this._tabIndex = -1;
-    //   setTimeout(() => this._tabIndex = 0);
-    // });
     if (this.disabled) {
       this._tabIndex = -1;
     }
 
-    // Go ahead and subscribe all of the initial options
-    // this._subscribeOptions(this.options);
-
     // When the list changes, re-subscribe
-    this._optionsChangeSubscriptionOnFocus = this.options.changes.startWith(this.options).switchMap((options) => {
-      let result = Observable.merge(...options.map(option => option.onFocus));
-      return result;
-    }).subscribe(e => {
-      console.log('THIS IS THE OPTION EVENT FROM FOCUS', e);
-      console.log('THIS IS THE CURRENT OPTIONS: ', this.options);
-      let optionIndex: number = this.options.toArray().indexOf(e.option);
-      console.log('+++++++' + optionIndex);
-      this._keyManager.updateActiveItemIndex(optionIndex);
-    });
-
-    this._optionsChangeSubscriptionDestory = this.options.changes.startWith(this.options).switchMap((options) => {
-      let result = Observable.merge(...options.map(option => option.destroy));
-      return result;
-    }).subscribe(e => {
-      console.log('THIS IS THE OPTIONS EVENT FROM DESTORY', e);
-      let optionIndex: number = this.options.toArray().indexOf(e.option);
-      //
-      console.log('--------' + optionIndex);
-      if (e.option._hasFocus) {
-        // Check whether the option is the last item
-        if (optionIndex < this.options.length - 1) {
-          this._keyManager.setActiveItem(optionIndex);
-        } else if (optionIndex - 1 >= 0) {
-          this._keyManager.setActiveItem(optionIndex - 1);
-        }
-      }
-      e.option.destroy.unsubscribe();
-    });
-
-    console.log(this.options);
+    this._optionsChangeSubscriptionOnFocus = this.onFocusSubscription();
+    this._optionsChangeSubscriptionDestroy = this.onDestorySubscription();
   }
 
   ngOnDestroy(): void {
@@ -184,6 +113,66 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   focus() {
     this._element.nativeElement.focus();
+  }
+
+  /**
+   * Map all the options' destroy event subscriptions and merge them into one stream.
+   */
+  onDestorySubscription(): Subscription {
+    // let subscription = this.options.changes.startWith(this.options).switchMap((options) => {
+    //   return merge(...options.map(option => option.destroy));
+    // }).subscribe(e => {
+    //   let optionIndex: number = this.options.toArray().indexOf(e.option);
+    //   if (e.option._hasFocus) {
+    //     // Check whether the option is the last item
+    //     if (optionIndex < this.options.length - 1) {
+    //       this._keyManager.setActiveItem(optionIndex);
+    //     } else if (optionIndex - 1 >= 0) {
+    //       this._keyManager.setActiveItem(optionIndex - 1);
+    //     }
+    //   }
+    //   e.option.destroy.unsubscribe();
+    // });
+
+    let sub2 = RxChain.from(this.options.changes).call(startWith, this.options)
+      .call(switchMap, (options: MdListOption[]) => {
+        return merge(...options.map(option => option.destroy));
+      }).subscribe((e: MdSelectionListOptionEvent) => {
+        let optionIndex: number = this.options.toArray().indexOf(e.option);
+        if (e.option._hasFocus) {
+          // Check whether the option is the last item
+          if (optionIndex < this.options.length - 1) {
+            this._keyManager.setActiveItem(optionIndex);
+          } else if (optionIndex - 1 >= 0) {
+            this._keyManager.setActiveItem(optionIndex - 1);
+          }
+        }
+        e.option.destroy.unsubscribe();
+      });
+
+    return sub2;
+  }
+
+  /**
+   * Map all the options' onFocus event subscriptions and merge them into one stream.
+   */
+  onFocusSubscription(): Subscription {
+    // let subscription =  this.options.changes.startWith(this.options).switchMap((options) => {
+    //   return merge(...options.map(option => option.onFocus));
+    // }).subscribe(e => {
+    //   let optionIndex: number = this.options.toArray().indexOf(e.option);
+    //   this._keyManager.updateActiveItemIndex(optionIndex);
+    // });
+
+    let sub2 = RxChain.from(this.options.changes).call(startWith, this.options).call(switchMap,
+    (options: MdListOption[]) => {
+      return merge(...options.map(option => option.onFocus));
+    }).subscribe((e: MdSelectionListOptionEvent) => {
+      let optionIndex: number = this.options.toArray().indexOf(e.option);
+      this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+
+    return sub2;
   }
 
   /** Passes relevant key presses to our key manager. */
@@ -204,10 +193,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   /** Toggles the selected state of the currently focused option. */
   protected _toggleSelectOnFocusedOption(): void {
-    // if (!this.selectable) {
-    //   return;
-    // }
-
     let focusedIndex = this._keyManager.activeItemIndex;
 
     if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
@@ -238,9 +223,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       let optionIndex: number = this.options.toArray().indexOf(option);
 
       this._keyManager.updateActiveItemIndex(optionIndex);
-      // if (this._isValidIndex(optionIndex)) {
-      //   this._keyManager.updateActiveItemIndex(optionIndex);
-      // }
     });
 
     // On destroy, remove the item from our list, and check focus
