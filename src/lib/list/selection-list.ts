@@ -30,6 +30,16 @@ import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/k
 import {Focusable} from '../core/a11y/focus-key-manager';
 import {MdListOption} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/of';
+import {merge} from 'rxjs/operator/merge';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/startWith';
+
 
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
@@ -71,8 +81,8 @@ export class MdSelectionList extends _MdSelectionListMixinBase
 
   private _optionsChangeSubscription: Subscription;
 
-  /** Whether or not the option is selectable. */
-  protected _selectable: boolean = true;
+  private _optionsChangeSubscriptionOnFocus: Subscription;
+  private _optionsChangeSubscriptionDestory: Subscription;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager;
@@ -123,15 +133,18 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       this._tabIndex = -1;
     }
 
-    // Go ahead and subscribe all of the initial options
-    this._subscribeOptions(this.options);
+    this._optionsChangeSubscriptionOnFocus = this.onFocusSubscription();
+    this._optionsChangeSubscriptionDestory = this.onDestorySubscription();
 
-    // When the list changes, re-subscribe
-    this._optionsChangeSubscription = this.options.changes.subscribe((options: QueryList<MdListOption>) => {
-      this._subscribeOptions(options);
-    });
-
-    console.log(this.options);
+    // // Go ahead and subscribe all of the initial options
+    // this._subscribeOptions(this.options);
+    //
+    // // When the list changes, re-subscribe
+    // this._optionsChangeSubscription = this.options.changes.subscribe((options: QueryList<MdListOption>) => {
+    //   this._subscribeOptions(options);
+    // });
+    //
+    // console.log(this.options);
   }
 
   ngOnDestroy(): void {
@@ -162,6 +175,34 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       default:
         this._keyManager.onKeydown(event);
     }
+  }
+
+  onDestorySubscription(): Subscription {
+    let subsctiption = this.options.changes.startWith(this.options).switchMap((options) => {
+      return Observable.merge(...options.map(option => option.destroy));
+    }).subscribe(e => {
+      let optionIndex: number = this.options.toArray().indexOf(e.option);
+      if (e.option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
+        }
+      }
+      e.option.destroy.unsubscribe();
+    });
+    return subsctiption;
+  }
+
+  onFocusSubscription(): Subscription {
+    let subscription = this.options.changes.startWith(this.options).switchMap((options) => {
+      return Observable.merge(...options.map(option => option.onFocus));
+    }).subscribe(e => {
+      let optionIndex: number = this.options.toArray().indexOf(e.option);
+      this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+    return subscription;
   }
 
   /** Toggles the selected state of the currently focused option. */
