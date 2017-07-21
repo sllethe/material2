@@ -78,7 +78,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
 
-  private _optionsChangeSubscription: Subscription;
+  private _optionsChangeSubscriptionOnFocus: Subscription;
 
   private _optionsChangeSubscriptionDestory: Subscription;
 
@@ -138,14 +138,15 @@ export class MdSelectionList extends _MdSelectionListMixinBase
    // this._subscribeOptions(this.options);
 
     // When the list changes, re-subscribe
-    this._optionsChangeSubscription = this.options.changes.startWith(this.options).switchMap((options) => {
+    this._optionsChangeSubscriptionOnFocus = this.options.changes.startWith(this.options).switchMap((options) => {
       let result = Observable.merge(...options.map(option => option.onFocus));
       return result;
     }).subscribe(e => {
       console.log('THIS IS THE OPTION EVENT FROM FOCUS', e);
-       let optionIndex: number = this.options.toArray().indexOf(e);
-       console.log('-------' + optionIndex);
-       //this._keyManager.updateActiveItemIndex(optionIndex);
+       console.log('THIS IS THE CURRENT OPTIONS: ', this.options);
+       let optionIndex: number = this.options.toArray().indexOf(e.option);
+       console.log('+++++++' + optionIndex);
+       this._keyManager.updateActiveItemIndex(optionIndex);
     });
 
     this._optionsChangeSubscriptionDestory = this.options.changes.startWith(this.options).switchMap((options) => {
@@ -153,18 +154,18 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       return result;
       }).subscribe(e => {
         console.log('THIS IS THE OPTIONS EVENT FROM DESTORY', e);
-       let optionIndex: number = this.options.toArray().indexOf(e);
+       let optionIndex: number = this.options.toArray().indexOf(e.option);
       //
-       console.log('+++++' + optionIndex);
-      // if (e._hasFocus) {
-      //   // Check whether the option is the last item
-      //   if (optionIndex < this.options.length - 1) {
-      //     this._keyManager.setActiveItem(optionIndex);
-      //   } else if (optionIndex - 1 >= 0) {
-      //     this._keyManager.setActiveItem(optionIndex - 1);
-      //   }
-      // }
-      // e.destroy.unsubscribe();
+       console.log('--------' + optionIndex);
+      if (e.option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
+        }
+      }
+      e.option.destroy.unsubscribe();
     });
 
     console.log(this.options);
@@ -175,8 +176,8 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       this._tabOutSubscription.unsubscribe();
     }
 
-    if (this._optionsChangeSubscription) {
-      this._optionsChangeSubscription.unsubscribe();
+    if (this._optionsChangeSubscriptionOnFocus) {
+      this._optionsChangeSubscriptionOnFocus.unsubscribe();
     }
   }
 
