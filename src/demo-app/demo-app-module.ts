@@ -77,7 +77,6 @@ import {
   MdTooltipModule,
   OverlayContainer,
   StyleModule,
-  CdkStickyHeaderModule,
 } from '@angular/material';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
 
@@ -118,7 +117,6 @@ import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
     MdTooltipModule,
     MdNativeDateModule,
     StyleModule,
-    CdkStickyHeaderModule,
   ]
 })
 export class DemoMaterialModule {}
