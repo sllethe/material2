@@ -181,7 +181,6 @@ export class DemoMaterialModule {}
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
-    StickyHeaderDemo,
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
