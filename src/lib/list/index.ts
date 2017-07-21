@@ -7,7 +7,8 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MdLineModule, MdRippleModule, MdCommonModule} from '../core';
+import {MdLineModule, MdRippleModule, MdCommonModule, MdSelectionModule} from '../core';
+import {CommonModule} from '@angular/common';
 import {
   MdList,
   MdListItem,
@@ -17,12 +18,15 @@ import {
   MdListCssMatStyler,
   MdNavListCssMatStyler,
   MdDividerCssMatStyler,
-  MdListSubheaderCssMatStyler,
+  MdListSubheaderCssMatStyler
 } from './list';
+import {MdSelectionList} from './selection-list';
+import {MdListOption} from './list-option';
+import {MdCheckboxModule} from '../checkbox/index';
 
 
 @NgModule({
-  imports: [MdLineModule, MdRippleModule, MdCommonModule],
+  imports: [MdLineModule, MdRippleModule, MdCommonModule, MdCheckboxModule, MdSelectionModule, CommonModule],
   exports: [
     MdList,
     MdListItem,
@@ -35,6 +39,10 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdCheckboxModule,
+    MdSelectionModule,
+    MdSelectionList,
+    MdListOption
   ],
   declarations: [
     MdList,
@@ -46,6 +54,8 @@ import {
     MdNavListCssMatStyler,
     MdDividerCssMatStyler,
     MdListSubheaderCssMatStyler,
+    MdSelectionList,
+    MdListOption
   ],
 })
 export class MdListModule {}

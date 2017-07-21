@@ -85,6 +85,7 @@
         </button>
       </md-list-item>
     </md-nav-list>
+
     <md-nav-list>
       <a md-list-item *ngFor="let link of links" href="http://www.google.com">
         <md-icon md-list-icon>folder</md-icon>
@@ -100,5 +101,60 @@
         </button>
       </md-list-item>
     </md-nav-list>
+  </div>
+
+  <div>
+    <h2>Selection List</h2>
+    <mat-selection-list id="selection-list-1">
+      <md-list-option checkboxPosition="before" disabled="true">
+        Inbox (disabled selection-option)
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Starred
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Sent Mail
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Drafts
+      </md-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list id="disabled-selection-list" [disabled] = true>
+      <md-list-option checkboxPosition="before">
+        Inbox (disabled list)
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Starred
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Sent Mail
+      </md-list-option>
+      <md-list-option checkboxPosition="before">
+        Drafts
+      </md-list-option>
+    </mat-selection-list>
+
+    <mat-selection-list id="selection-list-3">
+      <md-list-option>
+        Inbox
+      </md-list-option>
+      <md-list-option>
+        Starred
+      </md-list-option>
+      <md-list-option>
+        Sent Mail
+      </md-list-option>
+      <md-list-option>
+        Drafts
+      </md-list-option>
+    </mat-selection-list>
+
+    <md-selection-list dense id="selection-list-2">
+      <md-list-option *ngFor="let link of links">
+        {{ link.name }}
+        <!--<md-pseudo-checkbox></md-pseudo-checkbox>-->
+      </md-list-option>
+    </md-selection-list>
   </div>
 </div>
