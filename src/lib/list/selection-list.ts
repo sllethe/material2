@@ -210,6 +210,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     option.onFocus.subscribe(() => {
       let optionIndex: number = this.options.toArray().indexOf(option);
 
+      console.log('++++++++++++++++++++' +  optionIndex);
       this._keyManager.updateActiveItemIndex(optionIndex);
       // if (this._isValidIndex(optionIndex)) {
       //   this._keyManager.updateActiveItemIndex(optionIndex);
@@ -220,6 +221,7 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     option.destroy.subscribe(() => {
       let optionIndex: number = this.options.toArray().indexOf(option);
 
+      console.log('-------------' + optionIndex);
       // if (this._isValidIndex(optionIndex) && option._hasFocus) {
       if (option._hasFocus) {
         // Check whether the option is the last item
