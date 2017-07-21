@@ -28,6 +28,7 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
+import {Observable} from 'rxjs/Observable';
 import {MdListOption, MdSelectionListOptionEvent} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import 'rxjs/add/observable/merge';
@@ -36,7 +37,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import {merge} from 'rxjs/operator/merge';
-import {Observable} from 'rxjs/Observable';
+
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/startWith';
 
