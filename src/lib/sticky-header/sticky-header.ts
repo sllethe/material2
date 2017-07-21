@@ -303,8 +303,8 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
      * when to start, when to finish)
      */
     defineRestrictions(): void {
-        let clientRect: any = this.stickyParent.getBoundingClientRect();
-        let elemHeight: number = this.element.offsetHeight;
+        const clientRect: any = this.stickyParent.getBoundingClientRect();
+        //let elemHeight: number = this.element.offsetHeight;
         this._stickyRegionTop = clientRect.top;
 
       // this.stickyHeaderPadding = this.getCssValue(this.element, 'padding');
@@ -317,7 +317,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         // this._scrollingWidth = this.upperScrollableContainer.clientWidth -
         //    paddingNumber - paddingNumber;
 
-        this._stickyRegionBottomThreshold = this._stickyRegionTop + (clientRect.height - elemHeight);
+        this._stickyRegionBottomThreshold = this._stickyRegionTop + (clientRect.height - this.element.offsetHeight);
     }
 
     /**
