@@ -23,7 +23,7 @@ import {
   EventEmitter,
   Output, ChangeDetectorRef
 } from '@angular/core';
-import {coerceBooleanProperty, MdLine, MdLineSetter, MdPseudoCheckbox, MdSelectionModule, SelectionModel} from '../core';
+import {coerceBooleanProperty, MdLine, MdLineSetter, SelectionModel} from '../core';
 import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
