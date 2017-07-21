@@ -10,8 +10,9 @@ import {Component, Directive, Input, Output,
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
+import {RxChain, debounceTime} from '../core/rxjs/index';
 import {Subscription} from 'rxjs/Subscription';
 import {Platform} from '../core/platform';
 //import {isPositionStickySupported} from '../../cdk/platform/features';
@@ -94,7 +95,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
       // this.setStrategyAccordingToCompatibility();
-      this.setStrategy();
+      // this.setStrategy();
     }
   }
 
@@ -160,7 +161,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (this._isStickyPositionSupported == true) {
       this._element.nativeElement.style.top = '0px';
       this._element.nativeElement.style.cssText += 'position: -webkit-sticky; position: sticky; ';
-      // // TODO add css class with both 'sticky' and '-webkit-sticky' on position when @directory support adding CSS class
+      // TODO add css class with both 'sticky' and '-webkit-sticky' on position when @directory support adding CSS class
       // this._element.nativeElement.style.position = 'sticky';
       // if (this.platform.SAFARI || this.platform.WEBKIT) {
       //   this._isStickyPositionSupported = false;
@@ -265,13 +266,22 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
 
       // Observable.fromEvent(this.upperScrollableContainer, 'scroll').debounceTime(5)
       //   .subscribe(() => this.defineRestrictionsAndStick());
-      this._onScrollSubscription = Observable.fromEvent(this.upperScrollableContainer, 'scroll')
+      // this._onScrollSubscription = fromEvent(this.upperScrollableContainer, 'scroll')
+      //   .subscribe(() => this.defineRestrictionsAndStick());
+      //
+      // this._onTouchSubscription = fromEvent(this.upperScrollableContainer, 'touchmove')
+      //   .subscribe(() => this.defineRestrictionsAndStick());
+      //
+      // this._onResizeSubscription = fromEvent(this.upperScrollableContainer, 'resize')
+      //   .subscribe(() => this.onResize());
+
+      this._onScrollSubscription = RxChain.from(fromEvent(this.upperScrollableContainer, 'scroll'))
+        .call(debounceTime, 0).subscribe(() => this.defineRestrictionsAndStick());
+
+      this._onTouchSubscription = fromEvent(this.upperScrollableContainer, 'touchmove')
         .subscribe(() => this.defineRestrictionsAndStick());
 
-      this._onTouchSubscription = Observable.fromEvent(this.upperScrollableContainer, 'touchmove')
-        .subscribe(() => this.defineRestrictionsAndStick());
-
-      this._onResizeSubscription = Observable.fromEvent(this.upperScrollableContainer, 'resize')
+      this._onResizeSubscription = fromEvent(this.upperScrollableContainer, 'resize')
         .subscribe(() => this.onResize());
     }
 
