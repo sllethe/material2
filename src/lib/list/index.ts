@@ -62,3 +62,5 @@ export class MdListModule {}
 
 
 export * from './list';
+export * from './selection-list';
+export * from './list-option';
