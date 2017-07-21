@@ -28,7 +28,7 @@ import {FocusKeyManager} from '../core/a11y/focus-key-manager';
 import {Subscription} from 'rxjs/Subscription';
 import {SPACE, LEFT_ARROW, RIGHT_ARROW, TAB, HOME, END} from '../core/keyboard/keycodes';
 import {Focusable} from '../core/a11y/focus-key-manager';
-import {MdListOption} from './list-option';
+import {MdListOption, MdSelectionListOptionEvent} from './list-option';
 import {CanDisable, mixinDisabled} from '../core/common-behaviors/disabled';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/fromEvent';
@@ -39,10 +39,6 @@ import {merge} from 'rxjs/operator/merge';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/startWith';
-
-
-export class MdSelectionListBase {}
-export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
 
 export class MdSelectionListBase {}
 export const _MdSelectionListMixinBase = mixinDisabled(MdSelectionListBase);
@@ -82,10 +78,12 @@ export class MdSelectionList extends _MdSelectionListMixinBase
   /** Subscription to tabbing out from the selection-list. */
   private _tabOutSubscription: Subscription;
 
-  private _optionsChangeSubscription: Subscription;
-
   private _optionsChangeSubscriptionOnFocus: Subscription;
+
   private _optionsChangeSubscriptionDestory: Subscription;
+
+  /** Whether or not the option is selectable. */
+  protected _selectable: boolean = true;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager;
@@ -136,18 +134,41 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       this._tabIndex = -1;
     }
 
-    this._optionsChangeSubscriptionOnFocus = this.onFocusSubscription();
-    this._optionsChangeSubscriptionDestory = this.onDestorySubscription();
-
-    // // Go ahead and subscribe all of the initial options
+    // Go ahead and subscribe all of the initial options
     // this._subscribeOptions(this.options);
-    //
-    // // When the list changes, re-subscribe
-    // this._optionsChangeSubscription = this.options.changes.subscribe((options: QueryList<MdListOption>) => {
-    //   this._subscribeOptions(options);
-    // });
-    //
-    // console.log(this.options);
+
+    // When the list changes, re-subscribe
+    this._optionsChangeSubscriptionOnFocus = this.options.changes.startWith(this.options).switchMap((options) => {
+      let result = Observable.merge(...options.map(option => option.onFocus));
+      return result;
+    }).subscribe(e => {
+      console.log('THIS IS THE OPTION EVENT FROM FOCUS', e);
+      console.log('THIS IS THE CURRENT OPTIONS: ', this.options);
+      let optionIndex: number = this.options.toArray().indexOf(e.option);
+      console.log('+++++++' + optionIndex);
+      this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+
+    this._optionsChangeSubscriptionDestory = this.options.changes.startWith(this.options).switchMap((options) => {
+      let result = Observable.merge(...options.map(option => option.destroy));
+      return result;
+    }).subscribe(e => {
+      console.log('THIS IS THE OPTIONS EVENT FROM DESTORY', e);
+      let optionIndex: number = this.options.toArray().indexOf(e.option);
+      //
+      console.log('--------' + optionIndex);
+      if (e.option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
+        }
+      }
+      e.option.destroy.unsubscribe();
+    });
+
+    console.log(this.options);
   }
 
   ngOnDestroy(): void {
@@ -155,8 +176,8 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       this._tabOutSubscription.unsubscribe();
     }
 
-    if (this._optionsChangeSubscription) {
-      this._optionsChangeSubscription.unsubscribe();
+    if (this._optionsChangeSubscriptionOnFocus) {
+      this._optionsChangeSubscriptionOnFocus.unsubscribe();
     }
   }
 
@@ -178,34 +199,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
       default:
         this._keyManager.onKeydown(event);
     }
-  }
-
-  onDestorySubscription(): Subscription {
-    let subsctiption = this.options.changes.startWith(this.options).switchMap((options) => {
-      return Observable.merge(...options.map(option => option.destroy));
-    }).subscribe(e => {
-      let optionIndex: number = this.options.toArray().indexOf(e.option);
-      if (e.option._hasFocus) {
-        // Check whether the option is the last item
-        if (optionIndex < this.options.length - 1) {
-          this._keyManager.setActiveItem(optionIndex);
-        } else if (optionIndex - 1 >= 0) {
-          this._keyManager.setActiveItem(optionIndex - 1);
-        }
-      }
-      e.option.destroy.unsubscribe();
-    });
-    return subsctiption;
-  }
-
-  onFocusSubscription(): Subscription {
-    let subscription = this.options.changes.startWith(this.options).switchMap((options) => {
-      return Observable.merge(...options.map(option => option.onFocus));
-    }).subscribe(e => {
-      let optionIndex: number = this.options.toArray().indexOf(e.option);
-      this._keyManager.updateActiveItemIndex(optionIndex);
-    });
-    return subscription;
   }
 
   /** Toggles the selected state of the currently focused option. */
@@ -233,7 +226,38 @@ export class MdSelectionList extends _MdSelectionListMixinBase
    * @param options The list of options to be subscribed.
    */
   protected _subscribeOptions(options: QueryList<MdListOption>): void {
-    options.forEach(option => this._addOption(option));
+    // this.options.changes.switchMap((options) => {
+    //   return Observable.merge(options.map(option => option.onFocus))
+    // })
+
+
+    let onFocusStream = Observable.merge(options.map(option => option.onFocus));
+    let destroyStream = Observable.merge(options.map(option => option.destroy));
+
+    onFocusStream.subscribe((optionEvent: any) => {
+      console.log('THIS IS THE OPTION EVENT FROM FOCUS', optionEvent);
+      let optionIndex: number = this.options.toArray().indexOf(optionEvent.option);
+      this._keyManager.updateActiveItemIndex(optionIndex);
+    });
+
+    destroyStream.subscribe((optionEvent: any) => {
+      let optionIndex: number = this.options.toArray().indexOf(optionEvent.option);
+
+      console.log(optionEvent);
+      if (optionEvent.option._hasFocus) {
+        // Check whether the option is the last item
+        if (optionIndex < this.options.length - 1) {
+          this._keyManager.setActiveItem(optionIndex);
+        } else if (optionIndex - 1 >= 0) {
+          this._keyManager.setActiveItem(optionIndex - 1);
+        }
+      }
+
+      // this._subscribed.delete(optionEvent.option);
+      optionEvent.option.destroy.unsubscribe();
+    });
+
+    // options.forEach(option => {this._subscribed.set(option, true);});
   }
 
   /**
@@ -254,7 +278,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     option.onFocus.subscribe(() => {
       let optionIndex: number = this.options.toArray().indexOf(option);
 
-      console.log('++++++++++++++++++++' +  optionIndex);
       this._keyManager.updateActiveItemIndex(optionIndex);
       // if (this._isValidIndex(optionIndex)) {
       //   this._keyManager.updateActiveItemIndex(optionIndex);
@@ -265,7 +288,6 @@ export class MdSelectionList extends _MdSelectionListMixinBase
     option.destroy.subscribe(() => {
       let optionIndex: number = this.options.toArray().indexOf(option);
 
-      console.log('-------------' + optionIndex);
       // if (this._isValidIndex(optionIndex) && option._hasFocus) {
       if (option._hasFocus) {
         // Check whether the option is the last item
