@@ -17,22 +17,39 @@ describe('SelectionList', () => {
   }));
 
   fit('should add and remove focus class on focus/blur', () => {
-    // let fixture = TestBed.createComponent(SelectionListWithListOptions);
-    // fixture.detectChanges();
-    // let listItem = fixture.debugElement.query(By.directive(MdListOption));
-    // let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-    //
-    // expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
-    //
-    // listItem.componentInstance._handleFocus();
-    // fixture.detectChanges();
-    // expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
-    //
-    // listItem.componentInstance._handleBlur();
-    // fixture.detectChanges();
-    // expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.query(By.directive(MdListOption));
+    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
 
-    expect(true).toBe(true);
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+
+    listItem.componentInstance._handleFocus();
+    fixture.detectChanges();
+    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
+
+    listItem.componentInstance._handleBlur();
+    fixture.detectChanges();
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+  });
+
+  fit('should be able to dispatch selected items', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.query(By.directive(MdListOption));
+    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+
+    let testSelectItem = fixture.debugElement.query(By.);
+
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+
+    listItem.componentInstance._handleFocus();
+    fixture.detectChanges();
+    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
+
+    listItem.componentInstance._handleBlur();
+    fixture.detectChanges();
+    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
   });
 
 
@@ -43,7 +60,7 @@ describe('SelectionList', () => {
     <md-list-option checkboxPosition="before" disabled="true">
       Inbox (disabled selection-option)
     </md-list-option>
-    <md-list-option checkboxPosition="before">
+    <md-list-option id = "testSelect" checkboxPosition="before">
       Starred
     </md-list-option>
     <md-list-option checkboxPosition="before">
