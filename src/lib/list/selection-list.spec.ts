@@ -3,8 +3,8 @@ import {Component, QueryList, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
 import {createKeyboardEvent} from '@angular/cdk/testing';
-import {LEFT_ARROW, RIGHT_ARROW, SPACE, DELETE, TAB} from '../core/keyboard/keycodes';
-import {DOWN_ARROW, UP_ARROW} from "@angular/cdk";
+import {UP_ARROW, DOWN_ARROW, SPACE} from '../core/keyboard/keycodes';
+//import {DOWN_ARROW, UP_ARROW} from "@angular/cdk";
 
 
 describe('SelectionList and ListOption', () => {
@@ -12,7 +12,8 @@ describe('SelectionList and ListOption', () => {
     TestBed.configureTestingModule({
       imports: [MdListModule],
       declarations: [
-        SelectionListWithListOptions
+        SelectionListWithListOptions,
+        SelectionListWithCheckbocPositionAfter
       ],
     });
 
@@ -36,7 +37,7 @@ describe('SelectionList and ListOption', () => {
     expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
   });
 
-  fit('should be able to dispatch selected items', () => {
+  fit('should be able to dispatch selected one item', () => {
     let fixture = TestBed.createComponent(SelectionListWithListOptions);
     fixture.detectChanges();
     let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
@@ -49,6 +50,25 @@ describe('SelectionList and ListOption', () => {
     let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
 
     expect(selectList.selected.length).toBe(1);
+  });
+
+  fit('should be able to dispatch selected more than one items', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[2].injector.get<MdListOption>(MdListOption);
+    let testListItem2 = listItem[1].injector.get<MdListOption>(MdListOption);
+
+    testListItem.toggle();
+    fixture.detectChanges();
+
+    testListItem2.toggle();
+    fixture.detectChanges();
+
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(2);
   });
 
   fit('test keyboard select with SPACE', () => {
@@ -118,6 +138,14 @@ describe('SelectionList and ListOption', () => {
     expect(manager.activeItemIndex).toEqual(3);
   });
 
+  fit('can customize checkbox position', () => {
+    let fixture = TestBed.createComponent(SelectionListWithCheckbocPositionAfter);
+    fixture.detectChanges();
+
+    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item-content'));
+    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-content-reverse');
+  });
+
 
 });
 
@@ -137,7 +165,24 @@ describe('SelectionList and ListOption', () => {
     </md-list-option>
   </mat-selection-list>`})
 class SelectionListWithListOptions {
-  // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
-  // it doesn't get populated.
+  @ViewChildren(MdListOption) listOptions: QueryList<MdListOption>;
+}
+
+@Component({template: `
+  <mat-selection-list id="selection-list-1">
+    <md-list-option checkboxPosition="after">
+      Inbox (disabled selection-option)
+    </md-list-option>
+    <md-list-option id = "testSelect" checkboxPosition="after">
+      Starred
+    </md-list-option>
+    <md-list-option checkboxPosition="after">
+      Sent Mail
+    </md-list-option>
+    <md-list-option checkboxPosition="after">
+      Drafts
+    </md-list-option>
+  </mat-selection-list>`})
+class SelectionListWithCheckbocPositionAfter {
   @ViewChildren(MdListOption) listOptions: QueryList<MdListOption>;
 }
