@@ -4,7 +4,6 @@ import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {UP_ARROW, DOWN_ARROW, SPACE} from '../core/keyboard/keycodes';
-//import {DOWN_ARROW, UP_ARROW} from "@angular/cdk";
 
 
 describe('SelectionList and ListOption', () => {
