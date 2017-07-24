@@ -2,9 +2,11 @@ import {async, TestBed} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
+import {createKeyboardEvent} from '@angular/cdk/testing';
+import {LEFT_ARROW, RIGHT_ARROW, SPACE, DELETE, TAB} from '../core/keyboard/keycodes';
 
 
-describe('SelectionList', () => {
+describe('SelectionList and ListOption', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MdListModule],
@@ -47,6 +49,28 @@ describe('SelectionList', () => {
 
     expect(selectList.selected.length).toBe(1);
   });
+
+  fit('test keyboard select with SPACE', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[1].nativeElement as HTMLElement;
+    let SPACE_EVENT: KeyboardEvent =
+      createKeyboardEvent('keydown', SPACE, testListItem);
+    let options = selectionList.componentInstance.options;
+    let array = options.toArray();
+    let focusItem = array[1];
+    focusItem.focus();
+    selectionList.componentInstance.keydown(SPACE_EVENT);
+
+    fixture.detectChanges();
+
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(1);
+  });
+
 
 });
 
