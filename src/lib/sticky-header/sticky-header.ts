@@ -63,7 +63,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   /** boolean value to mark whether the current header is stuck*/
   isStuck: boolean = false;
   /** Whether the browser support CSS sticky positioning. */
-  private _isPositionStickySupported: boolean = true;
+  private _isPositionStickySupported: boolean = false;
 
   /** The element with the 'cdkStickyHeader' tag. */
   element: HTMLElement;
@@ -102,7 +102,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
     if (platform.isBrowser) {
       this.element = element.nativeElement;
       this.upperScrollableContainer = scrollable.getElementRef().nativeElement;
-      this._setStrategyAccordingToCompatibility();
+      //this._setStrategyAccordingToCompatibility();
     }
   }
 
@@ -112,15 +112,16 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
       this.stickyParent = this.parentRegion != null ?
         this.parentRegion._elementRef.nativeElement : this.element.parentElement;
 
-      let values = window.getComputedStyle(this.element, '');
+      let headerStyles = window.getComputedStyle(this.element, '');
       this._originalStyles = {
-        position: values.position,
-        top: values.top,
-        right: values.right,
-        left: values.left,
-        bottom: values.bottom,
-        width: values.width,
-        zIndex: values.zIndex} as CSSStyleDeclaration;
+        position: headerStyles.position,
+        top: headerStyles.top,
+        right: headerStyles.right,
+        left: headerStyles.left,
+        bottom: headerStyles.bottom,
+        width: headerStyles.width,
+        zIndex: headerStyles.zIndex
+      } as CSSStyleDeclaration;
 
       this.attach();
       this.defineRestrictionsAndStick();
@@ -128,17 +129,19 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this._onScrollSubscription) {
-      this._onScrollSubscription.unsubscribe();
-    }
-
-    if (this._onResizeSubscription) {
-      this._onResizeSubscription.unsubscribe();
-    }
-
-    if (this._onTouchSubscription) {
-      this._onTouchSubscription.unsubscribe();
-    }
+    // if (this._onScrollSubscription) {
+    //   this._onScrollSubscription.unsubscribe();
+    // }
+    //
+    // if (this._onResizeSubscription) {
+    //   this._onResizeSubscription.unsubscribe();
+    // }
+    //
+    // if (this._onTouchSubscription) {
+    //   this._onTouchSubscription.unsubscribe();
+    // }
+    [this._onScrollSubscription, this._onTouchSubscription, this._onResizeSubscription]
+      .forEach(s => s && s.unsubscribe());
   }
 
   /**
