@@ -71,6 +71,21 @@ describe('SelectionList and ListOption', () => {
     expect(selectList.selected.length).toBe(2);
   });
 
+  fit('test disabled items cannot be selected', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[0].injector.get<MdListOption>(MdListOption);
+
+    testListItem.toggle();
+    fixture.detectChanges();
+
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(0);
+  });
+
   fit('test keyboard select with SPACE', () => {
     let fixture = TestBed.createComponent(SelectionListWithListOptions);
     fixture.detectChanges();
