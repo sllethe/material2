@@ -4,6 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {LEFT_ARROW, RIGHT_ARROW, SPACE, DELETE, TAB} from '../core/keyboard/keycodes';
+import {UP_ARROW} from "@angular/cdk";
 
 
 describe('SelectionList and ListOption', () => {
@@ -61,6 +62,29 @@ describe('SelectionList and ListOption', () => {
     let options = selectionList.componentInstance.options;
     let array = options.toArray();
     let focusItem = array[1];
+    focusItem.focus();
+    selectionList.componentInstance.keydown(SPACE_EVENT);
+
+    fixture.detectChanges();
+
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(1);
+  });
+
+  fit('should focus previous item when press UP ARROW', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[2].nativeElement as HTMLElement;
+    let SPACE_EVENT: KeyboardEvent =
+      createKeyboardEvent('keydown', UP_ARROW, testListItem);
+    let options = selectionList.componentInstance.options;
+    let array = options.toArray();
+    let focusItem = array[2];
+    let manager = selectionList.componentInstance._keyManager;
+
     focusItem.focus();
     selectionList.componentInstance.keydown(SPACE_EVENT);
 
