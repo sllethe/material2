@@ -78,7 +78,7 @@ describe('SelectionList and ListOption', () => {
     let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
     let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
     let testListItem = listItem[2].nativeElement as HTMLElement;
-    let SPACE_EVENT: KeyboardEvent =
+    let UP_EVENT: KeyboardEvent =
       createKeyboardEvent('keydown', UP_ARROW, testListItem);
     let options = selectionList.componentInstance.options;
     let array = options.toArray();
@@ -86,13 +86,13 @@ describe('SelectionList and ListOption', () => {
     let manager = selectionList.componentInstance._keyManager;
 
     focusItem.focus();
-    selectionList.componentInstance.keydown(SPACE_EVENT);
+    expect(manager.activeItemIndex).toEqual(2);
+
+    selectionList.componentInstance.keydown(UP_EVENT);
 
     fixture.detectChanges();
 
-    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
-
-    expect(selectList.selected.length).toBe(1);
+    expect(manager.activeItemIndex).toEqual(1);
   });
 
 
