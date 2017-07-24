@@ -13,7 +13,8 @@ describe('SelectionList and ListOption', () => {
       imports: [MdListModule],
       declarations: [
         SelectionListWithListOptions,
-        SelectionListWithCheckbocPositionAfter
+        SelectionListWithCheckbocPositionAfter,
+        SelectionListWithListDisabled
       ],
     });
 
@@ -77,6 +78,21 @@ describe('SelectionList and ListOption', () => {
     let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
     let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
     let testListItem = listItem[0].injector.get<MdListOption>(MdListOption);
+
+    testListItem.toggle();
+    fixture.detectChanges();
+
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(0);
+  });
+
+  fit('test disabled selection-list cannot be selected', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListDisabled);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[2].injector.get<MdListOption>(MdListOption);
 
     testListItem.toggle();
     fixture.detectChanges();
@@ -184,7 +200,7 @@ class SelectionListWithListOptions {
 }
 
 @Component({template: `
-  <mat-selection-list id="selection-list-1">
+  <mat-selection-list id="selection-list-2">
     <md-list-option checkboxPosition="after">
       Inbox (disabled selection-option)
     </md-list-option>
@@ -199,5 +215,24 @@ class SelectionListWithListOptions {
     </md-list-option>
   </mat-selection-list>`})
 class SelectionListWithCheckbocPositionAfter {
+  @ViewChildren(MdListOption) listOptions: QueryList<MdListOption>;
+}
+
+@Component({template: `
+  <mat-selection-list id="selection-list-3" [disabled] = true>
+    <md-list-option checkboxPosition="after">
+      Inbox (disabled selection-option)
+    </md-list-option>
+    <md-list-option id = "testSelect" checkboxPosition="after">
+      Starred
+    </md-list-option>
+    <md-list-option checkboxPosition="after">
+      Sent Mail
+    </md-list-option>
+    <md-list-option checkboxPosition="after">
+      Drafts
+    </md-list-option>
+  </mat-selection-list>`})
+class SelectionListWithListDisabled {
   @ViewChildren(MdListOption) listOptions: QueryList<MdListOption>;
 }
