@@ -36,22 +36,17 @@ describe('SelectionList', () => {
   fit('should be able to dispatch selected items', () => {
     let fixture = TestBed.createComponent(SelectionListWithListOptions);
     fixture.detectChanges();
-    let listItem = fixture.debugElement.query(By.directive(MdListOption));
-    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[2].injector.get<MdListOption>(MdListOption);
 
-    let testSelectItem = fixture.debugElement.query(By.);
-
-    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
-
-    listItem.componentInstance._handleFocus();
+    testListItem.toggle();
     fixture.detectChanges();
-    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
 
-    listItem.componentInstance._handleBlur();
-    fixture.detectChanges();
-    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
+    let selectList = selectionList.injector.get<MdSelectionList>(MdSelectionList).selectedOptions;
+
+    expect(selectList.selected.length).toBe(1);
   });
-
 
 });
 
