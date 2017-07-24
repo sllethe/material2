@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MdSelectionList, MdListOption, MdListModule} from './index';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {LEFT_ARROW, RIGHT_ARROW, SPACE, DELETE, TAB} from '../core/keyboard/keycodes';
-import {UP_ARROW} from "@angular/cdk";
+import {DOWN_ARROW, UP_ARROW} from "@angular/cdk";
 
 
 describe('SelectionList and ListOption', () => {
@@ -93,6 +93,29 @@ describe('SelectionList and ListOption', () => {
     fixture.detectChanges();
 
     expect(manager.activeItemIndex).toEqual(1);
+  });
+
+  fit('should focus next item when press DOWN ARROW', () => {
+    let fixture = TestBed.createComponent(SelectionListWithListOptions);
+    fixture.detectChanges();
+    let listItem = fixture.debugElement.queryAll(By.directive(MdListOption));
+    let selectionList = fixture.debugElement.query(By.directive(MdSelectionList));
+    let testListItem = listItem[2].nativeElement as HTMLElement;
+    let DOWN_EVENT: KeyboardEvent =
+      createKeyboardEvent('keydown', DOWN_ARROW, testListItem);
+    let options = selectionList.componentInstance.options;
+    let array = options.toArray();
+    let focusItem = array[2];
+    let manager = selectionList.componentInstance._keyManager;
+
+    focusItem.focus();
+    expect(manager.activeItemIndex).toEqual(2);
+
+    selectionList.componentInstance.keydown(DOWN_EVENT);
+
+    fixture.detectChanges();
+
+    expect(manager.activeItemIndex).toEqual(3);
   });
 
 
