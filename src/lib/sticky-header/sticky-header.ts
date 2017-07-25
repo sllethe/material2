@@ -15,7 +15,7 @@ import 'rxjs/add/operator/debounceTime';
 import {RxChain, debounceTime} from '../core/rxjs/index';
 import {Subscription} from 'rxjs/Subscription';
 import {Platform} from '../core/platform';
-//import {isPositionStickySupported} from '../../cdk/platform/features';
+import {isPositionStickySupported} from '@angular/cdk';
 // import {createElement} from '@angular/core';
 
 @Directive({
@@ -95,7 +95,7 @@ export class CdkStickyHeader implements OnDestroy, AfterViewInit {
         this.parentRegion = parentReg.getElementRef().nativeElement;
       }
       // this.setStrategyAccordingToCompatibility();
-      // this.setStrategy();
+      this.setStrategy();
     }
   }
 
