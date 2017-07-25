@@ -49,6 +49,7 @@ import {MdTableModule} from './table/index';
 import {MdSortModule} from './sort/index';
 import {MdPaginatorModule} from './paginator/index';
 import {MdFormFieldModule} from './form-field/index';
+import {StickyHeaderModule} from './sticky-header/index';
 
 const MATERIAL_MODULES = [
   MdAutocompleteModule,
@@ -88,6 +89,7 @@ const MATERIAL_MODULES = [
   A11yModule,
   PlatformModule,
   MdCommonModule,
+  StickyHeaderModule,
   ObserversModule
 ];
 
