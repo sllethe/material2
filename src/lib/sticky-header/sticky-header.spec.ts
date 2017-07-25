@@ -7,6 +7,7 @@ import { Scrollable } from '../core/overlay/scroll/scrollable';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {CommonModule} from '@angular/common';
 import {OverlayModule, MdCommonModule} from '../core';
+import {Platform} from '../core/platform';
 
 
 describe('my test for sticky-header', () => {
@@ -16,6 +17,7 @@ describe('my test for sticky-header', () => {
   let stickyParentElement: DebugElement;
   let scrollableElement: HTMLElement;
   let stickyHeaderDir: CdkStickyHeader;
+  let platform: Platform;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,17 +45,6 @@ describe('my test for sticky-header', () => {
     fixture.detectChanges();
     expect(stickyParentElement.nativeElement.classList.contains('sticky-parent')).toBe(true);
   });
-
-  fit('make sure has the sticky-parent element afterViewInit()',
-    fakeAsync(() => {
-      fixture.detectChanges();
-      stickyHeaderDir.ngAfterViewInit();
-      tick(0);
-      fixture.detectChanges();
-      console.log('stickyElement.nativeElement is: ' + stickyElement.nativeElement);
-      console.log('stickyElement.nativeElement.stickyParent is: ' + stickyHeaderDir.stickyParent);
-      expect(stickyHeaderDir.stickyParent.classList.contains('sticky-parent')).toBe(true);
-    }));
 
 
   fit('make sure defineRestrictions() is called when the element is scrolled',
