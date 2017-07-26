@@ -1,39 +1,33 @@
-import {TestBed, async } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-
-import { StickyHeaderModule, CdkStickyRegion, CdkStickyHeader } from './index';
-import { Scrollable } from '../core/overlay/scroll/scrollable';
-import {CommonModule} from '@angular/common';
-import {OverlayModule, MdCommonModule} from '../core';
-import {extendObject} from '../core/util/object-extend';
-import {Subscription} from 'rxjs/Subscription';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {RxChain, debounceTime} from '../core/rxjs/index';
-import {isPositionStickySupported} from '@angular/cdk';
+import {AnimationEvent} from '@angular/animations';
+import {StickyHeaderModule, CdkStickyRegion, CdkStickyHeader} from './index';
+import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
+//import {Platform} from '../core/platform/platform';
+import {Platform} from '@angular/cdk/platform';
 
 
-
-describe('my test for sticky-header', () => {
+describe('sticky-header', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StickyHeaderModule, OverlayModule, MdCommonModule, CommonModule],
-      declarations: [
-        TestApp
+      imports: [StickyHeaderModule, OverlayModule],
+      declarations: [StickyHeaderTest],
+      providers: [
+        {provide: Platform, useValue: {IOS: false, isBrowser: true}},
       ],
     });
-
     TestBed.compileComponents();
   }));
 
-  fit('test run corrrectly', () => {
+  it('test test', () => {
     expect(true).toBe(true);
   });
+
+
 
 });
 
 @Component({
-  selector: 'app',
   template: `
     <div cdk-scrollable style="text-align: center;
         -webkit-appearance: none;
@@ -71,6 +65,6 @@ describe('my test for sticky-header', () => {
       </div>
     </div>
   `})
-class TestApp {
+class StickyHeaderTest {
 }
 

@@ -22,7 +22,7 @@ describe('MdTable', () => {
     fixture.detectChanges();
   });
 
-  it('should create a table with the right content', () => {
+  fit('should create a table with the right content', () => {
     const tableElement = fixture.nativeElement.querySelector('.mat-table');
     const headerRow = tableElement.querySelectorAll('.mat-header-cell');
     expectTextContent(headerRow[0], 'Column A');
