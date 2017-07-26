@@ -9,7 +9,7 @@ import {By} from '@angular/platform-browser';
 
 
 
-describe('sticky-header', () => {
+describe('sticky-header with positioning not supported', () => {
   let fixture: ComponentFixture<StickyHeaderTest>;
   let testComponent: StickyHeaderTest;
   let stickyElement: DebugElement;
@@ -42,9 +42,60 @@ describe('sticky-header', () => {
     expect(true).toBe(true);
   });
 
-  fit('stickyParent not null', () => {
+  fit('should be able to find stickyParent when sticky positioning is not supported', () => {
     fixture.detectChanges();
     expect(stickyElement.nativeElement.stickyParent).not.toBe(null);
+  });
+
+  function mockStickyHeaderCheckSuccess() {
+    return true;
+  }
+
+  function mockStickyHeaderCheckFail() {
+    return false;
+  }
+
+
+
+});
+
+describe('sticky-header with positioning supported', () => {
+  let fixture: ComponentFixture<StickyHeaderTest>;
+  let testComponent: StickyHeaderTest;
+  let stickyElement: DebugElement;
+  let stickyParentElement: DebugElement;
+  let scrollableElement: HTMLElement;
+  let stickyHeaderDir: CdkStickyHeader;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
+      declarations: [StickyHeaderTest],
+      providers: [
+        {provide: STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, useFactory: mockStickyHeaderCheckSuccess()},
+      ],
+    });
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(StickyHeaderTest);
+    fixture.detectChanges();
+    testComponent = fixture.debugElement.componentInstance;
+    stickyElement = fixture.debugElement.query(By.directive(CdkStickyHeader));
+    stickyParentElement = fixture.debugElement.query(By.directive(CdkStickyRegion));
+    stickyHeaderDir = stickyElement.injector.get<CdkStickyHeader>(CdkStickyHeader);
+    // stickyHeaderDir = fixture.debugElement.query(By.directive(StickyHeaderDirective)).componentInstance;
+  });
+
+  fit('should find sticky positioning is applied', () => {
+    fixture.detectChanges();
+    let position = window.getComputedStyle(stickyHeaderDir.element).position;
+    expect(position).not.toBe(null);
+    if (position != null) {
+      expect(/sticky/i.test(position)).toBe(true);
+    }
+
   });
 
   function mockStickyHeaderCheckSuccess() {
