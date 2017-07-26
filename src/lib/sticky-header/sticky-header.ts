@@ -7,7 +7,7 @@
  */
 import {Directive, Input,
   OnDestroy, AfterViewInit, ElementRef, Optional} from '@angular/core';
-import {Platform} from '../core/platform';
+import {Platform} from '../core/platform/index';
 import {Scrollable} from '../core/overlay/scroll/scrollable';
 import {extendObject} from '../core/util/object-extend';
 import {Subscription} from 'rxjs/Subscription';

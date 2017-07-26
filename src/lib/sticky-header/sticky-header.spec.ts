@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {StickyHeaderModule, CdkStickyRegion, CdkStickyHeader} from './index';
 import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index';
+import {PlatformModule} from '../core/platform/index';
 //import {Platform} from '../core/platform/platform';
 import {Platform} from '@angular/cdk/platform';
 
@@ -10,7 +11,7 @@ import {Platform} from '@angular/cdk/platform';
 describe('sticky-header', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ OverlayModule, StickyHeaderModule],
+      imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
         {provide: Platform, useValue: {IOS: false, isBrowser: true}},
