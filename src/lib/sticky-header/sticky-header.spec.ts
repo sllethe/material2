@@ -6,6 +6,7 @@ import {OverlayModule, Scrollable, OverlayContainer} from '../core/overlay/index
 import {PlatformModule} from '../core/platform/index';
 //import {Platform} from '../core/platform/platform';
 import {Platform} from '@angular/cdk/platform';
+//import {isPositionStickySupported} from '@angular/cdk/platform';
 
 
 describe('sticky-header', () => {
@@ -14,7 +15,7 @@ describe('sticky-header', () => {
       imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
-        {provide: Platform, useValue: {IOS: false, isBrowser: true}},
+        {provide: 'isPositionStickySupported', useExisting: mockStickyHeaderCheckFail()},
       ],
     });
     TestBed.compileComponents();
@@ -23,6 +24,14 @@ describe('sticky-header', () => {
   fit('test test', () => {
     expect(true).toBe(true);
   });
+
+  function mockStickyHeaderCheckSuccess() {
+    return true;
+  }
+
+  function mockStickyHeaderCheckFail() {
+    return false;
+  }
 
 
 
@@ -68,4 +77,5 @@ describe('sticky-header', () => {
   `})
 class StickyHeaderTest {
 }
+
 
