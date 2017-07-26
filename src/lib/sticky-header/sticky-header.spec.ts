@@ -10,7 +10,7 @@ import {Platform} from '@angular/cdk/platform';
 describe('sticky-header', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [StickyHeaderModule, OverlayModule],
+      imports: [ OverlayModule, StickyHeaderModule],
       declarations: [StickyHeaderTest],
       providers: [
         {provide: Platform, useValue: {IOS: false, isBrowser: true}},
@@ -19,7 +19,7 @@ describe('sticky-header', () => {
     TestBed.compileComponents();
   }));
 
-  it('test test', () => {
+  fit('test test', () => {
     expect(true).toBe(true);
   });
 

@@ -15,7 +15,7 @@ import {CdkStickyRegion, CdkStickyHeader} from './sticky-header';
 @NgModule({
   imports: [OverlayModule, MdCommonModule, CommonModule, PlatformModule],
   declarations: [CdkStickyRegion, CdkStickyHeader],
-  exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule],
+  exports: [CdkStickyRegion, CdkStickyHeader, MdCommonModule, PlatformModule],
 })
 export class StickyHeaderModule {}
 
