@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {StickyHeaderModule, CdkStickyRegion, CdkStickyHeader,
-  STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER} from './index';
+  STICKY_HEADER_SUPPORT_STRATEGY} from './index';
 import {OverlayModule, Scrollable} from '../core/overlay/index';
 import {PlatformModule} from '../core/platform/index';
 import {By} from '@angular/platform-browser';
@@ -22,7 +22,7 @@ describe('sticky-header with positioning not supported', () => {
       imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
-        {provide: STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, useFactory: mockStickyHeaderCheckFail()},
+        {provide: STICKY_HEADER_SUPPORT_STRATEGY, useValue: false},
       ],
     });
     TestBed.compileComponents();
@@ -101,7 +101,7 @@ describe('sticky-header with positioning supported', () => {
       imports: [ OverlayModule, PlatformModule, StickyHeaderModule ],
       declarations: [StickyHeaderTest],
       providers: [
-        {provide: STICKY_HEADER_SUPPORT_STRATEGY_PROVIDER, useFactory: mockStickyHeaderCheckSuccess()},
+        {provide: STICKY_HEADER_SUPPORT_STRATEGY, useValue: true},
       ],
     });
     TestBed.compileComponents();
@@ -126,16 +126,6 @@ describe('sticky-header with positioning supported', () => {
     }
 
   });
-
-  function mockStickyHeaderCheckSuccess() {
-    return true;
-  }
-
-  function mockStickyHeaderCheckFail() {
-    return false;
-  }
-
-
 
 });
 
