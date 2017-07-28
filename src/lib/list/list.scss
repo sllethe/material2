@@ -55,6 +55,10 @@ $mat-dense-list-icon-size: 20px;
     justify-content: space-around;
   }
 
+  .mat-list-item-disabled {
+    background: #EDEDED;
+  }
+
   .mat-list-item-ripple {
     position: absolute;
     left: 0;
