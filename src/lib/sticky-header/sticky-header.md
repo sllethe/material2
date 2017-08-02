@@ -2,30 +2,46 @@ Angular Material `<sticky-header>` is an attribute/component which makes DOM ele
 
 <!-- example(sticky-header-overview) -->
 
-Native `<button>` and `<a>` elements are always used in order to provide the most straightforward
-and accessible experience for users. A `<button>` element should be used whenever some _action_
-is performed. An `<a>` element should be used whenever the user will _navigate_ to another view.
+The sticky-header is a useful component when users want to implement a container focusing on displaying headers,
+subheaders and detailed contents. It can make the header of every `<cdkStickyRegion>` element stick to the top of
+the container while scrolling. When the current `<cdkStickyRegion>` element is completely scrolled out of the upper 
+scrollable container, the following `<cdkStickyRegion>` element header will replace it. 
 
+There are two ways to use Sticky-Header.
 
-There are five button variants, each applied as an attribute:
-
-| Attribute          | Description                                                                 |
-|--------------------|-----------------------------------------------------------------------------|
-| `md-button`        | Rectangular button w/ no elevation.                                         |
-| `md-raised-button` | Rectangular button w/ elevation                                             |
-| `md-icon-button`   | Circular button with a transparent background, meant to contain an icon     |
-| `md-fab`           | Circular button w/ elevation, defaults to theme's accent color              |
-| `md-mini-fab`      | Same as `md-fab` but smaller                                                |
-
-
-### Theming
-Buttons can be colored in terms of the current theme using the `color` property to set the
-background color to `primary`, `accent`, or `warn`. By default, only FABs are colored; the default
-background color for `md-button` and `md-raised-button` matches the theme's background color.
-
-### Capitalization
-According to the Material design spec button text has to be capitalized, however we have opted not
-to capitalize buttons automatically via `text-transform: uppercase`, because it can cause issues in
-certain locales. It is also worth noting that using ALL CAPS in the text itself causes issues for
-screen-readers, which will read the text character-by-character. We leave the decision of how to
-approach this to the consuming app.
+The first way is to just define a `<cdkStickyHeader>` without `<cdkStickyRegion>`. And the first direct 
+parent element of the `<cdkStickyHeader>` element will be set as its sticky-region. Like this:
+```html
+<div cdk-scrollable>
+  <div>
+     <h2 cdkStickyHeader>Unread Messages</h2>
+     <p>This is a</p>
+     <p>example demo</p>
+     <p>For sticky-header</p>
+  </div>
+  <div>
+     <h2 cdkStickyHeader>Deleted Messages</h2>
+     <p>This is another</p>
+     <p>example demo</p>
+     <p>For sticky-header</p>
+  </div>
+</div>
+```
+The other way to use a sticky-header is to define a sticky-region by your self. Each `cdkStickyRegion` should only have one 
+`cdkStickyHeader` in it.
+```html
+<div cdk-scrollable>
+  <div cdkStickyRegion>
+     <h2 cdkStickyHeader>Unread Messages</h2>
+     <p>This is a</p>
+     <p>example demo</p>
+     <p>For sticky-header</p>
+  </div>
+  <div cdkStickyRegion>
+     <h2 cdkStickyHeader>Deleted Messages</h2>
+     <p>This is another</p>
+     <p>example demo</p>
+     <p>For sticky-header</p>
+  </div>
+</div>
+```
