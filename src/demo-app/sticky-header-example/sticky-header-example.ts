@@ -5,12 +5,12 @@ import {CdkStickyRegion, CdkStickyHeader} from '@angular/material';
 
 @Component({
   moduleId: module.id,
-  selector: 'sticky-header-overview-example',
-  templateUrl: 'sticky-header-overview-example.html',
-  styleUrls: ['sticky-header-overview-example.css'],
+  selector: 'sticky-header-example',
+  templateUrl: 'sticky-header-example.html',
+  styleUrls: ['sticky-header-example.css'],
 })
 
-export class StickyHeaderOverviewExample {
+export class StickyHeaderExample {
   items: any[] = [
     {name: 'Min', messages: 'Brunch is this weekend?'},
     {name: 'Li', messages: 'Yes'},

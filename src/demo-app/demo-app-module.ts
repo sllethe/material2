@@ -82,6 +82,7 @@ import {
 import {CdkTableModule} from '@angular/cdk';
 import {TableHeaderDemo} from './table/table-header-demo';
 import {StickyHeaderDemo} from './sticky-header/sticky-header-demo';
+import {StickyHeaderExample} from './sticky-header-example/sticky-header-example';
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -187,7 +188,8 @@ export class DemoMaterialModule {}
     PlatformDemo,
     TypographyDemo,
     ExpansionDemo,
-    StickyHeaderDemo
+    StickyHeaderDemo,
+    StickyHeaderExample
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
