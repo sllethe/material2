@@ -1,7 +1,6 @@
-Angular Material buttons are native `<button>` or `<a>` elements enhanced with Material Design
-styling and ink ripples.
+Angular Material `<sticky-header>` is an attribute/component which makes DOM elements sticky to a specific parent.
 
-<!-- example(button-overview) -->
+<!-- example(sticky-header-overview) -->
 
 Native `<button>` and `<a>` elements are always used in order to provide the most straightforward
 and accessible experience for users. A `<button>` element should be used whenever some _action_
