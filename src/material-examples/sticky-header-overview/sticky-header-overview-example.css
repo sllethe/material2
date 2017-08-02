@@ -26,21 +26,21 @@ body {
 
 h1 {
   font-size: 20px;
-  padding: 20px;
+  padding: 5px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 h2 {
   font-size: 20px;
-  padding: 20px;
+  padding: 5px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 p {
   text-indent: 4em;
-  padding:15px;
+  padding:5px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -63,7 +63,7 @@ div{
 
 .demo-header-style{
   -webkit-appearance: none;
-  padding: 20px;
+  padding: 5px;
 }
 
 .demo-header-color1 {
