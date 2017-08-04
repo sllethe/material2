@@ -20,6 +20,10 @@
     .mat-subheader {
       color: mat-color($foreground, secondary-text);
     }
+
+    .mat-list-item-disabled {
+      background: #EDEDED;
+    }
   }
 
   .mat-divider {
@@ -68,6 +72,10 @@
     .mat-subheader {
       @include mat-typography-level-to-styles($config, body-2);
     }
+
+    .mat-list-item-disabled {
+      background: #EDEDED;
+    }
   }
 
   // Dense list
@@ -79,6 +87,10 @@
 
     .mat-subheader {
       font: mat-font-weight($config, body-2) mat-font-size($config, caption) $font-family;
+    }
+
+    .mat-list-item-disabled {
+      background: #EDEDED;
     }
   }
 }
