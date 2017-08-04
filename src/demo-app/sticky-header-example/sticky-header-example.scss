@@ -3,26 +3,8 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   height: 300px;
-  width: 500px;
+  width: 600px;
   overflow: auto;}
-
-.sticky-header-example button {
-  position: fixed;
-  margin: 16px;
-  z-index: 99;
-}
-
-.sticky-header-example * {
-  margin: 0;
-  padding: 0;
-}
-
-.sticky-header-example body {
-  font: 14px/1.5 Helvetica, Arial, sans-serif;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-}
 
 .sticky-header-example h1 {
   font-size: 20px;
@@ -33,20 +15,24 @@
 
 .sticky-header-example h2 {
   font-size: 20px;
-  padding: 5px;
+  padding: 2.5px;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .sticky-header-example p {
   text-indent: 4em;
-  padding:5px;
+  padding:10px;
+  margin: 0;
+  border: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .sticky-header-example div{
-  margin: 0; border: 0; padding: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -59,7 +45,7 @@
 
 .sticky-header-example .demo-header-style{
   -webkit-appearance: none;
-  padding: 5px;
+  padding: 2.5px;
 }
 
 .sticky-header-example .demo-header-color1 {
