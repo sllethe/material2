@@ -4,7 +4,7 @@
       <header class="global-format example-headers">Sticky-header Demo</header>
     </div>
 
-    <div class="example-container global-format">
+    <div class="global-format">
 
       <div>
         <div cdkStickyHeader class="demo-header-style demo-header-color3" >
@@ -21,9 +21,9 @@
       </div>
 
       <div cdkStickyRegion>
-        <div cdkStickyHeader class="demo-header-style demo-header-color1" >
-          <header class="global-format example-headers">Read Messages</header>
-        </div>
+          <div cdkStickyHeader class="demo-header-style demo-header-color1" >
+            <header class="global-format example-headers">Read Messages</header>
+          </div>
         <p class="global-format" *ngFor="let item of items">{{item.name}} :  {{item.messages}}</p>
       </div>
     </div>
