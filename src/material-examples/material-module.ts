@@ -41,7 +41,8 @@ import {
     MdTooltipModule,
     MdPaginatorModule,
     MdSortModule,
-    MdTableModule
+    MdTableModule,
+    StickyHeaderModule
   ]
 })
 export class ExampleMaterialModule {}
