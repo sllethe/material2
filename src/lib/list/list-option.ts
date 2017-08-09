@@ -21,6 +21,7 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   EventEmitter,
+  HostBinding,
   Output, ChangeDetectorRef
 } from '@angular/core';
 import {coerceBooleanProperty, MdLine, MdLineSetter, SelectionModel} from '../core';
@@ -94,7 +95,7 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Whether the checkbox is disabled. */
-
+  @HostBinding('class.mat-list-item-disabled')
   @Input()
   get disabled() { return (this.selectionList && this.selectionList.disabled) || this._disabled; }
   set disabled(value: any) { this._disabled = coerceBooleanProperty(value); }
