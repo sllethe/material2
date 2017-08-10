@@ -57,7 +57,7 @@ const FOCUS_STYLE: string = 'mat-list-item-focus';
     //'(focus)': 'focus()',
     '(blur)': '_handleBlur()',
     //'(focus)': '_hasFocus = true',
-    '(click)': 'toggle()',
+    '(click)': '_handleClick()',
     // '(keydown)':'onKeydown($event)',
     //'[tabIndex]': 'disabled ? -1 : 0',
     'tabindex': '-1',
@@ -139,6 +139,12 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
     this.destroy.emit({option: this});
   }
 
+  _handleClick() {
+    if(this._disabled == false) {
+      this.toggle();
+    }
+  }
+
   toggle(): void {
     // console.log('checked or not: ' + this.pCheckbox.state + ', isSelected or not: ' + this._selected);
     // if(this._disabled == false) {
@@ -150,12 +156,12 @@ export class MdListOption implements AfterContentInit, OnDestroy, Focusable {
     //   }
     // }
 
-    if(this._disabled == false) {
+    // if(this._disabled == false) {
       this.selected = !this.selected;
       console.log('===================' + this.selected);
       this.selectionList.selectedOptions.toggle(this);
       this._changeDetector.markForCheck();
-    }
+    // }
     console.log(this.selectionList.selectedOptions);
     console.log('current selectionModule length: ' + this.selectionList.selectedOptions.selected.length);
   }
